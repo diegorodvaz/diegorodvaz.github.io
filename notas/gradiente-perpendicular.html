@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Por qué el gradiente es perpendicular a las curvas de nivel</title>
+<meta name="description" content="Demostración con la regla de la cadena, intuición con la derivada direccional y por qué el descenso de gradiente hace zigzag en un paraboloide elíptico.">
+<link rel="canonical" href="https://diegorodvaz.github.io/notas/gradiente-perpendicular.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_AR">
+<meta property="og:url" content="https://diegorodvaz.github.io/notas/gradiente-perpendicular.html">
+<meta property="og:title" content="Por qué el gradiente es perpendicular a las curvas de nivel">
+<meta property="og:description" content="Una demostración de dos líneas, la intuición con la derivada direccional y el zigzag del descenso de gradiente.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+<style>
+  /* Colores de la figura */
+  .fig-level { fill: none; stroke: var(--muted); stroke-width: 1.2; opacity: 0.55; }
+  .fig-level.on { opacity: 1; stroke-width: 2; stroke: var(--heading); }
+  .fig-tan { stroke: var(--fg); stroke-width: 1.6; stroke-dasharray: 6 5; }
+  .fig-grad { stroke: var(--primary); stroke-width: 3; }
+  .fig-neg { stroke: #f97316; stroke-width: 3; }
+  .fig-aim { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 2 4; }
+  .fig-right { fill: none; stroke: var(--fg); stroke-width: 1.2; }
+  .fig-txt { font: 600 14px Lato, sans-serif; fill: var(--fg); }
+  .fig-txt.g { fill: var(--primary); }
+  .fig-txt.n { fill: #f97316; }
+  .fig-txt.m { fill: var(--muted); font-weight: 400; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notas">← Volver al portafolio</a>
+
+  <div class="kicker">Nota · Análisis Matemático II</div>
+  <h1>Por qué el gradiente es perpendicular a las curvas de nivel</h1>
+  <p class="meta">Diego E. Rodríguez V. · 5 min de lectura</p>
+
+  <p class="lead">Si mirás el mapa de curvas de nivel del <a href="../#simulador">simulador de descenso de gradiente</a>, las flechas de ∇f siempre cruzan las curvas en ángulo recto. No es casualidad ni un detalle del dibujo: es una propiedad que se demuestra en dos líneas.</p>
+
+  <h2>La demostración</h2>
+  <p>Sea $f(x, y)$ una función diferenciable y sea $f(x, y) = c$ una de sus curvas de nivel. Parametrizamos esa curva con $\mathbf r(t) = (x(t),\, y(t))$. Como la curva está entera dentro del nivel $c$, para todo $t$ vale:</p>
+  $$f\big(\mathbf r(t)\big) = c.$$
+  <p>Derivamos los dos lados respecto de $t$. A la derecha hay una constante, así que da cero. A la izquierda aplicamos la <strong>regla de la cadena</strong>:</p>
+  $$\frac{d}{dt}\, f\big(\mathbf r(t)\big) = \frac{\partial f}{\partial x}\,x'(t) + \frac{\partial f}{\partial y}\,y'(t) = \nabla f\big(\mathbf r(t)\big)\cdot \mathbf r'(t) = 0.$$
+  <p>El vector $\mathbf r'(t)$ es tangente a la curva de nivel. Un producto escalar nulo entre dos vectores no nulos significa que son perpendiculares. Por lo tanto:</p>
+  $$\nabla f \perp \text{curva de nivel en cada punto.}$$
+
+  <div class="callout">
+    <p class="callout-title">Hipótesis que se usaron</p>
+    <p>$f$ diferenciable, la curva parametrizada de forma suave con $\mathbf r'(t) \neq \mathbf 0$, y $\nabla f \neq \mathbf 0$ en el punto. Donde $\nabla f = \mathbf 0$ (un punto crítico) no hay dirección que comparar: ahí es justamente donde se detiene el descenso de gradiente.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 400 300" role="img" aria-labelledby="fig-t">
+      <title id="fig-t">Curvas de nivel elípticas de f = ½(x² + 3y²) con el gradiente perpendicular a la tangente en un punto</title>
+      <defs>
+        <marker id="ah-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--primary)"/></marker>
+        <marker id="ah-n" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f97316"/></marker>
+      </defs>
+      <ellipse class="fig-level" cx="200" cy="150" rx="40" ry="23.1"/>
+      <ellipse class="fig-level on" cx="200" cy="150" rx="80" ry="46.2"/>
+      <ellipse class="fig-level" cx="200" cy="150" rx="120" ry="69.3"/>
+      <ellipse class="fig-level" cx="200" cy="150" rx="160" ry="92.4"/>
+      <line class="fig-aim" x1="248" y1="113" x2="200" y2="150"/>
+      <line class="fig-tan" x1="183.8" y1="85.2" x2="312.2" y2="140.8"/>
+      <line class="fig-grad" x1="248" y1="113" x2="271.8" y2="58" marker-end="url(#ah-g)"/>
+      <line class="fig-neg" x1="248" y1="113" x2="224.2" y2="168" marker-end="url(#ah-n)"/>
+      <path class="fig-right" d="M238.83,109.03 L242.8,99.86 L251.97,103.83"/>
+      <circle cx="248" cy="113" r="4.5" style="fill: var(--heading)"/>
+      <circle cx="200" cy="150" r="3.5" style="fill: var(--muted)"/>
+      <text class="fig-txt g" x="278" y="58">∇f</text>
+      <text class="fig-txt n" x="196" y="186">−∇f</text>
+      <text class="fig-txt" x="316" y="146">tangente</text>
+      <text class="fig-txt m" x="160" y="140">mínimo</text>
+      <text class="fig-txt m" x="286" y="104">f = c</text>
+    </svg>
+    <figcaption>Curvas de nivel de $f = \tfrac12(x^2 + 3y^2)$. En el punto marcado, ∇f es perpendicular a la tangente, pero −∇f no apunta al mínimo (línea punteada).</figcaption>
+  </figure>
+
+  <h2>La intuición: la derivada direccional</h2>
+  <p>La derivada direccional mide cuánto cambia $f$ si te movés en la dirección de un vector unitario $\mathbf u$:</p>
+  $$D_{\mathbf u} f = \nabla f \cdot \mathbf u = \lVert \nabla f \rVert \cos\theta,$$
+  <p>donde $\theta$ es el ángulo entre $\nabla f$ y $\mathbf u$. De esta fórmula salen tres hechos de una vez:</p>
+  <ul>
+    <li><strong>Caminar sobre la curva de nivel</strong> no cambia $f$, así que $D_{\mathbf u} f = 0$. Como $\lVert\nabla f\rVert \neq 0$, tiene que ser $\cos\theta = 0$: la tangente forma 90° con el gradiente.</li>
+    <li><strong>El máximo crecimiento</strong> se da con $\cos\theta = 1$, es decir, en la dirección de $\nabla f$, y vale $\lVert \nabla f \rVert$.</li>
+    <li><strong>El máximo decrecimiento</strong> se da con $\cos\theta = -1$: la dirección de $-\nabla f$. Por eso el descenso de gradiente da pasos $\mathbf x_{k+1} = \mathbf x_k - \alpha\,\nabla f(\mathbf x_k)$.</li>
+  </ul>
+
+  <h2>Consecuencia práctica: el zigzag</h2>
+  <p>Que $-\nabla f$ sea la dirección de máximo descenso <em>local</em> no significa que apunte al mínimo. Las dos cosas coinciden solo cuando las curvas de nivel son circunferencias.</p>
+
+  <h3>Paraboloide circular: camino recto</h3>
+  <p>Con $f = x^2 + y^2$ las curvas de nivel son circunferencias y $\nabla f = (2x,\, 2y)$ apunta radialmente. Entonces $-\nabla f$ apunta directo al origen y el algoritmo baja en línea recta.</p>
+
+  <h3>Paraboloide elíptico: zigzag</h3>
+  <p>Con $f = \tfrac12(x^2 + 3y^2)$ las curvas son elipses y $\nabla f = (x,\, 3y)$. La componente en $y$ pesa el triple, así que $-\nabla f$ ya no apunta al mínimo (es lo que muestra la figura). Un paso del algoritmo queda:</p>
+  $$x_{k+1} = (1 - \alpha)\,x_k, \qquad y_{k+1} = (1 - 3\alpha)\,y_k.$$
+  <p>Con $\alpha = 0{,}5$ resulta $x_{k+1} = 0{,}5\,x_k$ pero $y_{k+1} = -0{,}5\,y_k$: la coordenada $y$ <strong>cambia de signo en cada paso</strong>. El punto rebota de un lado al otro del valle mientras avanza hacia el mínimo. Además, para que converja hace falta $|1 - \alpha| &lt; 1$ y $|1 - 3\alpha| &lt; 1$, o sea $0 &lt; \alpha &lt; \tfrac23$. Con un $\alpha$ más grande, la dirección más empinada (la de $y$) diverge.</p>
+
+  <div class="callout idea">
+    <p class="callout-title">Probalo en el simulador</p>
+    <p>Elegí <em>Paraboloide elíptico (zigzag)</em> y apretá Iniciar: vas a ver el rebote. Después subí α por encima de 0,67 y fijate cómo diverge. Con <em>Paraboloide circular</em> el camino es recto.</p>
+  </div>
+
+  <h2>Un detalle de dibujo</h2>
+  <p>La perpendicularidad solo se ve si los dos ejes tienen la misma escala. Si el eje $y$ se estira respecto del $x$, los ángulos rectos se deforman. Por eso el mapa de curvas de nivel del simulador fija una escala 1:1 entre los ejes.</p>
+
+  <h2>En tres variables</h2>
+  <p>El mismo argumento funciona para $F(x, y, z)$: cualquier curva contenida en la superficie de nivel $F = c$ cumple $\nabla F \cdot \mathbf r'(t) = 0$. Entonces $\nabla F$ es perpendicular a todas las direcciones tangentes de la superficie, y por eso es el vector normal del <strong>plano tangente</strong>:</p>
+  $$\nabla F(P_0)\cdot (\mathbf x - P_0) = 0.$$
+
+  <div class="cta">
+    <p>📈 <a href="../#simulador">Abrir el simulador de descenso de gradiente</a></p>
+    <p>📝 <a href="como-funciona-el-simulador.html">Otra nota: cómo funciona el simulador por dentro</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portafolio de Recursos</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>

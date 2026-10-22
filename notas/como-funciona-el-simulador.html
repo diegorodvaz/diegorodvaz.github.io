@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Cómo funciona el simulador por dentro</title>
+<meta name="description" content="Derivación simbólica, marching squares y las decisiones para que el simulador de descenso de gradiente corra fluido en el navegador.">
+<link rel="canonical" href="https://diegorodvaz.github.io/notas/como-funciona-el-simulador.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_AR">
+<meta property="og:url" content="https://diegorodvaz.github.io/notas/como-funciona-el-simulador.html">
+<meta property="og:title" content="Cómo funciona el simulador de descenso de gradiente por dentro">
+<meta property="og:description" content="De una expresión escrita como texto a superficies 3D, curvas de nivel y una animación fluida, sin servidor.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notas">← Volver al portafolio</a>
+
+  <div class="kicker">Nota · Desarrollo web</div>
+  <h1>Cómo funciona el simulador por dentro</h1>
+  <p class="meta">Diego E. Rodríguez V. · 6 min de lectura</p>
+
+  <p class="lead">El <a href="../#simulador">simulador de descenso de gradiente</a> corre entero en el navegador: no hay servidor que calcule nada. Esta nota recorre las piezas principales, desde que escribís una función hasta que ves la trayectoria animada en 3D.</p>
+
+  <h2>1. Las herramientas</h2>
+  <ul>
+    <li><strong>HTML, CSS y JavaScript</strong> sin frameworks: el estado vive en un único objeto y cada cambio redibuja lo necesario.</li>
+    <li><strong>math.js</strong> para leer la función, evaluarla y derivarla de forma simbólica.</li>
+    <li><strong>Plotly.js</strong> para la superficie 3D, el mapa de curvas de nivel y el gráfico de convergencia.</li>
+  </ul>
+  <p>Plotly pesa unos 3,5 MB. Para que el resto del portafolio cargue rápido, las librerías se descargan recién cuando el simulador está por aparecer en pantalla (con un <code>IntersectionObserver</code>).</p>
+
+  <h2>2. De texto a función</h2>
+  <p>Lo que escribís es texto, por ejemplo <code>0.5 * (x**2 + 3*y**2)</code>. El simulador:</p>
+  <ol>
+    <li>Reemplaza <code>**</code> por <code>^</code>, para aceptar también la sintaxis de Python.</li>
+    <li>Lo convierte en un árbol de expresión con <code>math.parse</code> y lo compila para evaluarlo rápido.</li>
+    <li>Lo prueba en cinco puntos. Así detecta símbolos desconocidos (como una <code>z</code> suelta) o funciones que no dan valores reales, y muestra un error legible.</li>
+    <li>Calcula $\partial f/\partial x$ y $\partial f/\partial y$ con <code>math.derivative</code>: son las fórmulas que aparecen debajo del campo de la función.</li>
+  </ol>
+  <p>Si math.js no puede derivar la expresión, o si se elige el modo <em>Numérico</em>, el gradiente se aproxima con <strong>diferencias centrales</strong>:</p>
+  $$\frac{\partial f}{\partial x}(x, y) \approx \frac{f(x + h,\, y) - f(x - h,\, y)}{2h}, \qquad h = 10^{-5}\cdot\max(1, |x|).$$
+  <p>El error de esta fórmula es del orden de $h^2$, mucho mejor que la diferencia hacia adelante (orden $h$). Escalar $h$ con $|x|$ evita perder precisión cuando los valores son grandes.</p>
+
+  <h2>3. El algoritmo</h2>
+  <p>Cada paso aplica $\mathbf x_{k+1} = \mathbf x_k - \alpha\,\nabla f(\mathbf x_k)$ y después revisa tres condiciones de parada:</p>
+<pre><code><span class="c">// Un paso del descenso de gradiente (simplificado)</span>
+const p = makePoint(last.x - alpha * last.gx, last.y - alpha * last.gy);
+
+if (!finite(p.z) || Math.abs(p.x) > 1e6) status = 'diverged';   <span class="c">// se fue al infinito</span>
+else if (p.norm &lt; tol)                  status = 'converged';  <span class="c">// ‖∇f‖ &lt; tolerancia</span>
+else if (k >= maxIter)                   status = 'maxiter';    <span class="c">// sin llegar a tiempo</span></code></pre>
+  <p>Converger significa llegar a un <strong>punto crítico</strong>, donde $\nabla f = \mathbf 0$. Puede ser un mínimo, pero también un máximo o un punto de silla: los ejemplos <em>Punto de silla</em> y <em>Silla de mono</em> están para mostrar eso.</p>
+
+  <h2>4. La curva de nivel del plano z = c</h2>
+  <p>Para dibujar la intersección de la superficie con el plano $z = c$ se usa <strong>marching squares</strong>, un algoritmo clásico de gráficos:</p>
+  <ol>
+    <li>Se evalúa $f$ en una malla de puntos (de 20×20 a 120×120, según el control de resolución).</li>
+    <li>En cada celda se miran sus cuatro aristas. Si en los extremos de una arista $f - c$ cambia de signo, la curva cruza esa arista.</li>
+    <li>El punto exacto del cruce se estima con interpolación lineal: $t = \dfrac{c - z_a}{z_b - z_a}$.</li>
+    <li>Los cruces de cada celda se unen de a pares con segmentos.</li>
+  </ol>
+  <p>Es el mismo argumento del teorema de Bolzano, aplicado celda por celda. La curva resultante se dibuja igual en el mapa 2D y, levemente elevada, sobre la superficie 3D. Hubo una razón práctica para hacerlo a mano: un contorno de Plotly con un único nivel fallaba al redibujarse.</p>
+
+  <h2>5. El campo vectorial</h2>
+  <p>Plotly no trae un gráfico de flechas (<em>quiver</em>), así que las flechas se construyen como segmentos sueltos. En una grilla de 15×15 se calcula $\nabla f$, se normaliza la dirección y la longitud se hace proporcional a $\sqrt{\lVert\nabla f\rVert}$. La raíz comprime los rangos: sin ella, las flechas cerca del mínimo serían invisibles y las del borde enormes. Cada flecha se dibuja dos veces, una oscura y gruesa debajo y una blanca encima, para que se lea sobre cualquier color del mapa.</p>
+
+  <h2>6. Que la animación sea fluida</h2>
+  <p>Redibujar todo en cada paso sería lento: la superficie tiene hasta 14.400 puntos y el contorno se recalcula entero. Por eso:</p>
+  <ul>
+    <li><strong>En 3D solo se actualizan las trazas de la trayectoria</strong> (<code>Plotly.restyle</code> sobre tres trazas), no la superficie.</li>
+    <li><strong>En 2D la trayectoria va en un <code>&lt;canvas&gt;</code> superpuesto</strong>, que usa la escala de los ejes de Plotly para ubicar cada punto. El contorno no se toca.</li>
+    <li><strong>A velocidades altas se calculan varios pasos por cuadro</strong> y se dibuja una sola vez.</li>
+    <li><strong>Mientras girás la cámara 3D no se redibuja nada:</strong> cada actualización reiniciaba el gesto y el giro se trababa. Los cambios pendientes se aplican al soltar el mouse, y la cámara elegida se guarda para que no vuelva a la posición inicial.</li>
+  </ul>
+
+  <h2>7. Integrarlo al portafolio</h2>
+  <ul>
+    <li><strong>Colores:</strong> el simulador usa las mismas variables CSS que el resto de la página. Cuando cambiás entre modo claro y oscuro, un <code>MutationObserver</code> lo detecta y recolorea los gráficos.</li>
+    <li><strong>Diseño adaptable:</strong> con <em>container queries</em> el simulador se acomoda según su propio ancho. En pantallas anchas los controles van en un panel lateral; en el celular, una columna con la barra de reproducción fija abajo.</li>
+    <li><strong>Atajos de teclado</strong> (Espacio, →, R) que solo funcionan con el simulador enfocado, para no interferir con el scroll de la página.</li>
+  </ul>
+
+  <div class="cta">
+    <p>📈 <a href="../#simulador">Abrir el simulador</a></p>
+    <p>💻 <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/simulador-gradiente" target="_blank" rel="noopener">Ver el código en GitHub</a></p>
+    <p>📝 <a href="gradiente-perpendicular.html">Otra nota: por qué el gradiente es perpendicular a las curvas de nivel</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portafolio de Recursos</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>

@@ -6,6 +6,19 @@
 <meta name="author" content="Diego E. Rodríguez V.">
 <meta name="description" content="Portafolio de Recursos de Diego E. Rodríguez V.: simulador interactivo de descenso de gradiente, materiales didácticos en LaTeX y animaciones matemáticas con Manim.">
 <title>Portafolio de Recursos</title>
+<link rel="canonical" href="https://diegorodvaz.github.io/">
+<!-- Vista previa al compartir el enlace (LinkedIn, WhatsApp, X, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:url" content="https://diegorodvaz.github.io/">
+<meta property="og:title" content="Portafolio de Recursos · Diego E. Rodríguez V.">
+<meta property="og:description" content="Simuladores interactivos, animaciones con Manim y materiales didácticos en LaTeX para Análisis Matemático.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Portafolio de Diego E. Rodríguez V.: superficie 3D del simulador de descenso de gradiente y miniaturas de las animaciones.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://diegorodvaz.github.io/img/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -214,6 +227,82 @@
   }
   summary { cursor: pointer; font-weight: 700; font-size: 1.1em; }
   video { width: 100%; margin-top: 15px; border-radius: 8px; box-shadow: var(--shadow); }
+
+  /* Descripción del PDF seleccionado */
+  .pdf-desc { margin: 0 0 0.85rem; font-size: 0.95rem; }
+
+  /* Enlaces de proyecto (código, demo, nota) */
+  .links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.92rem; font-weight: 700; margin: 0 0 1.25rem; padding: 0; list-style: none; }
+  .links a, .links button {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    color: var(--link); text-decoration: none;
+    font: inherit; background: none; border: 0; padding: 0; cursor: pointer;
+  }
+  .links a:hover, .links button:hover { text-decoration: underline; }
+  .links svg { width: 1em; height: 1em; fill: currentColor; }
+
+  /* Tarjetas de proyecto (animaciones y notas) */
+  .cards { display: grid; gap: 1rem; margin-top: 1.25rem; }
+  .card {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 1.1rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    scroll-margin-top: 1rem;
+  }
+  .card h3 { margin: 0 0 0.3rem; font-size: 1.2rem; }
+  .card p { margin: 0 0 0.65rem; font-size: 0.95rem; }
+  .card .tags { margin: 0 0 0.65rem; }
+  .card .links { margin: 0; }
+  .card h3 a { color: var(--heading); text-decoration: none; }
+  .card h3 a:hover { color: var(--primary); }
+  .card-meta { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.25rem; }
+  .card-thumb {
+    position: relative;
+    align-self: start;
+    aspect-ratio: 16 / 9;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0b0f1a;
+    cursor: pointer;
+  }
+  .card-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+  .card-thumb:hover img, .card-thumb:focus-visible img { transform: scale(1.04); }
+  .card-thumb:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .play-badge {
+    position: absolute; inset: 0; margin: auto;
+    width: 54px; height: 54px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff; font-size: 1.2rem; padding-left: 4px;
+  }
+  /* Al reproducir, el video ocupa todo el ancho de la tarjeta */
+  .card.playing { grid-template-columns: minmax(0, 1fr); }
+  .card.playing .card-thumb { display: none; }
+  .card video { margin: 0; }
+  /* Tarjetas de notas: un ícono en lugar de miniatura */
+  .card-icon {
+    align-self: start;
+    display: grid; place-items: center;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(24, 188, 156, 0.18), rgba(24, 188, 156, 0.04));
+    border: 1px solid var(--border);
+    color: var(--primary);
+    font-size: 2.4rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  @media (max-width: 640px) {
+    .card { grid-template-columns: minmax(0, 1fr); }
+  }
 
   /* ================================================================
      PROYECTO DESTACADO · Simulador de descenso de gradiente
@@ -545,6 +634,11 @@
     <ul class="tags" aria-label="Tecnologías">
       <li>JavaScript</li><li>Plotly.js</li><li>math.js</li><li>Derivación simbólica</li><li>Optimización</li>
     </ul>
+    <ul class="links">
+      <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/simulador-gradiente" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código en GitHub</a></li>
+      <li><a href="codigo/simulador-gradiente/" target="_blank" rel="noopener">↗ Abrir versión independiente</a></li>
+      <li><a href="notas/como-funciona-el-simulador.html">📝 Cómo funciona por dentro</a></li>
+    </ul>
 
     <div class="gd" id="gd" tabindex="-1" aria-label="Simulador de descenso de gradiente">
       <div class="gd-head">
@@ -736,13 +830,19 @@
     <p>A continuación se presentan los diferentes recursos interactivos y de evaluación generados para la cátedra de Análisis Matemático. Seleccioná cada pestaña para visualizar el documento.</p>
 
     <div class="tabs" role="tablist">
-      <button role="tab" aria-selected="true" data-pdf="Portfolio_AM1_Solutions.pdf">Examen (Soluciones)</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_AM1_Student.pdf">Examen (Alumno)</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_CheatSheet.pdf">Cheat Sheet</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_Tikz.pdf">Gráficos TikZ</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_Interactive.pdf">Guía Interactiva</button>
+      <button role="tab" aria-selected="true" data-pdf="Portfolio_AM1_Solutions.pdf"
+        data-desc="Primer parcial de <strong>Análisis Matemático I</strong> (UTN FRCU) con la resolución paso a paso y los criterios de corrección de cada ejercicio: límites con desarrollo de Taylor, optimización y teoremas fundamentales, entre otros.">Examen (Soluciones)</button>
+      <button role="tab" aria-selected="false" data-pdf="Portfolio_AM1_Student.pdf"
+        data-desc="La versión del mismo parcial de <strong>Análisis Matemático I</strong> para el estudiante, sin las soluciones.">Examen (Alumno)</button>
+      <button role="tab" aria-selected="false" data-pdf="Portfolio_CheatSheet.pdf"
+        data-desc="Guía resumen de referencia de <strong>Análisis Matemático II</strong>: vectores y geometría en ℝ³, derivadas parciales, gradiente, derivada direccional y plano tangente.">Cheat Sheet</button>
+      <button role="tab" aria-selected="false" data-pdf="Portfolio_Tikz.pdf"
+        data-desc="Ilustraciones vectoriales hechas en LaTeX con <strong>TikZ</strong> y pgfplots: geometría en ℝ³, un diagrama de arquitectura de sistemas, la campana de Gauss y la interpretación geométrica de la derivada.">Gráficos TikZ</button>
+      <button role="tab" aria-selected="false" data-pdf="Portfolio_Interactive.pdf"
+        data-desc="Autoevaluación de <strong>Análisis Matemático II</strong> (Unidad 2: derivadas direccionales y campo gradiente) con resoluciones que se despliegan dentro del PDF. Para desplegarlas, abrilo en pestaña nueva con un visor que soporte capas PDF.">Guía Interactiva</button>
     </div>
     <div class="tab-panels" role="tabpanel">
+      <p class="pdf-desc" id="pdf-desc" aria-live="polite"></p>
       <div class="pdf-toolbar">
         <span id="pdf-status">Cargando…</span>
         <a id="pdf-open" href="Portfolio_AM1_Solutions.pdf" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
@@ -756,30 +856,91 @@
     <h2>2. Animaciones Matemáticas (Manim)</h2>
     <p>Demostraciones conceptuales programadas en Python utilizando el motor gráfico <strong>Manim</strong>.</p>
 
-    <h3 id="green">Teorema de Green</h3>
-    <details>
-      <summary>🎥 Clic aquí para desplegar / ocultar la animación</summary>
-      <video controls preload="metadata">
-        <source src="GreensTheoremAnimation.mp4" type="video/mp4">
-      </video>
-    </details>
+    <!-- Cada tarjeta muestra una miniatura; el video se carga recién al darle play -->
+    <div class="cards">
+      <article class="card" id="green">
+        <button class="card-thumb" type="button" data-video="GreensTheoremAnimation.mp4" aria-label="Reproducir animación: Teorema de Green">
+          <img src="img/green.jpg" alt="Región D dividida en celdas coloreadas según el rotor, con la fórmula del Teorema de Green" width="800" height="450" loading="lazy">
+          <span class="play-badge" aria-hidden="true">▶</span>
+        </button>
+        <div>
+          <div class="card-meta">Análisis Matemático II · 0:53</div>
+          <h3>Teorema de Green</h3>
+          <p>Por qué la circulación de un campo a lo largo de una curva cerrada <em>C</em> es igual a la integral del rotor en la región <em>D</em>: los remolinos de celdas vecinas se cancelan en las aristas compartidas y solo sobrevive el borde.</p>
+          <ul class="tags"><li>Manim</li><li>Python</li><li>Cálculo vectorial</li></ul>
+          <ul class="links">
+            <li><button type="button" data-play>▶ Ver animación</button></li>
+            <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Green.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código en GitHub</a></li>
+          </ul>
+        </div>
+      </article>
 
-    <h3 id="taylor">Series de Taylor</h3>
-    <details>
-      <summary>🎥 Clic aquí para desplegar / ocultar la animación</summary>
-      <video controls preload="metadata">
-        <source src="TaylorCaterpillarAnimation.mp4" type="video/mp4">
-      </video>
-    </details>
+      <article class="card" id="taylor">
+        <button class="card-thumb" type="button" data-video="TaylorCaterpillarAnimation.mp4" aria-label="Reproducir animación: Series de Taylor">
+          <img src="img/taylor.jpg" alt="Polinomio de Taylor de grado 13 aproximando a sen x cerca del origen" width="800" height="450" loading="lazy">
+          <span class="play-badge" aria-hidden="true">▶</span>
+        </button>
+        <div>
+          <div class="card-meta">Análisis Matemático I · 0:40</div>
+          <h3>Series de Taylor</h3>
+          <p>Cómo el polinomio de Taylor de sen x centrado en 0 suma términos hasta grado 15: cerca del origen se pega a la función y lejos todavía se escapa. La zona donde |f − P<sub>n</sub>| &lt; 0,1 crece con cada grado.</p>
+          <ul class="tags"><li>Manim</li><li>Python</li><li>Aproximación polinómica</li></ul>
+          <ul class="links">
+            <li><button type="button" data-play>▶ Ver animación</button></li>
+            <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Taylor.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código en GitHub</a></li>
+          </ul>
+        </div>
+      </article>
 
-    <h3 id="topologia">Conceptos de Topología Básica</h3>
-    <details>
-      <summary>🎥 Clic aquí para desplegar / ocultar la animación</summary>
-      <video controls preload="metadata">
-        <source src="TopologiaBasica.mp4" type="video/mp4">
-      </video>
-    </details>
+      <article class="card" id="topologia">
+        <button class="card-thumb" type="button" data-video="TopologiaBasica.mp4" aria-label="Reproducir animación: Conceptos de Topología Básica">
+          <img src="img/topologia.jpg" alt="Bola abierta sobre el borde superior del conjunto A, mitad verde y mitad roja" width="800" height="450" loading="lazy">
+          <span class="play-badge" aria-hidden="true">▶</span>
+        </button>
+        <div>
+          <div class="card-meta">Análisis Matemático II · 1:12</div>
+          <h3>Conceptos de Topología Básica</h3>
+          <p>Clasifica puntos del plano en interiores, exteriores y frontera usando bolas abiertas, sobre el conjunto A = [0, 2] × [0, 2). Muestra que un punto frontera puede pertenecer o no al conjunto.</p>
+          <ul class="tags"><li>Manim</li><li>Python</li><li>Topología en ℝ²</li></ul>
+          <ul class="links">
+            <li><button type="button" data-play>▶ Ver animación</button></li>
+            <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/PuntosTopologia.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código en GitHub</a></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+    <hr>
   </section>
+
+  <section id="notas">
+    <h2>3. Notas</h2>
+    <p>Explicaciones cortas sobre las ideas matemáticas y técnicas detrás de los proyectos.</p>
+    <div class="cards">
+      <article class="card">
+        <a class="card-icon" href="notas/gradiente-perpendicular.html" aria-hidden="true" tabindex="-1">∇f ⟂</a>
+        <div>
+          <div class="card-meta">Nota · 5 min de lectura</div>
+          <h3><a href="notas/gradiente-perpendicular.html">Por qué el gradiente es perpendicular a las curvas de nivel</a></h3>
+          <p>Una demostración de dos líneas con la regla de la cadena, la intuición con la derivada direccional y por qué el descenso de gradiente hace zigzag en un paraboloide elíptico.</p>
+          <ul class="tags"><li>Análisis Matemático II</li><li>Gradiente</li><li>Optimización</li></ul>
+        </div>
+      </article>
+      <article class="card">
+        <a class="card-icon" href="notas/como-funciona-el-simulador.html" aria-hidden="true" tabindex="-1">&lt;/&gt;</a>
+        <div>
+          <div class="card-meta">Nota · 6 min de lectura</div>
+          <h3><a href="notas/como-funciona-el-simulador.html">Cómo funciona el simulador por dentro</a></h3>
+          <p>De una expresión escrita como texto a superficies 3D, curvas de nivel y una animación fluida: derivación simbólica, marching squares y las decisiones para que todo corra en el navegador.</p>
+          <ul class="tags"><li>JavaScript</li><li>Plotly.js</li><li>math.js</li></ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Ícono de GitHub reutilizable -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <symbol id="gh-icon" viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol>
+  </svg>
 
 </main>
 
@@ -795,6 +956,7 @@
         <li><a href="#topologia">Topología Básica</a></li>
       </ul>
     </li>
+    <li><a href="#notas">3. Notas</a></li>
   </ul>
 </nav>
 </div>
@@ -820,8 +982,37 @@
       document.querySelectorAll(".tabs button").forEach(function (b) {
         b.setAttribute("aria-selected", b === btn ? "true" : "false");
       });
+      showPdfDesc(btn);
       window.showPdf(btn.dataset.pdf);
     });
+  });
+
+  // Descripción del documento seleccionado
+  function showPdfDesc(btn) {
+    document.getElementById("pdf-desc").innerHTML = btn.dataset.desc || "";
+  }
+  showPdfDesc(document.querySelector('.tabs button[aria-selected="true"]'));
+
+  // Tarjetas de animaciones: el video se crea y carga recién al darle play
+  document.querySelectorAll(".card").forEach(function (card) {
+    var thumb = card.querySelector(".card-thumb[data-video]");
+    if (!thumb) return;
+    function play() {
+      if (card.classList.contains("playing")) return;
+      var v = document.createElement("video");
+      v.controls = true;
+      v.playsInline = true;
+      v.preload = "auto";
+      v.poster = thumb.querySelector("img").src;
+      v.src = thumb.dataset.video;
+      card.insertBefore(v, card.firstChild);
+      card.classList.add("playing");
+      card.querySelectorAll("[data-play]").forEach(function (b) { b.closest("li").hidden = true; });
+      v.play().catch(function () {});
+      v.focus();
+    }
+    thumb.addEventListener("click", play);
+    card.querySelectorAll("[data-play]").forEach(function (b) { b.addEventListener("click", play); });
   });
 
   // Resalta la sección actual en el índice
@@ -834,7 +1025,7 @@
       });
     });
   }, { rootMargin: "0px 0px -70% 0px" });
-  ["simulador", "materiales", "animaciones", "green", "taylor", "topologia"].forEach(function (id) {
+  ["simulador", "materiales", "animaciones", "green", "taylor", "topologia", "notas"].forEach(function (id) {
     observer.observe(document.getElementById(id));
   });
 </script>
