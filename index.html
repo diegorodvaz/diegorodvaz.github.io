@@ -923,17 +923,17 @@
     <!-- Galería: cada tarjeta muestra una miniatura; el video se abre en el reproductor recién al darle play -->
     <h3 class="anim-grupo" id="anim-analisis">Análisis Matemático</h3>
     <div class="gallery">
-      <article class="vcard wide" id="green">
-        <button class="vcard-thumb" type="button" data-video="videos/teorema-de-green.mp4" data-title="Teorema de Green" aria-label="Reproducir: Teorema de Green">
-          <img src="img/teorema-de-green.jpg" alt="Región D dividida en celdas coloreadas según el rotor, con la fórmula del Teorema de Green" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">0:53</span>
+      <article class="vcard" id="logaritmo">
+        <button class="vcard-thumb" type="button" data-video="videos/logaritmo-area.mp4" data-title="El logaritmo como área" aria-label="Reproducir: El logaritmo como área">
+          <img src="img/logaritmo-area.jpg" alt="Área bajo la hipérbola y = 1/t dividida en ln a y ln b, con ln(ab) = ln a + ln b" width="800" height="450" loading="lazy">
+          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">3:51</span>
         </button>
         <div class="vcard-body">
-          <div class="card-meta">Análisis Matemático II</div>
-          <h4>Teorema de Green</h4>
-          <p>Por qué la circulación de un campo a lo largo de una curva cerrada <em>C</em> es igual a la integral del rotor en la región <em>D</em>: los remolinos de celdas vecinas se cancelan en las aristas compartidas y solo sobrevive el borde.</p>
-          <ul class="tags"><li>Manim</li><li>Python</li><li>Cálculo vectorial</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Green.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
+          <div class="card-meta">Análisis Matemático I</div>
+          <h4>El logaritmo como área</h4>
+          <p>ln x es el área bajo la hipérbola y = 1/t entre 1 y x. Una transformación que conserva áreas muestra por qué ln(ab) = ln a + ln b, y de ahí salen las potencias, los inversos, el número e y la derivada 1/x.</p>
+          <ul class="tags"><li>Manim</li><li>Integral definida</li></ul>
+          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/log_area.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
         </div>
       </article>
 
@@ -962,6 +962,20 @@
           <p>Puntos interiores, exteriores y frontera definidos con bolas abiertas, sobre el conjunto A = [0, 2] × [0, 2). Un punto frontera puede pertenecer o no al conjunto.</p>
           <ul class="tags"><li>Manim</li><li>Topología en ℝ²</li></ul>
           <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/PuntosTopologia.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
+        </div>
+      </article>
+
+      <article class="vcard" id="green">
+        <button class="vcard-thumb" type="button" data-video="videos/teorema-de-green.mp4" data-title="Teorema de Green" aria-label="Reproducir: Teorema de Green">
+          <img src="img/teorema-de-green.jpg" alt="Región D dividida en celdas coloreadas según el rotor, con la fórmula del Teorema de Green" width="800" height="450" loading="lazy">
+          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">0:53</span>
+        </button>
+        <div class="vcard-body">
+          <div class="card-meta">Análisis Matemático II</div>
+          <h4>Teorema de Green</h4>
+          <p>Por qué la circulación de un campo a lo largo de una curva cerrada <em>C</em> es igual a la integral del rotor en la región <em>D</em>: los remolinos de celdas vecinas se cancelan en las aristas compartidas y solo sobrevive el borde.</p>
+          <ul class="tags"><li>Manim</li><li>Python</li><li>Cálculo vectorial</li></ul>
+          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Green.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
         </div>
       </article>
     </div>
