@@ -336,21 +336,6 @@
     border-radius: 999px; background: rgba(24, 188, 156, 0.15); color: var(--primary);
     text-transform: none; letter-spacing: 0;
   }
-  /* Capítulos de una serie */
-  .episodios { list-style: none; margin: 0 0 0.75rem; padding: 0; display: grid; gap: 0.35rem; }
-  .episodios button, .player-eps button {
-    display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
-    width: 100%;
-    padding: 0.35rem 0.65rem;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg);
-    color: var(--fg);
-    font: inherit; font-size: 0.88rem; text-align: left;
-    cursor: pointer;
-  }
-  .episodios button:hover, .player-eps button:hover { border-color: var(--primary); color: var(--primary); }
-  .episodios span, .player-eps span { color: var(--muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
   @media (max-width: 680px) {
     .gallery { grid-template-columns: minmax(0, 1fr); }
     .vcard.wide { display: flex; }
@@ -380,8 +365,6 @@
   }
   .player-close:hover { border-color: var(--primary); color: var(--primary); }
   .player video { display: block; width: 100%; max-height: calc(94vh - 130px); margin: 0; border-radius: 0; box-shadow: none; background: #000; }
-  .player-eps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; padding: 0.75rem 1rem; }
-  .player-eps button[aria-current="true"] { border-color: var(--primary); background: rgba(24, 188, 156, 0.12); color: var(--primary); font-weight: 700; }
 
   /* ================================================================
      PROYECTO DESTACADO · Simulador de descenso de gradiente
@@ -985,33 +968,20 @@
 
     <h3 class="anim-grupo" id="anim-algebra">Álgebra con geometría</h3>
     <div class="gallery">
-      <article class="vcard" id="cuadrados">
-        <button class="vcard-thumb" type="button" data-video="videos/completar-cuadrados.mp4" data-title="Completar cuadrados, literalmente" aria-label="Reproducir: Completar cuadrados">
+      <article class="vcard wide" id="cuadrados">
+        <button class="vcard-thumb" type="button" data-video="videos/completar-cuadrados.mp4" data-title="Desde completar cuadrados a resolvente" aria-label="Reproducir: Desde completar cuadrados a resolvente">
           <img src="img/completar-cuadrados.jpg" alt="Cuadrado de lado x + b/2 armado con piezas y la fórmula resolvente" width="800" height="450" loading="lazy">
           <span class="play-badge" aria-hidden="true">▶</span><span class="dur">1:20</span>
         </button>
         <div class="vcard-body">
           <div class="card-meta">Álgebra</div>
-          <h4>Completar cuadrados, literalmente</h4>
+          <h4>Desde completar cuadrados a resolvente</h4>
           <p>x² + bx es un cuadrado más un rectángulo. El rectángulo se corta en dos tiras que se pegan al cuadrado, y solo falta la esquina (b/2)². Leyendo las áreas sale la fórmula resolvente.</p>
           <ul class="tags"><li>Manim</li><li>Ecuación cuadrática</li></ul>
           <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/completar_cuadrados.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
         </div>
       </article>
 
-      <article class="vcard" id="am-gm">
-        <button class="vcard-thumb" type="button" data-video="videos/am-gm-rectangulos.mp4" data-title="Desigualdad AM–GM con rectángulos" aria-label="Reproducir: Desigualdad AM–GM con rectángulos">
-          <img src="img/am-gm-rectangulos.jpg" alt="Cuatro rectángulos en molinete con un hueco cuadrado y la desigualdad entre medias" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">1:23</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Desigualdades</div>
-          <h4>Desigualdad AM–GM con rectángulos</h4>
-          <p>Cuatro rectángulos de a × b dentro de un cuadrado de lado a + b dejan un hueco de lado |a − b|. Contando áreas, (a + b)/2 ≥ √(ab), con igualdad solo si a = b: a perímetro fijo, el rectángulo de mayor área es el cuadrado.</p>
-          <ul class="tags"><li>Manim</li><li>Demostración visual</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/am_gm_rectangulos.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
     </div>
 
     <h3 class="anim-grupo" id="anim-fisica">Física: electromagnetismo</h3>
@@ -1032,38 +1002,6 @@
           </ul>
         </div>
       </article>
-
-      <article class="vcard" id="particula" data-series>
-        <button class="vcard-thumb" type="button" data-video="videos/particula-b-circulo.mp4" data-title="Partícula en un campo B · 1. Movimiento circular" aria-label="Reproducir la serie: Partícula cargada en un campo magnético">
-          <img src="img/particula-b-circulo.jpg" alt="Órbitas circulares de una carga en un campo magnético con r = mv/qB" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">3 videos</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Física · Electromagnetismo</div>
-          <h4>Partícula cargada en un campo magnético</h4>
-          <p>La fuerza F = q v × B curva la trayectoria sin cambiar la rapidez. Una serie que va del círculo a la hélice y termina en una aplicación: el selector de velocidades.</p>
-          <ol class="episodios">
-            <li><button type="button" data-video="videos/particula-b-circulo.mp4" data-poster="img/particula-b-circulo.jpg" data-title="Partícula en un campo B · 1. Movimiento circular">1 · Movimiento circular <span>0:58</span></button></li>
-            <li><button type="button" data-video="videos/particula-b-helice.mp4" data-poster="img/particula-b-helice.jpg" data-title="Partícula en un campo B · 2. Hélice">2 · Hélice <span>0:40</span></button></li>
-            <li><button type="button" data-video="videos/particula-b-selector.mp4" data-poster="img/particula-b-selector.jpg" data-title="Partícula en un campo B · 3. Selector de velocidades">3 · Selector de velocidades <span>0:42</span></button></li>
-          </ol>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/particula_campo_B.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
-
-      <article class="vcard" id="faraday">
-        <button class="vcard-thumb" type="button" data-video="videos/faraday-espira.mp4" data-title="Ley de Faraday: el generador" aria-label="Reproducir: Ley de Faraday">
-          <img src="img/faraday-espira.jpg" alt="Espira girando en un campo magnético junto a los gráficos del flujo y de la fem" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">1:10</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Física · Electromagnetismo</div>
-          <h4>Ley de Faraday: el generador</h4>
-          <p>Una espira gira en un campo B uniforme: el flujo Φ = BA cos θ cambia con el giro y la fem ε = −dΦ/dt resulta alterna. Al duplicar ω se duplican la amplitud y la frecuencia.</p>
-          <ul class="tags"><li>Manim</li><li>Inducción</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/faraday_espira.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
     </div>
 
     <!-- Reproductor único para todas las animaciones -->
@@ -1074,7 +1012,6 @@
       </div>
       <!-- muted: las animaciones no tienen audio, y así el navegador nunca bloquea el autoplay -->
       <video id="player-video" controls playsinline muted preload="auto"></video>
-      <div class="player-eps" id="player-eps" hidden></div>
     </dialog>
     <hr>
   </section>
@@ -1165,41 +1102,21 @@
     var dlg = document.getElementById("player");
     var video = document.getElementById("player-video");
     var title = document.getElementById("player-title");
-    var eps = document.getElementById("player-eps");
-    var series = [];   // capítulos de la serie abierta (si hay)
 
     function load(btn) {
-      var img = btn.querySelector("img");
-      video.poster = btn.dataset.poster || (img ? img.src : "");
+      video.poster = btn.querySelector("img").src;
       video.src = btn.dataset.video;
       title.textContent = btn.dataset.title;
-      eps.querySelectorAll("button").forEach(function (b) {
-        b.setAttribute("aria-current", b.dataset.video === btn.dataset.video ? "true" : "false");
-      });
       video.play().catch(function () {});
     }
 
     function open(btn) {
       // Sin soporte de <dialog>: se abre el video directo en otra pestaña
       if (typeof dlg.showModal !== "function") { window.open(btn.dataset.video, "_blank"); return; }
-      var card = btn.closest("[data-series]");
-      series = card ? Array.prototype.slice.call(card.querySelectorAll(".episodios button")) : [];
-      eps.innerHTML = "";
-      eps.hidden = !series.length;
-      series.forEach(function (ep) {
-        var b = ep.cloneNode(true);
-        b.addEventListener("click", function () { load(ep); });
-        eps.appendChild(b);
-      });
       if (!dlg.open) dlg.showModal();
       load(btn);
     }
 
-    // En una serie, al terminar un capítulo arranca el siguiente
-    video.addEventListener("ended", function () {
-      var i = series.findIndex(function (ep) { return ep.dataset.video === video.getAttribute("src"); });
-      if (i >= 0 && i < series.length - 1) load(series[i + 1]);
-    });
     dlg.addEventListener("close", function () {
       video.pause();
       video.removeAttribute("src");
