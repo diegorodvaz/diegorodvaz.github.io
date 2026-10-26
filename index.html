@@ -331,25 +331,6 @@
     .benefit { padding: var(--s-300); }
   }
 
-  /* ---------------- Frase con revelado por palabra ---------------- */
-  .tagline { padding: var(--s-900) 0; border-block: 1px solid var(--border); background: var(--surface); }
-  .tagline p {
-    max-width: 880px; margin: 0;
-    font-size: 3rem; line-height: 1; letter-spacing: -0.03em; font-weight: 600;
-    text-wrap: balance;
-  }
-  .tagline .w {
-    color: color-mix(in srgb, var(--heading) 28%, transparent);
-    transition: color 500ms var(--ease);
-  }
-  .tagline .w.on { color: var(--heading); }
-  .tagline .w.accent.on { color: var(--primary); }
-  @media (max-width: 640px) {
-    .tagline { padding: var(--s-700) 0; }
-    .tagline p { font-size: 2.25rem; line-height: 2.5rem; }
-    .tagline br { display: none; }
-  }
-
   /* ---------------- Etiquetas y enlaces de proyecto ---------------- */
   .tags { display: flex; flex-wrap: wrap; gap: var(--s-75); list-style: none; padding: 0; margin: 0 0 var(--s-300); }
   .tags li {
@@ -943,13 +924,6 @@
           <p>Las escenas se verifican antes de renderizar. La del logaritmo incluye un <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/verificar_log_area.py" target="_blank" rel="noopener">script que comprueba cada área</a>.</p>
         </li>
       </ul>
-    </div>
-  </section>
-
-  <!-- ======================= FRASE ======================= -->
-  <section class="tagline" aria-label="Enfoque">
-    <div class="wrap">
-      <p data-words>Animaciones, simuladores y materiales<br>para Análisis Matemático, Álgebra y Física.</p>
     </div>
   </section>
 
@@ -1582,39 +1556,6 @@
     document.querySelectorAll(".reveal").forEach(function (el) { revealObserver.observe(el); });
 
   }
-
-  // Frase: cada palabra pasa del tono apagado al color pleno, una por vez y en orden de lectura,
-  // según cuánto avanzó la sección por la pantalla (scroll limitado a un cálculo por cuadro)
-  (function () {
-    var line = document.querySelector("[data-words]");
-    var accents = [];
-    var html = line.innerHTML.split(/(<br>)/).map(function (part) {
-      if (part === "<br>") return " <br>";
-      return part.split(" ").filter(Boolean).map(function (w) {
-        return '<span class="w' + (accents.indexOf(w) > -1 ? " accent" : "") + '">' + w + "</span>";
-      }).join(" ");
-    }).join("");
-    line.innerHTML = html;
-    var words = line.querySelectorAll(".w");
-    if (reduceMotion) { words.forEach(function (w) { w.classList.add("on"); }); return; }
-
-    var queued = false;
-    function update() {
-      queued = false;
-      var r = line.getBoundingClientRect();
-      var vh = window.innerHeight;
-      // 0 cuando la frase asoma por el 85% de la pantalla, 1 cuando su final llega al 45%
-      var start = vh * 0.85, end = vh * 0.45;
-      var p = (start - r.top) / (start - end + r.height);
-      var lit = Math.round(Math.max(0, Math.min(1, p)) * words.length);
-      words.forEach(function (w, i) { w.classList.toggle("on", i < lit); });
-    }
-    window.addEventListener("scroll", function () {
-      if (!queued) { queued = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    window.addEventListener("resize", update);
-    update();
-  })();
 
   if (!("IntersectionObserver" in window)) document.documentElement.classList.remove("js");
 </script>
