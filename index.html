@@ -4,15 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Diego E. Rodríguez V.">
-<meta name="description" content="Portafolio de Recursos de Diego E. Rodríguez V.: simulador interactivo de descenso de gradiente, materiales didácticos en LaTeX y animaciones de matemática y física con Manim.">
-<title>Portafolio de Recursos</title>
+<meta name="description" content="Diego E. Rodríguez V. crea animaciones con Manim, simuladores interactivos y materiales en LaTeX para cursos de Análisis Matemático, Álgebra y Física. Disponible para proyectos de contenido educativo.">
+<title>Diego E. Rodríguez V. · Animaciones y simuladores de matemática</title>
 <link rel="canonical" href="https://diegorodvaz.github.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b7d66'/%3E%3Cpath d='M8 9h16L16 24z' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
 <!-- Vista previa al compartir el enlace (LinkedIn, WhatsApp, X, etc.) -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_AR">
 <meta property="og:url" content="https://diegorodvaz.github.io/">
-<meta property="og:title" content="Portafolio de Recursos · Diego E. Rodríguez V.">
-<meta property="og:description" content="Simuladores interactivos, animaciones con Manim y materiales didácticos en LaTeX para Análisis Matemático y Física.">
+<meta property="og:title" content="Diego E. Rodríguez V. · Animaciones y simuladores de matemática">
+<meta property="og:description" content="Animaciones con Manim, simuladores interactivos y materiales en LaTeX para Análisis Matemático, Álgebra y Física.">
 <meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -23,7 +24,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://cdn.plot.ly" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
 <script>
   // Aplica el tema guardado antes de pintar para evitar parpadeo
   (function () {
@@ -33,381 +36,575 @@
     if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
   })();
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "¿Qué tipo de contenido podés crear?", "acceptedAnswer": { "@type": "Answer", "text": "Animaciones explicativas con Manim, simuladores interactivos que corren en el navegador y materiales de cátedra en LaTeX: exámenes, guías y resúmenes con figuras en TikZ." } },
+    { "@type": "Question", "name": "¿Qué temas cubrís?", "acceptedAnswer": { "@type": "Answer", "text": "Análisis Matemático I y II, álgebra y física a nivel universitario, en especial cálculo vectorial, optimización y electromagnetismo." } },
+    { "@type": "Question", "name": "¿Con qué herramientas trabajás?", "acceptedAnswer": { "@type": "Answer", "text": "Python con Manim para las animaciones, JavaScript con Plotly.js y math.js para los simuladores, y LaTeX con TikZ y pgfplots para los documentos." } },
+    { "@type": "Question", "name": "¿Los simuladores necesitan instalación?", "acceptedAnswer": { "@type": "Answer", "text": "No. Corren en el navegador, también en el celular, y se pueden integrar en una plataforma de cursos o publicar como página independiente." } },
+    { "@type": "Question", "name": "¿Puedo revisar tu código antes de escribirte?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. Todo el código de este portafolio es abierto y está en GitHub: las escenas de Manim, el simulador y los scripts de verificación." } },
+    { "@type": "Question", "name": "¿Cómo sé que el contenido es correcto?", "acceptedAnswer": { "@type": "Answer", "text": "Estudio Matemática, y antes de animar verifico las cuentas. Por ejemplo, la animación del logaritmo tiene un script que comprueba numéricamente cada área y cada transformación de la escena." } }
+  ]
+}
+</script>
 <style>
+  /* ================================================================
+     Sistema visual: una sola familia (Geist), escala de tipografía y
+     espaciado fijos, fondos planos, un acento verde azulado.
+     ================================================================ */
   :root {
     --bg: #ffffff;
-    --fg: #212529;
-    --muted: #6c757d;
-    --heading: #2c3e50;
-    --primary: #18bc9c;
-    --link: #18bc9c;
-    --border: #dee2e6;
-    --surface: #f8f9fa;
-    --tip: #198754;
-    --tip-bg: #d1e7dd55;
-    --note: #0d6efd;
-    --note-bg: #cfe2ff55;
-    --shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+    --surface: #fafaf9;
+    --raised: #f2f2f0;
+    --fg: #161616;
+    --muted: #5c5f63;
+    --heading: #0f0f0f;
+    --primary: #0b7d66;
+    --on-primary: #ffffff;
+    --link: #0b7d66;
+    --border: #e6e6e3;
+    --accent-soft: rgba(11, 125, 102, 0.08);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    --nav-bg: rgba(255, 255, 255, 0.72);
+    --hero-from: #000000;
+    --hero-to: #666666;
+    --font: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+
+    /* Espaciado */
+    --s-25: 2px; --s-50: 4px; --s-75: 8px; --s-100: 12px; --s-200: 16px; --s-300: 24px;
+    --s-400: 32px; --s-500: 40px; --s-600: 48px; --s-700: 64px; --s-800: 80px; --s-900: 96px;
+
+    /* Movimiento */
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
   [data-theme="dark"] {
-    --bg: #222;
-    --fg: #e9ecef;
-    --muted: #adb5bd;
-    --heading: #f8f9fa;
-    --primary: #00bc8c;
-    --link: #00bc8c;
-    --border: #444;
-    --surface: #2b2b2b;
-    --tip: #3fb57c;
-    --tip-bg: rgba(63, 181, 124, 0.12);
-    --note: #5e9cff;
-    --note-bg: rgba(94, 156, 255, 0.12);
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    --bg: #181818;
+    --surface: #1f1f1f;
+    --raised: #272727;
+    --fg: #ececec;
+    --muted: #a3a3a3;
+    --heading: #ffffff;
+    --primary: #34d3b0;
+    --on-primary: #06231d;
+    --link: #34d3b0;
+    --border: #313131;
+    --accent-soft: rgba(52, 211, 176, 0.1);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --nav-bg: rgba(31, 31, 31, 0.72);
+    --hero-from: #ffffff;
+    --hero-to: #9b9b9b;
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: var(--s-900); }
   body {
     margin: 0;
-    font-family: Lato, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 1.0625rem;
-    line-height: 1.6;
+    font-family: var(--font);
+    font-size: 1rem;
+    line-height: 1.5rem;
     background: var(--bg);
     color: var(--fg);
-    transition: background-color 0.2s, color 0.2s;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 300ms var(--ease), color 300ms var(--ease);
   }
-  a { color: var(--link); }
-  h1, h2, h3 { color: var(--heading); font-weight: 700; line-height: 1.2; }
-  h2 {
-    font-size: 1.6rem;
-    margin-top: 2.5rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--border);
-  }
-  h3 { font-size: 1.3rem; margin-top: 2rem; }
-  hr { border: 0; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+  em, i:not([class*="ph"]) { font-style: normal; }
+  a { color: var(--link); text-underline-offset: 3px; }
+  h1, h2, h3, h4 { color: var(--heading); font-weight: 600; margin: 0; text-wrap: balance; }
+  p, li, dd { text-wrap: pretty; }
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+  img, video { max-width: 100%; }
 
-  /* Layout: contenido + índice lateral */
-  .page {
-    display: grid;
-    grid-template-columns: minmax(0, 850px) 230px;
-    gap: 3rem;
-    justify-content: center;
-    padding: 2rem 1.5rem 4rem;
+  .skip {
+    position: absolute; left: var(--s-200); top: -100px; z-index: 100;
+    padding: var(--s-75) var(--s-100); border-radius: 8px;
+    background: var(--primary); color: var(--on-primary); font-weight: 600; text-decoration: none;
   }
-  @media (max-width: 1000px) {
-    .page { grid-template-columns: minmax(0, 850px); }
-    .toc { display: none; }
+  .skip:focus { top: var(--s-200); }
+
+  .wrap { width: min(1120px, 100% - 2 * var(--s-300)); margin-inline: auto; }
+  section.block { padding: var(--s-900) 0; }
+  @media (max-width: 640px) {
+    .wrap { width: calc(100% - 2 * var(--s-200)); }
+    section.block { padding: var(--s-700) 0; }
   }
 
-  .toc { position: sticky; top: 2rem; align-self: start; font-size: 0.9rem; }
-  .toc h2 { font-size: 1rem; margin: 0 0 0.5rem; border: 0; padding: 0; }
-  .toc ul { list-style: none; margin: 0; padding-left: 0; }
-  .toc ul ul { padding-left: 0.9rem; }
-  .toc a {
-    display: block;
-    padding: 0.2rem 0 0.2rem 0.6rem;
-    border-left: 2px solid var(--border);
-    color: var(--muted);
-    text-decoration: none;
+  /* Encabezados de sección */
+  .kicker {
+    display: inline-flex; align-items: center; gap: var(--s-75);
+    font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: var(--primary);
   }
-  .toc a:hover, .toc a.active { color: var(--primary); border-left-color: var(--primary); }
+  .sec-head { max-width: 680px; margin-bottom: var(--s-600); }
+  .sec-head h2 { font-size: 2.25rem; line-height: 2.5rem; letter-spacing: -0.02em; margin-top: var(--s-100); }
+  .sec-head p { margin: var(--s-200) 0 0; font-size: 1.125rem; line-height: 1.75rem; color: var(--muted); }
+  @media (max-width: 640px) {
+    .sec-head h2 { font-size: 1.875rem; line-height: 2.25rem; }
+  }
 
-  /* Título */
-  .title-block { margin-bottom: 2rem; }
-  .title-block h1 { font-size: 2.6rem; margin: 0.5rem 0 1rem; }
-  .meta-heading { text-transform: uppercase; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.04em; }
-  .meta-contents { margin: 0; }
+  /* Botones */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-75);
+    padding: var(--s-75) var(--s-100);
+    font: inherit; font-size: 1rem; line-height: 1.5rem; font-weight: 600;
+    border-radius: 8px; border: 1px solid transparent;
+    text-decoration: none; cursor: pointer; white-space: nowrap;
+    transition: transform 300ms var(--ease), background-color 300ms var(--ease), border-color 300ms var(--ease), color 300ms var(--ease);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--primary); color: var(--on-primary); }
+  .btn-primary:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--primary) 88%, var(--heading)); }
+  .btn-ghost { background: transparent; color: var(--fg); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--raised); }
+  .btn-sm { font-size: 0.875rem; line-height: 1.25rem; padding: var(--s-75) var(--s-100); }
+  .btn i { font-size: 1.125rem; }
 
-  /* Botón de modo oscuro */
-  .theme-toggle {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 10;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--fg);
-    font-size: 1.4rem;
-    cursor: pointer;
+  /* ---------------- Navegación flotante ---------------- */
+  .nav {
+    position: fixed; top: var(--s-200); left: 50%; z-index: 50;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: var(--s-50);
+    padding: var(--s-75);
+    max-width: calc(100% - 2 * var(--s-200));
+    border: 1px solid var(--border); border-radius: 9999px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    backdrop-filter: blur(16px) saturate(1.4);
     box-shadow: var(--shadow);
   }
-  .theme-toggle:hover { transform: scale(1.08); }
+  .brand {
+    display: inline-flex; align-items: center; gap: var(--s-75);
+    padding: var(--s-50) var(--s-100) var(--s-50) var(--s-50);
+    font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: var(--heading); text-decoration: none; white-space: nowrap;
+  }
+  .brand-mark {
+    width: 28px; height: 28px; display: grid; place-items: center;
+    border-radius: 9999px; background: var(--primary); color: var(--on-primary);
+    font-family: var(--mono); font-size: 0.875rem; font-weight: 500;
+  }
+  .nav-links { display: flex; gap: var(--s-25); list-style: none; margin: 0; padding: 0; }
+  .nav-links a {
+    display: block; padding: var(--s-75) var(--s-100); border-radius: 9999px;
+    font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: var(--muted); text-decoration: none;
+    transition: color 300ms var(--ease), background-color 300ms var(--ease);
+  }
+  .nav-links a:hover { color: var(--heading); background: var(--raised); }
+  .nav-links a[aria-current="true"] { color: var(--heading); background: var(--raised); }
+  .icon-btn {
+    width: 36px; height: 36px; flex-shrink: 0;
+    display: grid; place-items: center;
+    border: 0; border-radius: 9999px; background: transparent; color: var(--fg);
+    font-size: 1.125rem; cursor: pointer;
+    transition: background-color 300ms var(--ease), transform 300ms var(--ease);
+  }
+  .icon-btn:hover { background: var(--raised); }
+  .icon-btn:active { transform: scale(0.94); }
+  .nav .btn-primary { border-radius: 9999px; }
 
-  /* Callouts */
-  .callout {
-    margin: 1.25rem 0;
-    border: 1px solid var(--border);
-    border-left: 5px solid var(--c);
-    border-radius: 6px;
-    overflow: hidden;
+  /* Botón de menú: dos líneas que se cruzan */
+  .menu-btn { display: none; position: relative; }
+  .menu-btn span {
+    position: absolute; left: 11px; width: 14px; height: 1.5px; border-radius: 2px; background: currentColor;
+    transition: transform 500ms var(--ease);
   }
-  .callout-header { padding: 0.5rem 1rem; background: var(--cbg); font-weight: 700; }
-  .callout-body { padding: 0.25rem 1rem; }
-  .callout-tip { --c: var(--tip); --cbg: var(--tip-bg); }
-  .callout-note { --c: var(--note); --cbg: var(--note-bg); }
+  .menu-btn span:first-child { transform: translateY(-3px); }
+  .menu-btn span:last-child { transform: translateY(3px); }
+  .menu-open .menu-btn span:first-child { transform: rotate(45deg); }
+  .menu-open .menu-btn span:last-child { transform: rotate(-45deg); }
 
-  .btn-linkedin {
-    display: inline-block;
-    margin: 0.25rem 0 0.75rem;
-    padding: 6px 12px;
-    background: #0077b5;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: 700;
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 40;
+    display: flex; flex-direction: column; justify-content: center; gap: var(--s-300);
+    padding: var(--s-900) var(--s-300) var(--s-600);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    opacity: 0; visibility: hidden;
+    transition: opacity 500ms var(--ease), visibility 500ms;
   }
-  .btn-linkedin:hover { background: #005f91; }
+  .menu-open .mobile-menu { opacity: 1; visibility: visible; }
+  .mobile-menu ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-75); }
+  .mobile-menu li, .mobile-menu .btn {
+    opacity: 0; transform: translateY(var(--s-300));
+    transition: opacity 500ms var(--ease), transform 500ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 60ms);
+  }
+  .menu-open .mobile-menu li, .menu-open .mobile-menu .btn { opacity: 1; transform: none; }
+  .mobile-menu ul a {
+    display: block; padding: var(--s-75) 0;
+    font-size: 1.875rem; line-height: 2.25rem; font-weight: 600; color: var(--heading); text-decoration: none;
+  }
+  .mobile-menu ul a[aria-current="true"] { color: var(--primary); }
+  .mobile-menu .btn { align-self: flex-start; }
 
-  /* Pestañas */
-  .tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin-top: 1rem; }
-  .tabs button {
-    font: inherit;
-    font-size: 0.95rem;
-    padding: 0.5rem 1rem;
-    margin-bottom: -1px;
-    background: none;
-    border: 1px solid transparent;
-    border-radius: 6px 6px 0 0;
-    color: var(--link);
-    cursor: pointer;
+  @media (max-width: 860px) {
+    .nav { left: var(--s-200); right: var(--s-200); transform: none; max-width: none; justify-content: space-between; }
+    .nav-links, .nav .nav-cta { display: none; }
+    .menu-btn { display: grid; }
+    .nav-right { display: flex; align-items: center; }
   }
-  .tabs button:hover { border-color: var(--border) var(--border) transparent; }
-  .tabs button[aria-selected="true"] {
-    color: var(--fg);
-    background: var(--bg);
-    border-color: var(--border) var(--border) var(--bg);
+  @media (min-width: 861px) {
+    .mobile-menu { display: none; }
+    .nav-right { display: contents; }
   }
-  .tab-panels {
-    border: 1px solid var(--border);
-    border-top: 0;
-    border-radius: 0 0 6px 6px;
-    padding: 1rem;
-  }
-  .pdf-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-  .pdf-toolbar a { font-weight: 700; text-decoration: none; }
-  .pdf-viewer {
-    height: 650px;
-    overflow-y: auto;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: #525659;
-    padding: 12px;
-  }
-  .pdf-viewer canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin: 0 auto 12px;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  }
-  .pdf-viewer iframe { width: 100%; height: 100%; border: 0; background: #fff; }
-  .pdf-message { color: #fff; text-align: center; padding: 2rem 1rem; }
-  .pdf-message a { color: #7ee2c9; }
 
-  /* Animaciones desplegables */
-  details {
-    margin-bottom: 20px;
-    padding: 15px;
-    border-left: 4px solid var(--primary);
-    background: rgba(24, 188, 156, 0.1);
-    border-radius: 5px;
+  /* ---------------- Hero ---------------- */
+  .hero { padding: 152px 0 var(--s-900); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-700); align-items: center; }
+  .hero h1 {
+    max-width: 680px; margin-top: var(--s-300);
+    font-size: 3.75rem; line-height: 1; letter-spacing: -0.035em; font-weight: 600;
+    background: linear-gradient(90deg, var(--hero-from), var(--hero-to));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    padding-bottom: var(--s-50);
   }
-  summary { cursor: pointer; font-weight: 700; font-size: 1.1em; }
-  video { width: 100%; margin-top: 15px; border-radius: 8px; box-shadow: var(--shadow); }
-
-  /* Descripción del PDF seleccionado */
-  .pdf-desc { margin: 0 0 0.85rem; font-size: 0.95rem; }
-
-  /* Enlaces de proyecto (código, demo, nota) */
-  .links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.92rem; font-weight: 700; margin: 0 0 1.25rem; padding: 0; list-style: none; }
-  .links a, .links button {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    color: var(--link); text-decoration: none;
-    font: inherit; background: none; border: 0; padding: 0; cursor: pointer;
+  .hero .lead { max-width: 680px; margin: var(--s-300) 0 0; font-size: 1.125rem; line-height: 1.75rem; color: var(--muted); }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-200); margin-top: var(--s-500); }
+  .text-link {
+    display: inline-flex; align-items: center; gap: var(--s-50);
+    font-weight: 600; color: var(--fg); text-decoration: none;
+    transition: color 300ms var(--ease);
   }
-  .links a:hover, .links button:hover { text-decoration: underline; }
-  .links svg { width: 1em; height: 1em; fill: currentColor; }
+  .text-link:hover { color: var(--primary); }
+  .text-link i { transition: transform 300ms var(--ease); }
+  .text-link:hover i { transform: translateY(2px); }
+  .proof {
+    display: flex; flex-wrap: wrap; gap: var(--s-300); margin: var(--s-600) 0 0; padding: var(--s-300) 0 0;
+    border-top: 1px solid var(--border); list-style: none;
+  }
+  .proof li { display: grid; gap: var(--s-25); }
+  .proof b { font-size: 1.5rem; line-height: 2rem; font-weight: 600; color: var(--heading); font-variant-numeric: tabular-nums; }
+  .proof span { font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
 
-  /* Tarjetas de proyecto (animaciones y notas) */
-  .cards { display: grid; gap: 1rem; margin-top: 1.25rem; }
-  .card {
-    display: grid;
-    grid-template-columns: 250px minmax(0, 1fr);
-    gap: 1.1rem;
-    padding: 1rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
+  .hero-media {
+    position: relative; margin: 0;
+    padding: var(--s-75);
+    border: 1px solid var(--border); border-radius: 24px;
     background: var(--surface);
-    scroll-margin-top: 1rem;
+    box-shadow: var(--shadow);
   }
-  .card h3 { margin: 0 0 0.3rem; font-size: 1.2rem; }
-  .card p { margin: 0 0 0.65rem; font-size: 0.95rem; }
-  .card .tags { margin: 0 0 0.65rem; }
-  .card .links { margin: 0; }
-  .card h3 a { color: var(--heading); text-decoration: none; }
-  .card h3 a:hover { color: var(--primary); }
-  .card-meta { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.25rem; }
-  .play-badge {
-    position: absolute; inset: 0; margin: auto;
-    width: 54px; height: 54px;
-    display: grid; place-items: center;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.85);
-    background: rgba(0, 0, 0, 0.55);
-    color: #fff; font-size: 1.2rem; padding-left: 4px;
+  .hero-media video {
+    display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+    border-radius: 16px; background: #000;
   }
-  /* Tarjetas de notas: un ícono en lugar de miniatura */
-  .card-icon {
-    align-self: start;
-    display: grid; place-items: center;
-    aspect-ratio: 16 / 9;
-    border-radius: 8px;
-    background: linear-gradient(135deg, rgba(24, 188, 156, 0.18), rgba(24, 188, 156, 0.04));
-    border: 1px solid var(--border);
-    color: var(--primary);
-    font-size: 2.4rem;
-    font-weight: 700;
-    text-decoration: none;
+  .hero-media figcaption {
+    display: flex; justify-content: space-between; gap: var(--s-200);
+    padding: var(--s-100) var(--s-75) var(--s-50);
+    font-size: 0.875rem; line-height: 1.25rem; color: var(--muted);
+  }
+  .hero-media figcaption b { color: var(--heading); font-weight: 600; }
+  .live-dot { display: inline-flex; align-items: center; gap: var(--s-75); }
+  .live-dot::before { content: ""; width: 8px; height: 8px; border-radius: 9999px; background: var(--primary); }
+
+  @media (max-width: 960px) {
+    .hero { padding-top: 128px; }
+    .hero-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-600); }
+    .hero h1 { font-size: 3rem; }
   }
   @media (max-width: 640px) {
-    .card { grid-template-columns: minmax(0, 1fr); }
+    .hero { padding: 112px 0 var(--s-700); }
+    .hero h1 { font-size: 2.25rem; line-height: 2.5rem; }
+    .hero h1 br { display: none; }
+    .proof { gap: var(--s-200) var(--s-300); }
   }
 
-  /* Galería de animaciones, agrupada por tema */
-  .anim-grupo { font-size: 1.2rem; margin: 2rem 0 0.75rem; scroll-margin-top: 1rem; }
-  .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  /* ---------------- Beneficios ---------------- */
+  .benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-200); list-style: none; margin: 0; padding: 0; }
+  .benefit {
+    padding: var(--s-400);
+    border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+    transition: transform 500ms var(--ease), border-color 300ms var(--ease);
+  }
+  .benefit:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); }
+  .benefit-icon {
+    width: 40px; height: 40px; display: grid; place-items: center;
+    border-radius: 8px; background: var(--accent-soft); color: var(--primary); font-size: 1.25rem;
+  }
+  .benefit h3 { margin-top: var(--s-300); font-size: 1.25rem; line-height: 1.75rem; }
+  .benefit p { margin: var(--s-75) 0 0; color: var(--muted); }
+  .benefit a { font-weight: 600; }
+  @media (max-width: 760px) {
+    .benefits { grid-template-columns: minmax(0, 1fr); }
+    .benefit { padding: var(--s-300); }
+  }
+
+  /* ---------------- Frase con revelado por palabra ---------------- */
+  .tagline { padding: var(--s-900) 0; border-block: 1px solid var(--border); background: var(--surface); }
+  .tagline p {
+    max-width: 880px; margin: 0;
+    font-size: 3rem; line-height: 1; letter-spacing: -0.03em; font-weight: 600;
+    text-wrap: balance;
+  }
+  .tagline .w {
+    color: color-mix(in srgb, var(--heading) 28%, transparent);
+    transition: color 500ms var(--ease);
+  }
+  .tagline .w.on { color: var(--heading); }
+  .tagline .w.accent.on { color: var(--primary); }
+  @media (max-width: 640px) {
+    .tagline { padding: var(--s-700) 0; }
+    .tagline p { font-size: 2.25rem; line-height: 2.5rem; }
+    .tagline br { display: none; }
+  }
+
+  /* ---------------- Etiquetas y enlaces de proyecto ---------------- */
+  .tags { display: flex; flex-wrap: wrap; gap: var(--s-75); list-style: none; padding: 0; margin: 0 0 var(--s-300); }
+  .tags li {
+    font-size: 0.75rem; line-height: 1rem; font-weight: 500;
+    padding: var(--s-50) var(--s-100); border-radius: 9999px;
+    border: 1px solid var(--border); color: var(--muted); background: var(--bg);
+  }
+  .links { display: flex; flex-wrap: wrap; gap: var(--s-75) var(--s-300); list-style: none; margin: 0 0 var(--s-300); padding: 0; font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; }
+  .links a {
+    display: inline-flex; align-items: center; gap: var(--s-75);
+    color: var(--link); text-decoration: none;
+  }
+  .links a:hover { text-decoration: underline; }
+  .links i { font-size: 1rem; }
+
+  /* ---------------- Simulador (envoltorio) ---------------- */
+  .feature-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-400); align-items: end; margin-bottom: var(--s-400); }
+  .feature-head .sec-head { margin-bottom: 0; }
+  .feature-head .links { margin: 0; justify-content: flex-end; }
+  @media (max-width: 860px) {
+    .feature-head { grid-template-columns: minmax(0, 1fr); gap: var(--s-300); }
+    .feature-head .links { justify-content: flex-start; }
+  }
+
+  /* ---------------- Galería de animaciones ---------------- */
+  .filter { display: flex; flex-wrap: wrap; gap: var(--s-75); margin: 0 0 var(--s-400); }
+  .filter button {
+    font: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500;
+    padding: var(--s-75) var(--s-200); border-radius: 9999px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--muted); cursor: pointer;
+    transition: background-color 300ms var(--ease), color 300ms var(--ease), border-color 300ms var(--ease);
+  }
+  .filter button:hover { color: var(--heading); border-color: var(--muted); }
+  .filter button[aria-pressed="true"] { background: var(--heading); border-color: var(--heading); color: var(--bg); }
+
+  .gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-300); }
   .vcard {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
+    display: flex; flex-direction: column; min-width: 0;
+    border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
     overflow: hidden;
-    scroll-margin-top: 1rem;
+    transition: transform 500ms var(--ease), border-color 300ms var(--ease);
   }
-  /* Tarjeta ancha (destacada): miniatura a la izquierda, texto a la derecha */
-  .vcard.wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
-  .vcard.wide .vcard-thumb { aspect-ratio: auto; height: 100%; min-height: 220px; }
+  .vcard:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); }
+  .vcard[hidden] { display: none; }
   .vcard-thumb {
-    position: relative;
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    padding: 0;
-    border: 0;
-    background: #0b0f1a;
-    cursor: pointer;
-    overflow: hidden;
+    position: relative; display: block; width: 100%; aspect-ratio: 16 / 9;
+    padding: 0; border: 0; background: #0b0f1a; cursor: pointer; overflow: hidden;
   }
-  .vcard-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+  .vcard-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 500ms var(--ease); }
   .vcard-thumb:hover img, .vcard-thumb:focus-visible img { transform: scale(1.04); }
-  .vcard-thumb:focus-visible { outline: 3px solid var(--primary); outline-offset: -3px; }
-  .dur {
-    position: absolute; right: 0.5rem; bottom: 0.5rem;
-    padding: 0.1rem 0.45rem;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.72);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
+  .vcard-thumb:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; border-radius: 0; }
+  .play-badge {
+    position: absolute; inset: 0; margin: auto;
+    width: 48px; height: 48px; display: grid; place-items: center;
+    border-radius: 9999px; background: rgba(255, 255, 255, 0.92); color: #111;
+    font-size: 1.25rem;
+    opacity: 0; transform: scale(0.9);
+    transition: opacity 300ms var(--ease), transform 500ms var(--ease);
   }
-  .vcard-body { display: flex; flex-direction: column; flex: 1; padding: 0.85rem 1rem 1rem; }
-  .vcard h4 { margin: 0 0 0.35rem; font-size: 1.1rem; line-height: 1.25; color: var(--heading); }
-  .vcard p { margin: 0 0 0.65rem; font-size: 0.92rem; }
-  .vcard .tags { margin: 0 0 0.65rem; }
+  .vcard-thumb:hover .play-badge, .vcard-thumb:focus-visible .play-badge { opacity: 1; transform: none; }
+  @media (hover: none) { .play-badge { opacity: 1; transform: none; } }
+  .dur {
+    position: absolute; right: var(--s-75); bottom: var(--s-75);
+    padding: var(--s-25) var(--s-75); border-radius: 4px;
+    background: rgba(0, 0, 0, 0.72); color: #fff;
+    font-family: var(--mono); font-size: 0.75rem; line-height: 1rem; font-variant-numeric: tabular-nums;
+  }
+  .vcard-body { display: flex; flex-direction: column; flex: 1; padding: var(--s-300); }
+  .card-meta { font-size: 0.75rem; line-height: 1rem; font-weight: 500; color: var(--muted); margin-bottom: var(--s-75); }
+  .vcard h3 { font-size: 1.125rem; line-height: 1.75rem; }
+  .vcard p { margin: var(--s-75) 0 var(--s-200); font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+  .vcard .tags { margin-bottom: var(--s-200); }
   .vcard .links { margin: auto 0 0; }
   .pill {
-    display: inline-block; margin-left: 0.35rem; padding: 0 0.5rem;
-    border-radius: 999px; background: rgba(24, 188, 156, 0.15); color: var(--primary);
-    text-transform: none; letter-spacing: 0;
+    display: inline-block; margin-left: var(--s-50); padding: 0 var(--s-75);
+    border-radius: 9999px; background: var(--accent-soft); color: var(--primary);
   }
-  @media (max-width: 680px) {
-    .gallery { grid-template-columns: minmax(0, 1fr); }
-    .vcard.wide { display: flex; }
-    .vcard.wide .vcard-thumb { aspect-ratio: 16 / 9; height: auto; min-height: 0; }
-  }
+  @media (max-width: 960px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .gallery { grid-template-columns: minmax(0, 1fr); } }
 
   /* Reproductor (ventana modal) */
   .player {
-    width: min(1100px, 94vw);
-    max-height: 94vh;
-    padding: 0;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--bg);
-    color: var(--fg);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    width: min(1100px, 94vw); max-height: 94vh; padding: 0;
+    border: 1px solid var(--border); border-radius: 16px;
+    background: var(--bg); color: var(--fg);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
     overflow: auto;
   }
+  .player[open] { animation: pop 500ms var(--ease); }
+  @keyframes pop { from { opacity: 0; transform: translateY(var(--s-200)) scale(0.98); } }
   .player::backdrop { background: rgba(0, 0, 0, 0.78); }
-  .player-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.6rem 0.75rem 0.6rem 1rem; border-bottom: 1px solid var(--border); }
-  .player-head h3 { margin: 0; font-size: 1.05rem; }
-  .player-close {
-    flex-shrink: 0; width: 36px; height: 36px;
-    border-radius: 50%; border: 1px solid var(--border);
-    background: var(--surface); color: var(--fg);
-    font-size: 1rem; cursor: pointer;
-  }
-  .player-close:hover { border-color: var(--primary); color: var(--primary); }
-  .player video { display: block; width: 100%; max-height: calc(94vh - 130px); margin: 0; border-radius: 0; box-shadow: none; background: #000; }
+  .player-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-200); padding: var(--s-100) var(--s-100) var(--s-100) var(--s-300); border-bottom: 1px solid var(--border); }
+  .player-head h3 { font-size: 1rem; line-height: 1.5rem; }
+  .player video { display: block; width: 100%; max-height: calc(94vh - 130px); background: #000; }
 
+  /* ---------------- Cómo trabajo ---------------- */
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-300); list-style: none; margin: 0; padding: 0; counter-reset: paso; }
+  .step { padding-top: var(--s-300); border-top: 1px solid var(--border); counter-increment: paso; }
+  .step::before {
+    content: counter(paso, decimal-leading-zero);
+    font-family: var(--mono); font-size: 0.875rem; line-height: 1.25rem; color: var(--primary);
+  }
+  .step h3 { margin-top: var(--s-200); font-size: 1.25rem; line-height: 1.75rem; }
+  .step p { margin: var(--s-75) 0 0; color: var(--muted); }
+  .trust {
+    display: flex; align-items: center; gap: var(--s-200);
+    margin-top: var(--s-600); padding: var(--s-300);
+    border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+  }
+  .trust i { font-size: 1.5rem; color: var(--primary); flex-shrink: 0; }
+  .trust p { margin: 0; }
+  .trust a { font-weight: 600; }
+  @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+
+  /* ---------------- Materiales (visor de PDF) ---------------- */
+  .docs { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--s-300); align-items: start; }
+  .tabs { display: grid; gap: var(--s-75); }
+  .tabs button {
+    display: grid; gap: var(--s-25); text-align: left;
+    font: inherit; padding: var(--s-100) var(--s-200);
+    border: 1px solid var(--border); border-radius: 12px; background: var(--bg);
+    color: var(--fg); cursor: pointer;
+    transition: background-color 300ms var(--ease), border-color 300ms var(--ease);
+  }
+  .tabs button b { font-weight: 600; font-size: 0.875rem; line-height: 1.25rem; }
+  .tabs button span { font-size: 0.75rem; line-height: 1rem; color: var(--muted); }
+  .tabs button:hover { background: var(--raised); }
+  .tabs button[aria-selected="true"] { border-color: var(--primary); background: var(--accent-soft); }
+  .tab-panels { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: var(--s-300); min-width: 0; }
+  .pdf-desc { margin: 0 0 var(--s-200); color: var(--muted); }
+  .pdf-desc strong { color: var(--fg); font-weight: 600; }
+  .pdf-toolbar {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-200);
+    margin-bottom: var(--s-100); font-size: 0.875rem; line-height: 1.25rem; color: var(--muted);
+  }
+  .pdf-toolbar a { display: inline-flex; align-items: center; gap: var(--s-50); font-weight: 600; text-decoration: none; }
+  .pdf-toolbar a:hover { text-decoration: underline; }
+  .pdf-viewer {
+    height: 640px; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: #4a4d50; padding: var(--s-100);
+  }
+  .pdf-viewer canvas { display: block; width: 100%; height: auto; margin: 0 auto var(--s-100); background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35); }
+  .pdf-viewer iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+  .pdf-message { color: #fff; text-align: center; padding: var(--s-400) var(--s-200); }
+  .pdf-message a { color: #7ee2c9; }
+  /* Esqueleto mientras se cargan las páginas */
+  .pdf-skel { display: grid; gap: var(--s-100); }
+  .pdf-skel div { aspect-ratio: 1 / 1.3; border-radius: 4px; background: #5c6064; animation: pulse 1.6s var(--ease) infinite; }
+  @keyframes pulse { 50% { opacity: 0.55; } }
+  @media (max-width: 860px) {
+    .docs { grid-template-columns: minmax(0, 1fr); }
+    .tabs { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    .pdf-viewer { height: 520px; }
+    .tab-panels { padding: var(--s-200); }
+  }
+
+  /* ---------------- Notas ---------------- */
+  .notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-300); }
+  .note {
+    position: relative; display: grid; gap: var(--s-75);
+    padding: var(--s-400); border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+    transition: transform 500ms var(--ease), border-color 300ms var(--ease);
+  }
+  .note:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); }
+  .note-icon { font-family: var(--mono); font-size: 1.5rem; line-height: 2rem; color: var(--primary); margin-bottom: var(--s-100); }
+  .note h3 { font-size: 1.25rem; line-height: 1.75rem; }
+  .note h3 a { color: inherit; text-decoration: none; }
+  .note h3 a::after { content: ""; position: absolute; inset: 0; border-radius: 16px; }
+  .note p { margin: 0 0 var(--s-100); color: var(--muted); }
+  .note .tags { margin: 0; }
+  @media (max-width: 760px) { .notes { grid-template-columns: minmax(0, 1fr); } .note { padding: var(--s-300); } }
+
+  /* ---------------- Preguntas frecuentes ---------------- */
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--s-700); align-items: start; }
+  .faq-grid .sec-head { position: sticky; top: 120px; }
+  .faq { border-top: 1px solid var(--border); }
+  .faq details { border-bottom: 1px solid var(--border); }
+  .faq summary {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-200);
+    padding: var(--s-300) 0; cursor: pointer; list-style: none;
+    font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; color: var(--heading);
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary i { flex-shrink: 0; color: var(--muted); transition: transform 500ms var(--ease); }
+  .faq details[open] summary i { transform: rotate(45deg); }
+  .faq details p { margin: 0 0 var(--s-300); color: var(--muted); max-width: 640px; }
+  @media (max-width: 860px) {
+    .faq-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-300); }
+    .faq-grid .sec-head { position: static; }
+  }
+
+  /* ---------------- Contacto final ---------------- */
+  .cta {
+    padding: var(--s-800) var(--s-600);
+    border-radius: 24px; background: var(--heading); color: var(--bg);
+    text-align: center;
+  }
+  .cta h2 { color: var(--bg); max-width: 680px; margin: var(--s-200) auto 0; font-size: 2.25rem; line-height: 2.5rem; letter-spacing: -0.02em; }
+  .cta p { max-width: 560px; margin: var(--s-200) auto 0; font-size: 1.125rem; line-height: 1.75rem; color: color-mix(in srgb, var(--bg) 72%, transparent); }
+  .cta .kicker { color: color-mix(in srgb, var(--bg) 72%, transparent); }
+  .cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-100); margin-top: var(--s-500); }
+  .cta .btn-primary { background: var(--bg); color: var(--heading); }
+  .cta .btn-primary:hover { background: color-mix(in srgb, var(--bg) 88%, var(--heading)); }
+  .cta .btn-ghost { color: var(--bg); border-color: color-mix(in srgb, var(--bg) 28%, transparent); }
+  .cta .btn-ghost:hover { background: color-mix(in srgb, var(--bg) 10%, transparent); }
+  .copy-status { min-height: 1.25rem; margin-top: var(--s-200); font-size: 0.875rem; line-height: 1.25rem; color: color-mix(in srgb, var(--bg) 72%, transparent); }
+  .cta-alt { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-300); margin-top: var(--s-300); font-size: 0.875rem; line-height: 1.25rem; }
+  .cta-alt a { display: inline-flex; align-items: center; gap: var(--s-75); color: var(--bg); text-decoration: none; font-weight: 500; opacity: 0.8; transition: opacity 300ms var(--ease); }
+  .cta-alt a:hover { opacity: 1; }
+  @media (max-width: 640px) {
+    .cta { padding: var(--s-600) var(--s-300); }
+    .cta h2 { font-size: 1.875rem; line-height: 2.25rem; }
+  }
+
+  /* ---------------- Pie ---------------- */
+  .footer { padding: var(--s-500) 0 var(--s-600); font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+  .footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-200); }
+  .footer ul { display: flex; flex-wrap: wrap; gap: var(--s-300); list-style: none; margin: 0; padding: 0; }
+  .footer a { color: var(--muted); text-decoration: none; }
+  .footer a:hover { color: var(--heading); }
+
+  /* ---------------- Revelado al hacer scroll ---------------- */
+  .js .reveal { opacity: 0; transform: translateY(var(--s-400)); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: 200ms !important; animation: none !important; }
+    .js .reveal { transform: none; }
+    .mobile-menu li, .mobile-menu .btn { transform: none; }
+  }
+</style>
+<style>
   /* ================================================================
      PROYECTO DESTACADO · Simulador de descenso de gradiente
      Todo el CSS va bajo .gd y usa las variables del tema del sitio,
      así el simulador cambia junto con el modo claro / oscuro.
      ================================================================ */
-  .featured-label {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--primary);
-  }
-  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; margin: 0 0 1.25rem; }
-  .tags li {
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 0.15rem 0.65rem;
-    border-radius: 999px;
-    border: 1px solid var(--primary);
-    color: var(--primary);
-    background: rgba(24, 188, 156, 0.08);
-  }
-
   .gd {
     --gd-path: #f97316;
     --gd-cut: #ec4899;
     --gd-start: #22c55e;
     container-type: inline-size;
     border: 1px solid var(--border);
-    border-top: 4px solid var(--primary);
-    border-radius: 10px;
+    border-radius: 16px;
     background: var(--surface);
     box-shadow: var(--shadow);
     overflow: clip; /* clip (no hidden) para que la barra sticky funcione */
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     line-height: 1.45;
     outline: none;
   }
   .gd [hidden] { display: none !important; }
   .gd.is-fs { overflow: auto; border-radius: 0; border-width: 0; height: 100vh; }
-  .gd h3 { margin: 0; font-size: 0.9rem; color: var(--heading); }
+  .gd h3 { margin: 0; font-size: 0.875rem; color: var(--heading); }
   .gd code, .gd kbd, .gd .mono { font-family: var(--mono); font-size: 0.85em; }
   .gd kbd { padding: 0 0.3em; border: 1px solid var(--border); border-radius: 3px; background: var(--bg); }
 
@@ -424,13 +621,13 @@
     display: grid; place-items: center;
     border-radius: 8px;
     background: var(--primary);
-    color: #fff;
+    color: var(--on-primary);
     font-family: var(--mono);
     font-weight: 700;
   }
   .gd-head-text { flex: 1; min-width: 0; }
   .gd-title { font-weight: 700; color: var(--heading); font-size: 1rem; }
-  .gd-sub { font-size: 0.78rem; color: var(--muted); }
+  .gd-sub { font-size: 0.75rem; color: var(--muted); }
   .gd-badge {
     flex-shrink: 0;
     font-size: 0.75rem;
@@ -504,7 +701,7 @@
   }
   .gd-btn:hover { filter: brightness(0.95); }
   [data-theme="dark"] .gd-btn:hover { filter: brightness(1.2); }
-  .gd-btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; min-width: 7.5rem; }
+  .gd-btn-primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); min-width: 7.5rem; }
   .gd-btn-dark { background: var(--heading); border-color: var(--heading); color: var(--bg); }
   .gd-btn-icon { padding: 0.3rem 0.55rem; font-size: 1rem; line-height: 1; }
 
@@ -514,11 +711,11 @@
   .gd-fn .gd-input { flex: 1 1 auto; }
   .gd-actions { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0.5rem; }
   .gd-actions .gd-btn { padding-left: 0.4rem; padding-right: 0.4rem; min-width: 0; }
-  .gd-error { margin: 0; color: #dc2626; font-size: 0.8rem; }
+  .gd-error { margin: 0; color: #dc2626; font-size: 0.75rem; }
 
   .gd-deriv {
     font-family: var(--mono);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -531,7 +728,7 @@
   .gd-grid-2 { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
   .gd-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-width: 0; }
   .gd-panel-head { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); }
-  .gd-legend { display: flex; flex-wrap: wrap; gap: 0.15rem 0.8rem; margin-top: 0.2rem; font-size: 0.72rem; color: var(--muted); }
+  .gd-legend { display: flex; flex-wrap: wrap; gap: 0.15rem 0.8rem; margin-top: 0.2rem; font-size: 0.75rem; color: var(--muted); }
   .gd-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
   .gd-sw { display: inline-block; width: 12px; height: 3px; border-radius: 2px; }
   .gd-sw.dot { width: 9px; height: 9px; border-radius: 50%; background: #fff; border: 1.5px solid #0f172a; }
@@ -544,7 +741,7 @@
   .gd-loading {
     position: absolute; inset: 0;
     display: grid; place-items: center;
-    color: var(--muted); font-size: 0.85rem;
+    color: var(--muted); font-size: 0.875rem;
   }
 
   /* Grupos de parámetros */
@@ -562,7 +759,7 @@
   }
   .gd-group legend {
     padding: 0 0.35rem;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -570,23 +767,23 @@
   }
   .gd-field { display: block; }
   .gd-field-top { display: flex; justify-content: space-between; gap: 0.5rem; }
-  .gd-field-top .val { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+  .gd-field-top .val { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
   .gd-field-top .val.cut { color: var(--gd-cut); }
   .gd-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
   .gd-pair > label:not(.gd-stack) { display: flex; align-items: center; gap: 0.35rem; }
   .gd-pair .gd-input, .gd-pair .gd-select { width: 100%; }
   .gd-stack { display: grid; gap: 0.2rem; }
   .gd-check { display: flex; align-items: center; gap: 0.45rem; }
-  .gd-hint { margin: 0; font-size: 0.72rem; color: var(--muted); }
+  .gd-hint { margin: 0; font-size: 0.75rem; color: var(--muted); }
 
   /* Métricas */
   .gd-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding: 0.8rem; }
   .gd-metric { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.6rem; min-width: 0; }
   .gd-metric.hl { border-color: var(--primary); background: rgba(24, 188, 156, 0.08); }
-  .gd-metric .lbl { font-size: 0.7rem; color: var(--muted); }
+  .gd-metric .lbl { font-size: 0.75rem; color: var(--muted); }
   .gd-metric .v {
     font-family: var(--mono);
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     font-variant-numeric: tabular-nums;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -595,7 +792,7 @@
   .gd-msg {
     margin: 0 0.8rem 0.8rem;
     padding: 0.5rem 0.65rem;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--surface);
@@ -607,7 +804,7 @@
   .gd-msg[data-s="maxiter"]   { color: #ea580c; border-color: rgba(249, 115, 22, 0.4); background: rgba(249, 115, 22, 0.08); }
 
   .gd details { margin: 0; font-size: 0.875rem; }
-  .gd summary { font-size: 1em; }
+  .gd summary { font-size: 1em; font-weight: 600; cursor: pointer; }
   .gd details ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
   .gd details li { margin: 0.25rem 0; }
 
@@ -649,10 +846,7 @@
 
   /* El simulador ocupa todo el ancho de la ventana (lo calcula el script) */
   .gd.bleed { width: var(--bleed-w); margin-left: var(--bleed-x); }
-  .gd.bleed .gd-head { padding-right: 4.5rem; } /* deja lugar al botón de tema */
   .gd.is-fs { width: auto; margin-left: 0; }
-  .toc { transition: opacity 0.2s, visibility 0.2s; }
-  .toc.is-hidden { opacity: 0; visibility: hidden; }
 
   @media (max-width: 560px) {
     .gd-plot:not(.gd-conv) { height: 320px; }
@@ -661,46 +855,122 @@
 </style>
 </head>
 <body>
+<script>document.documentElement.classList.add("js");</script>
+<a class="skip" href="#main">Saltar al contenido</a>
 
-<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
-
-<div class="page">
-<main>
-
-  <header class="title-block">
-    <h1>Portafolio de Recursos</h1>
-    <div class="meta-heading">Autor</div>
-    <p class="meta-contents">Diego E. Rodríguez V.</p>
-  </header>
-
-  <div class="callout callout-tip">
-    <div class="callout-header">💡 Tip de visualización</div>
-    <div class="callout-body">
-      <p>Podés alternar entre el <strong>Modo Claro</strong> y el <strong>Modo Oscuro</strong> usando el interruptor ubicado en la esquina superior derecha de esta página.</p>
-    </div>
-  </div>
-
-  <div class="callout callout-note" style="margin-bottom: 30px;">
-    <div class="callout-header">👋 Sobre mí</div>
-    <div class="callout-body">
-      <p>Soy estudiante de Sistemas de Información y de Matemática. Me gusta explorar la integración de tecnología en la educación matemática. Este portafolio recopila materiales didácticos y demostraciones visuales.</p>
-      <p><a class="btn-linkedin" href="https://www.linkedin.com/in/diego-ezequiel-rodriguez-vazquez" target="_blank" rel="noopener">🔗 Conectar en LinkedIn</a></p>
-    </div>
-  </div>
-
-  <!-- ======================= PROYECTO DESTACADO ======================= -->
-  <section id="simulador">
-    <span class="featured-label">⭐ Proyecto destacado</span>
-    <h2 style="margin-top: 0.25rem;">Simulador de Descenso de Gradiente</h2>
-    <p>Aplicación web interactiva para <strong>Análisis Matemático 2</strong>: superficies <em>z = f(x, y)</em>, curvas de nivel, planos intersectores y el campo vectorial ∇f. Permite seguir paso a paso cómo el algoritmo de <strong>descenso de gradiente</strong> llega a un punto crítico, y ver cuándo oscila o diverge según la tasa de aprendizaje α.</p>
-    <ul class="tags" aria-label="Tecnologías">
-      <li>JavaScript</li><li>Plotly.js</li><li>math.js</li><li>Derivación simbólica</li><li>Optimización</li>
+<header class="nav" id="nav">
+  <a class="brand" href="#inicio" aria-label="Diego E. Rodríguez V., inicio"><span class="brand-mark" aria-hidden="true">∇</span>Diego Rodríguez V.</a>
+  <nav aria-label="Secciones">
+    <ul class="nav-links">
+      <li><a href="#simulador">Simulador</a></li>
+      <li><a href="#animaciones">Animaciones</a></li>
+      <li><a href="#materiales">Materiales</a></li>
+      <li><a href="#preguntas">Preguntas</a></li>
     </ul>
-    <ul class="links">
-      <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/simulador-gradiente" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código en GitHub</a></li>
-      <li><a href="codigo/simulador-gradiente/" target="_blank" rel="noopener">↗ Abrir versión independiente</a></li>
-      <li><a href="notas/como-funciona-el-simulador.html">📝 Cómo funciona por dentro</a></li>
-    </ul>
+  </nav>
+  <div class="nav-right">
+    <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Cambiar entre modo claro y oscuro"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn-primary btn-sm nav-cta" href="#contacto">Escribime</a>
+    <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" aria-label="Menú">
+  <ul>
+    <li style="--i: 0"><a href="#simulador">Simulador</a></li>
+    <li style="--i: 1"><a href="#animaciones">Animaciones</a></li>
+    <li style="--i: 2"><a href="#materiales">Materiales</a></li>
+    <li style="--i: 3"><a href="#preguntas">Preguntas</a></li>
+  </ul>
+  <a class="btn btn-primary" style="--i: 4" href="#contacto"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime por un proyecto</a>
+</div>
+
+<main id="main">
+
+  <!-- ======================= HERO ======================= -->
+  <section class="hero" id="inicio">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker"><i class="ph-bold ph-function" aria-hidden="true"></i>Contenido de matemática para EdTech</span>
+        <h1>La matemática que cuesta, <br>explicada en movimiento</h1>
+        <p class="lead">Creo animaciones con Manim, simuladores que corren en el navegador y materiales en LaTeX para cursos universitarios de Análisis Matemático, Álgebra y Física. Todo el código está abierto en GitHub.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Proyecto%20de%20contenido%20matem%C3%A1tico"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime por un proyecto</a>
+          <a class="text-link" href="#animaciones">Ver el trabajo<i class="ph ph-arrow-down" aria-hidden="true"></i></a>
+        </div>
+        <ul class="proof" aria-label="Trabajo publicado">
+          <li><b>6</b><span>animaciones en Manim</span></li>
+          <li><b>1</b><span>simulador interactivo</span></li>
+          <li><b>5</b><span>materiales de cátedra</span></li>
+          <li><b>2</b><span>notas técnicas</span></li>
+        </ul>
+      </div>
+      <figure class="hero-media">
+        <video id="hero-video" muted loop playsinline preload="metadata" poster="img/serie-de-taylor.jpg" aria-label="Animación: polinomios de Taylor de grado creciente aproximando a sen x">
+          <source src="videos/serie-de-taylor.mp4" type="video/mp4">
+        </video>
+        <figcaption><span class="live-dot"><b>Series de Taylor</b></span><span>Manim · 0:40</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ======================= BENEFICIOS ======================= -->
+  <section class="block" id="servicios" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Qué puedo sumar a tu equipo</span>
+        <h2>Contenido que el alumno entiende sin que se lo expliquen dos veces</h2>
+      </div>
+      <ul class="benefits">
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-film-strip" aria-hidden="true"></i></div>
+          <h3>Animaciones que muestran el porqué</h3>
+          <p>Seis piezas en Manim, de 40 segundos a casi 4 minutos. Cada una parte de una pregunta concreta, como por qué ln(ab) = ln a + ln b, y la responde con geometría.</p>
+        </li>
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-cursor-click" aria-hidden="true"></i></div>
+          <h3>Simuladores que el alumno manipula</h3>
+          <p>Un simulador de descenso de gradiente con derivación simbólica, curvas de nivel y métricas en vivo. Corre en el navegador y en el celular, sin instalar nada.</p>
+        </li>
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-file-text" aria-hidden="true"></i></div>
+          <h3>Materiales listos para la cátedra</h3>
+          <p>Exámenes con criterios de corrección, guías con resoluciones desplegables y resúmenes en LaTeX con figuras propias en TikZ.</p>
+        </li>
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-seal-check" aria-hidden="true"></i></div>
+          <h3>Rigor antes que efecto</h3>
+          <p>Estudio Matemática y Sistemas de Información. Antes de animar verifico las cuentas: la escena del logaritmo tiene un <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/verificar_log_area.py" target="_blank" rel="noopener">script que comprueba cada área</a>.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= FRASE ======================= -->
+  <section class="tagline" aria-label="Enfoque">
+    <div class="wrap">
+      <p data-words>Cuando el alumno ve la idea moverse,<br>la fórmula deja de ser algo para memorizar.</p>
+    </div>
+  </section>
+
+  <!-- ======================= SIMULADOR ======================= -->
+  <section class="block" id="simulador">
+    <div class="wrap">
+      <div class="feature-head reveal">
+        <div class="sec-head">
+          <span class="kicker"><i class="ph-bold ph-star" aria-hidden="true"></i>Proyecto destacado</span>
+          <h2>Simulador de descenso de gradiente</h2>
+          <p>Para Análisis Matemático II: superficies z = f(x, y), curvas de nivel, planos intersectores y el campo ∇f. Muestra paso a paso cómo el algoritmo llega a un punto crítico, y cuándo oscila o diverge según la tasa α. Probalo acá abajo.</p>
+        </div>
+        <ul class="links">
+          <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/simulador-gradiente" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li>
+          <li><a href="codigo/simulador-gradiente/" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Versión independiente</a></li>
+          <li><a href="notas/como-funciona-el-simulador.html"><i class="ph ph-notebook" aria-hidden="true"></i>Cómo funciona</a></li>
+        </ul>
+      </div>
+      <ul class="tags" aria-label="Tecnologías">
+        <li>JavaScript</li><li>Plotly.js</li><li>math.js</li><li>Derivación simbólica</li><li>Optimización</li>
+      </ul>
 
     <div class="gd" id="gd" tabindex="-1" aria-label="Simulador de descenso de gradiente">
       <div class="gd-head">
@@ -884,206 +1154,290 @@
         </div>
       </div>
     </div>
-    <hr>
+    </div>
   </section>
 
-  <section id="materiales">
-    <h2>1. Materiales Didácticos (LaTeX)</h2>
-    <p>A continuación se presentan los diferentes recursos interactivos y de evaluación generados para la cátedra de Análisis Matemático. Seleccioná cada pestaña para visualizar el documento.</p>
-
-    <div class="tabs" role="tablist">
-      <button role="tab" aria-selected="true" data-pdf="Portfolio_AM1_Solutions.pdf"
-        data-desc="Primer parcial de <strong>Análisis Matemático I</strong> (UTN FRCU) con la resolución paso a paso y los criterios de corrección de cada ejercicio: límites con desarrollo de Taylor, optimización y teoremas fundamentales, entre otros.">Examen (Soluciones)</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_AM1_Student.pdf"
-        data-desc="La versión del mismo parcial de <strong>Análisis Matemático I</strong> para el estudiante, sin las soluciones.">Examen (Alumno)</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_CheatSheet.pdf"
-        data-desc="Guía resumen de referencia de <strong>Análisis Matemático II</strong>: vectores y geometría en ℝ³, derivadas parciales, gradiente, derivada direccional y plano tangente.">Cheat Sheet</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_Tikz.pdf"
-        data-desc="Ilustraciones vectoriales hechas en LaTeX con <strong>TikZ</strong> y pgfplots: geometría en ℝ³, un diagrama de arquitectura de sistemas, la campana de Gauss y la interpretación geométrica de la derivada.">Gráficos TikZ</button>
-      <button role="tab" aria-selected="false" data-pdf="Portfolio_Interactive.pdf"
-        data-desc="Autoevaluación de <strong>Análisis Matemático II</strong> (Unidad 2: derivadas direccionales y campo gradiente) con resoluciones que se despliegan dentro del PDF. Para desplegarlas, abrilo en pestaña nueva con un visor que soporte capas PDF.">Guía Interactiva</button>
-    </div>
-    <div class="tab-panels" role="tabpanel">
-      <p class="pdf-desc" id="pdf-desc" aria-live="polite"></p>
-      <div class="pdf-toolbar">
-        <span id="pdf-status">Cargando…</span>
-        <a id="pdf-open" href="Portfolio_AM1_Solutions.pdf" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
+  <!-- ======================= ANIMACIONES ======================= -->
+  <section class="block" id="animaciones" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Animaciones con Manim</span>
+        <h2>Demostraciones que se miran, no solo se leen</h2>
+        <p>Programadas en Python con Manim, el motor de 3Blue1Brown. Tocá una miniatura para verla en grande.</p>
       </div>
-      <div class="pdf-viewer" id="pdf-viewer" aria-label="Visor de PDF"></div>
-    </div>
-    <hr>
-  </section>
 
-  <section id="animaciones">
-    <h2>2. Animaciones Matemáticas (Manim)</h2>
-    <p>Demostraciones conceptuales programadas en Python utilizando el motor gráfico <strong>Manim</strong>.</p>
-
-    <p>Tocá cualquier miniatura para ver la animación en grande.</p>
-
-    <!-- Galería: cada tarjeta muestra una miniatura; el video se abre en el reproductor recién al darle play -->
-    <h3 class="anim-grupo" id="anim-analisis">Análisis Matemático</h3>
-    <div class="gallery">
-      <article class="vcard" id="logaritmo">
-        <button class="vcard-thumb" type="button" data-video="videos/logaritmo-area.mp4" data-title="El logaritmo como área" aria-label="Reproducir: El logaritmo como área">
-          <img src="img/logaritmo-area.jpg" alt="Área bajo la hipérbola y = 1/t dividida en ln a y ln b, con ln(ab) = ln a + ln b" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">3:51</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Análisis Matemático I</div>
-          <h4>El logaritmo como área</h4>
-          <p>ln x es el área bajo la hipérbola y = 1/t entre 1 y x. Una transformación que conserva áreas muestra por qué ln(ab) = ln a + ln b, y de ahí salen las potencias, los inversos, el número e y la derivada 1/x.</p>
-          <ul class="tags"><li>Manim</li><li>Integral definida</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/log_area.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
-
-      <article class="vcard" id="taylor">
-        <button class="vcard-thumb" type="button" data-video="videos/serie-de-taylor.mp4" data-title="Series de Taylor" aria-label="Reproducir: Series de Taylor">
-          <img src="img/serie-de-taylor.jpg" alt="Polinomio de Taylor de grado 13 aproximando a sen x cerca del origen" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">0:40</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Análisis Matemático I</div>
-          <h4>Series de Taylor</h4>
-          <p>El polinomio de Taylor de sen x centrado en 0 suma términos hasta grado 15: cerca del origen se pega a la función y lejos todavía se escapa. La zona donde |f − P<sub>n</sub>| &lt; 0,1 crece con cada grado.</p>
-          <ul class="tags"><li>Manim</li><li>Aproximación polinómica</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Taylor.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
-
-      <article class="vcard" id="topologia">
-        <button class="vcard-thumb" type="button" data-video="videos/topologia-basica.mp4" data-title="Conceptos de Topología Básica" aria-label="Reproducir: Conceptos de Topología Básica">
-          <img src="img/topologia-basica.jpg" alt="Bola abierta sobre el borde superior del conjunto A, mitad verde y mitad roja" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">1:12</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Análisis Matemático II</div>
-          <h4>Conceptos de Topología Básica</h4>
-          <p>Puntos interiores, exteriores y frontera definidos con bolas abiertas, sobre el conjunto A = [0, 2] × [0, 2). Un punto frontera puede pertenecer o no al conjunto.</p>
-          <ul class="tags"><li>Manim</li><li>Topología en ℝ²</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/PuntosTopologia.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
-
-      <article class="vcard" id="green">
-        <button class="vcard-thumb" type="button" data-video="videos/teorema-de-green.mp4" data-title="Teorema de Green" aria-label="Reproducir: Teorema de Green">
-          <img src="img/teorema-de-green.jpg" alt="Región D dividida en celdas coloreadas según el rotor, con la fórmula del Teorema de Green" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">0:53</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Análisis Matemático II</div>
-          <h4>Teorema de Green</h4>
-          <p>Por qué la circulación de un campo a lo largo de una curva cerrada <em>C</em> es igual a la integral del rotor en la región <em>D</em>: los remolinos de celdas vecinas se cancelan en las aristas compartidas y solo sobrevive el borde.</p>
-          <ul class="tags"><li>Manim</li><li>Python</li><li>Cálculo vectorial</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Green.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
-    </div>
-
-    <h3 class="anim-grupo" id="anim-algebra">Álgebra con geometría</h3>
-    <div class="gallery">
-      <article class="vcard wide" id="cuadrados">
-        <button class="vcard-thumb" type="button" data-video="videos/completar-cuadrados.mp4" data-title="Desde completar cuadrados a resolvente" aria-label="Reproducir: Desde completar cuadrados a resolvente">
-          <img src="img/completar-cuadrados.jpg" alt="Cuadrado de lado x + b/2 armado con piezas y la fórmula resolvente" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">1:20</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Álgebra</div>
-          <h4>Desde completar cuadrados a resolvente</h4>
-          <p>x² + bx es un cuadrado más un rectángulo. El rectángulo se corta en dos tiras que se pegan al cuadrado, y solo falta la esquina (b/2)². Leyendo las áreas sale la fórmula resolvente.</p>
-          <ul class="tags"><li>Manim</li><li>Ecuación cuadrática</li></ul>
-          <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/completar_cuadrados.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li></ul>
-        </div>
-      </article>
-
-    </div>
-
-    <h3 class="anim-grupo" id="anim-fisica">Física: electromagnetismo</h3>
-    <div class="gallery">
-      <article class="vcard wide" id="potencial">
-        <button class="vcard-thumb" type="button" data-video="videos/potencial-relieve.mp4" data-title="El potencial eléctrico como relieve" aria-label="Reproducir: El potencial eléctrico como relieve">
-          <img src="img/potencial-relieve.jpg" alt="Superficie z = V(x, y) de dos cargas con líneas de campo y equipotenciales proyectadas" width="800" height="450" loading="lazy">
-          <span class="play-badge" aria-hidden="true">▶</span><span class="dur">1:51</span>
-        </button>
-        <div class="vcard-body">
-          <div class="card-meta">Física + Análisis Matemático II <span class="pill">Conecta con el simulador</span></div>
-          <h4>El potencial eléctrico como relieve</h4>
-          <p>Cada carga es una montaña o un pozo de z = V(x, y). Las equipotenciales son curvas de nivel, el campo es E = −∇V y las líneas de campo siguen el camino de máximo descenso: el mismo gradiente del simulador.</p>
-          <ul class="tags"><li>Manim</li><li>Gradiente</li><li>Campo eléctrico</li></ul>
-          <ul class="links">
-            <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/potencial_relieve.py" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><use href="#gh-icon"/></svg>Código</a></li>
-            <li><a href="notas/gradiente-perpendicular.html">📝 Nota relacionada</a></li>
-          </ul>
-        </div>
-      </article>
-    </div>
-
-    <!-- Reproductor único para todas las animaciones -->
-    <dialog class="player" id="player" aria-labelledby="player-title">
-      <div class="player-head">
-        <h3 id="player-title"></h3>
-        <button class="player-close" type="button" aria-label="Cerrar">✕</button>
+      <div class="filter" role="group" aria-label="Filtrar por tema">
+        <button type="button" aria-pressed="true" data-filter="todas">Todas</button>
+        <button type="button" aria-pressed="false" data-filter="analisis">Análisis Matemático</button>
+        <button type="button" aria-pressed="false" data-filter="algebra">Álgebra</button>
+        <button type="button" aria-pressed="false" data-filter="fisica">Física</button>
       </div>
-      <!-- muted: las animaciones no tienen audio, y así el navegador nunca bloquea el autoplay -->
-      <video id="player-video" controls playsinline muted preload="auto"></video>
-    </dialog>
-    <hr>
+
+      <!-- Cada tarjeta muestra una miniatura; el video se abre en el reproductor recién al darle play -->
+      <div class="gallery">
+        <article class="vcard reveal" id="logaritmo" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="videos/logaritmo-area.mp4" data-title="El logaritmo como área" aria-label="Reproducir: El logaritmo como área">
+            <img src="img/logaritmo-area.jpg" alt="Área bajo la hipérbola y = 1/t dividida en ln a y ln b, con ln(ab) = ln a + ln b" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">3:51</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Análisis Matemático I</div>
+            <h3>El logaritmo como área</h3>
+            <p>ln x es el área bajo y = 1/t entre 1 y x. Una transformación que conserva áreas muestra por qué ln(ab) = ln a + ln b, y de ahí salen las potencias, el número e y la derivada 1/x.</p>
+            <ul class="tags"><li>Integral definida</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/log_area.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="potencial" data-cat="fisica">
+          <button class="vcard-thumb" type="button" data-video="videos/potencial-relieve.mp4" data-title="El potencial eléctrico como relieve" aria-label="Reproducir: El potencial eléctrico como relieve">
+            <img src="img/potencial-relieve.jpg" alt="Superficie z = V(x, y) de dos cargas con líneas de campo y equipotenciales proyectadas" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">1:51</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Física y Análisis Matemático II <span class="pill">Conecta con el simulador</span></div>
+            <h3>El potencial eléctrico como relieve</h3>
+            <p>Cada carga es una montaña o un pozo de z = V(x, y). Las equipotenciales son curvas de nivel y las líneas de campo siguen el camino de máximo descenso: el mismo gradiente del simulador.</p>
+            <ul class="tags"><li>Gradiente</li><li>Campo eléctrico</li></ul>
+            <ul class="links">
+              <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/potencial_relieve.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li>
+              <li><a href="notas/gradiente-perpendicular.html"><i class="ph ph-notebook" aria-hidden="true"></i>Nota relacionada</a></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="taylor" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="videos/serie-de-taylor.mp4" data-title="Series de Taylor" aria-label="Reproducir: Series de Taylor">
+            <img src="img/serie-de-taylor.jpg" alt="Polinomio de Taylor de grado 13 aproximando a sen x cerca del origen" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">0:40</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Análisis Matemático I</div>
+            <h3>Series de Taylor</h3>
+            <p>El polinomio de Taylor de sen x suma términos hasta grado 15: cerca del origen se pega a la función y lejos todavía se escapa. La zona donde |f − P<sub>n</sub>| &lt; 0,1 crece con cada grado.</p>
+            <ul class="tags"><li>Aproximación polinómica</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Taylor.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="green" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="videos/teorema-de-green.mp4" data-title="Teorema de Green" aria-label="Reproducir: Teorema de Green">
+            <img src="img/teorema-de-green.jpg" alt="Región D dividida en celdas coloreadas según el rotor, con la fórmula del Teorema de Green" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">0:53</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Análisis Matemático II</div>
+            <h3>Teorema de Green</h3>
+            <p>Por qué la circulación a lo largo de una curva cerrada C es igual a la integral del rotor en D: los remolinos de celdas vecinas se cancelan en las aristas compartidas y solo sobrevive el borde.</p>
+            <ul class="tags"><li>Cálculo vectorial</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Green.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="topologia" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="videos/topologia-basica.mp4" data-title="Conceptos de topología básica" aria-label="Reproducir: Conceptos de topología básica">
+            <img src="img/topologia-basica.jpg" alt="Bola abierta sobre el borde superior del conjunto A, mitad verde y mitad roja" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">1:12</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Análisis Matemático II</div>
+            <h3>Conceptos de topología básica</h3>
+            <p>Puntos interiores, exteriores y frontera definidos con bolas abiertas, sobre el conjunto A = [0, 2] × [0, 2). Un punto frontera puede pertenecer o no al conjunto.</p>
+            <ul class="tags"><li>Topología en ℝ²</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/PuntosTopologia.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="cuadrados" data-cat="algebra">
+          <button class="vcard-thumb" type="button" data-video="videos/completar-cuadrados.mp4" data-title="De completar cuadrados a la resolvente" aria-label="Reproducir: De completar cuadrados a la resolvente">
+            <img src="img/completar-cuadrados.jpg" alt="Cuadrado de lado x + b/2 armado con piezas y la fórmula resolvente" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">1:20</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Álgebra</div>
+            <h3>De completar cuadrados a la resolvente</h3>
+            <p>x² + bx es un cuadrado más un rectángulo. El rectángulo se corta en dos tiras que se pegan al cuadrado, y solo falta la esquina (b/2)². Leyendo las áreas sale la fórmula resolvente.</p>
+            <ul class="tags"><li>Ecuación cuadrática</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/completar_cuadrados.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li></ul>
+          </div>
+        </article>
+      </div>
+
+      <!-- Reproductor único para todas las animaciones -->
+      <dialog class="player" id="player" aria-labelledby="player-title">
+        <div class="player-head">
+          <h3 id="player-title"></h3>
+          <button class="icon-btn player-close" type="button" aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button>
+        </div>
+        <!-- muted: las animaciones no tienen audio, y así el navegador nunca bloquea el autoplay -->
+        <video id="player-video" controls playsinline muted preload="auto"></video>
+      </dialog>
+    </div>
   </section>
 
-  <section id="notas">
-    <h2>3. Notas</h2>
-    <p>Explicaciones cortas sobre las ideas matemáticas y técnicas detrás de los proyectos.</p>
-    <div class="cards">
-      <article class="card">
-        <a class="card-icon" href="notas/gradiente-perpendicular.html" aria-hidden="true" tabindex="-1">∇f ⟂</a>
-        <div>
-          <div class="card-meta">Nota · 5 min de lectura</div>
+  <!-- ======================= CÓMO TRABAJO ======================= -->
+  <section class="block" id="proceso" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Cómo trabajaríamos</span>
+        <h2>De un tema difícil a una pieza lista para publicar</h2>
+      </div>
+      <ol class="steps">
+        <li class="step reveal">
+          <h3>Elegimos el concepto</h3>
+          <p>Me contás el tema, el nivel del curso y en qué paso se traban los alumnos. Con eso defino qué tiene que mostrar la pieza.</p>
+        </li>
+        <li class="step reveal">
+          <h3>Guion y versión corta</h3>
+          <p>Escribo el guion, verifico las cuentas y armo una primera versión breve para validar el enfoque antes de producir todo.</p>
+        </li>
+        <li class="step reveal">
+          <h3>Entrega con código</h3>
+          <p>Recibís el video o la aplicación terminada, más el código fuente para que tu equipo pueda ajustarla después.</p>
+        </li>
+      </ol>
+      <div class="trust reveal">
+        <i class="ph ph-github-logo" aria-hidden="true"></i>
+        <p>Antes de escribirme podés revisar cómo trabajo: el código de cada animación, del simulador y de los scripts de verificación está en <a href="https://github.com/diegorodvaz/diegorodvaz.github.io" target="_blank" rel="noopener">GitHub</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= MATERIALES ======================= -->
+  <section class="block" id="materiales" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Materiales en LaTeX</span>
+        <h2>Documentos de cátedra, listos para usar</h2>
+        <p>Recursos de evaluación y estudio para Análisis Matemático en la UTN FRCU. Elegí un documento para verlo acá mismo.</p>
+      </div>
+      <div class="docs reveal">
+        <div class="tabs" role="tablist" aria-label="Documentos">
+          <button role="tab" aria-selected="true" data-pdf="Portfolio_AM1_Solutions.pdf"
+            data-desc="Primer parcial de <strong>Análisis Matemático I</strong> (UTN FRCU) con la resolución paso a paso y los criterios de corrección de cada ejercicio: límites con desarrollo de Taylor, optimización y teoremas fundamentales, entre otros."><b>Examen con soluciones</b><span>Análisis Matemático I</span></button>
+          <button role="tab" aria-selected="false" data-pdf="Portfolio_AM1_Student.pdf"
+            data-desc="La versión del mismo parcial de <strong>Análisis Matemático I</strong> para el estudiante, sin las soluciones."><b>Examen para el alumno</b><span>Análisis Matemático I</span></button>
+          <button role="tab" aria-selected="false" data-pdf="Portfolio_CheatSheet.pdf"
+            data-desc="Guía resumen de referencia de <strong>Análisis Matemático II</strong>: vectores y geometría en ℝ³, derivadas parciales, gradiente, derivada direccional y plano tangente."><b>Resumen de referencia</b><span>Análisis Matemático II</span></button>
+          <button role="tab" aria-selected="false" data-pdf="Portfolio_Tikz.pdf"
+            data-desc="Ilustraciones vectoriales hechas en LaTeX con <strong>TikZ</strong> y pgfplots: geometría en ℝ³, un diagrama de arquitectura de sistemas, la campana de Gauss y la interpretación geométrica de la derivada."><b>Gráficos en TikZ</b><span>Ilustración técnica</span></button>
+          <button role="tab" aria-selected="false" data-pdf="Portfolio_Interactive.pdf"
+            data-desc="Autoevaluación de <strong>Análisis Matemático II</strong> (Unidad 2: derivadas direccionales y campo gradiente) con resoluciones que se despliegan dentro del PDF. Para desplegarlas, abrilo en pestaña nueva con un visor que soporte capas PDF."><b>Guía interactiva</b><span>Análisis Matemático II</span></button>
+        </div>
+        <div class="tab-panels" role="tabpanel">
+          <p class="pdf-desc" id="pdf-desc" aria-live="polite"></p>
+          <div class="pdf-toolbar">
+            <span id="pdf-status">Cargando…</span>
+            <a id="pdf-open" href="Portfolio_AM1_Solutions.pdf" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Abrir en pestaña nueva</a>
+          </div>
+          <div class="pdf-viewer" id="pdf-viewer" aria-label="Visor de PDF"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= NOTAS ======================= -->
+  <section class="block" id="notas" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Notas</span>
+        <h2>Las ideas detrás de los proyectos</h2>
+      </div>
+      <div class="notes">
+        <article class="note reveal">
+          <div class="note-icon" aria-hidden="true">∇f ⟂</div>
+          <div class="card-meta">5 min de lectura</div>
           <h3><a href="notas/gradiente-perpendicular.html">Por qué el gradiente es perpendicular a las curvas de nivel</a></h3>
           <p>Una demostración de dos líneas con la regla de la cadena, la intuición con la derivada direccional y por qué el descenso de gradiente hace zigzag en un paraboloide elíptico.</p>
-          <ul class="tags"><li>Análisis Matemático II</li><li>Gradiente</li><li>Optimización</li></ul>
-        </div>
-      </article>
-      <article class="card">
-        <a class="card-icon" href="notas/como-funciona-el-simulador.html" aria-hidden="true" tabindex="-1">&lt;/&gt;</a>
-        <div>
-          <div class="card-meta">Nota · 6 min de lectura</div>
+          <ul class="tags"><li>Gradiente</li><li>Optimización</li></ul>
+        </article>
+        <article class="note reveal">
+          <div class="note-icon" aria-hidden="true">&lt;/&gt;</div>
+          <div class="card-meta">6 min de lectura</div>
           <h3><a href="notas/como-funciona-el-simulador.html">Cómo funciona el simulador por dentro</a></h3>
           <p>De una expresión escrita como texto a superficies 3D, curvas de nivel y una animación fluida: derivación simbólica, marching squares y las decisiones para que todo corra en el navegador.</p>
           <ul class="tags"><li>JavaScript</li><li>Plotly.js</li><li>math.js</li></ul>
-        </div>
-      </article>
+        </article>
+      </div>
     </div>
   </section>
 
-  <!-- Ícono de GitHub reutilizable -->
-  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
-    <symbol id="gh-icon" viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol>
-  </svg>
+  <!-- ======================= PREGUNTAS ======================= -->
+  <section class="block" id="preguntas" style="padding-top: 0">
+    <div class="wrap faq-grid">
+      <div class="sec-head reveal">
+        <span class="kicker">Preguntas frecuentes</span>
+        <h2>Lo que suelen preguntarme</h2>
+        <p>Si tu duda no está acá, <a href="#contacto">escribime</a>.</p>
+      </div>
+      <div class="faq reveal">
+        <details>
+          <summary>¿Qué tipo de contenido podés crear?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Animaciones explicativas con Manim, simuladores interactivos que corren en el navegador y materiales de cátedra en LaTeX: exámenes, guías y resúmenes con figuras en TikZ.</p>
+        </details>
+        <details>
+          <summary>¿Qué temas cubrís?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Análisis Matemático I y II, álgebra y física a nivel universitario, en especial cálculo vectorial, optimización y electromagnetismo.</p>
+        </details>
+        <details>
+          <summary>¿Con qué herramientas trabajás?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Python con Manim para las animaciones, JavaScript con Plotly.js y math.js para los simuladores, y LaTeX con TikZ y pgfplots para los documentos.</p>
+        </details>
+        <details>
+          <summary>¿Los simuladores necesitan instalación?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>No. Corren en el navegador, también en el celular, y se pueden integrar en una plataforma de cursos o publicar como página independiente.</p>
+        </details>
+        <details>
+          <summary>¿Puedo revisar tu código antes de escribirte?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Sí. Todo el código de este portafolio es abierto y está en GitHub: las escenas de Manim, el simulador y los scripts de verificación.</p>
+        </details>
+        <details>
+          <summary>¿Cómo sé que el contenido es correcto?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Estudio Matemática, y antes de animar verifico las cuentas. Por ejemplo, la animación del logaritmo tiene un script que comprueba numéricamente cada área y cada transformación de la escena.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CONTACTO ======================= -->
+  <section class="block" id="contacto" style="padding-top: 0">
+    <div class="wrap">
+      <div class="cta reveal">
+        <span class="kicker"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Contacto</span>
+        <h2>¿Hay un tema que a tus alumnos les cuesta ver?</h2>
+        <p>Contame cuál es y te respondo con una idea concreta de cómo animarlo o convertirlo en un simulador.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Proyecto%20de%20contenido%20matem%C3%A1tico"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime por un proyecto</a>
+          <button class="btn btn-ghost" type="button" id="copy-email" data-email="diego@rodriguez-vazquez.com.ar"><i class="ph ph-copy" aria-hidden="true"></i>diego@rodriguez-vazquez.com.ar</button>
+        </div>
+        <p class="copy-status" id="copy-status" aria-live="polite"></p>
+        <div class="cta-alt">
+          <a href="https://www.linkedin.com/in/diego-ezequiel-rodriguez-vazquez" target="_blank" rel="noopener"><i class="ph ph-linkedin-logo" aria-hidden="true"></i>LinkedIn</a>
+          <a href="https://github.com/diegorodvaz" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </main>
 
-<nav class="toc" aria-label="Índice">
-  <h2>Índice</h2>
-  <ul>
-    <li><a href="#simulador">⭐ Simulador de Descenso de Gradiente</a></li>
-    <li><a href="#materiales">1. Materiales Didácticos (LaTeX)</a></li>
-    <li><a href="#animaciones">2. Animaciones Matemáticas (Manim)</a>
-      <ul>
-        <li><a href="#anim-analisis">Análisis Matemático</a></li>
-        <li><a href="#anim-algebra">Álgebra con geometría</a></li>
-        <li><a href="#anim-fisica">Física: electromagnetismo</a></li>
-      </ul>
-    </li>
-    <li><a href="#notas">3. Notas</a></li>
-  </ul>
-</nav>
-</div>
+<footer class="footer">
+  <div class="wrap">
+    <span>© 2026 Diego E. Rodríguez V. · Este sitio no usa cookies ni seguimiento.</span>
+    <ul>
+      <li><a href="#inicio">Volver arriba</a></li>
+      <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io" target="_blank" rel="noopener">Código del sitio</a></li>
+      <li><a href="https://www.linkedin.com/in/diego-ezequiel-rodriguez-vazquez" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+  </div>
+</footer>
 
 <script>
   // Modo claro / oscuro
   var toggle = document.getElementById("theme-toggle");
   function syncIcon() {
-    toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙";
+    var dark = document.documentElement.dataset.theme === "dark";
+    toggle.innerHTML = '<i class="ph ' + (dark ? "ph-sun" : "ph-moon") + '" aria-hidden="true"></i>';
   }
   toggle.addEventListener("click", function () {
     var dark = document.documentElement.dataset.theme !== "dark";
@@ -1093,6 +1447,33 @@
     syncIcon();
   });
   syncIcon();
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Menú de celular: panel a pantalla completa
+  (function () {
+    var btn = document.getElementById("menu-btn");
+    var menu = document.getElementById("mobile-menu");
+    function set(open) {
+      document.body.classList.toggle("menu-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+      document.body.style.overflow = open ? "hidden" : "";
+    }
+    btn.addEventListener("click", function () { set(!document.body.classList.contains("menu-open")); });
+    menu.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+  })();
+
+  // Video del hero: se reproduce solo si está en pantalla y no se pidió reducir el movimiento
+  (function () {
+    var v = document.getElementById("hero-video");
+    if (reduceMotion || !("IntersectionObserver" in window)) return;
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) v.play().catch(function () {});
+      else v.pause();
+    }).observe(v);
+  })();
 
   // Pestañas de PDFs (el visor se carga en el script de módulo de abajo)
   document.querySelectorAll(".tabs button").forEach(function (btn) {
@@ -1110,6 +1491,21 @@
     document.getElementById("pdf-desc").innerHTML = btn.dataset.desc || "";
   }
   showPdfDesc(document.querySelector('.tabs button[aria-selected="true"]'));
+
+  // Filtro de la galería por tema
+  (function () {
+    var buttons = document.querySelectorAll(".filter button");
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var f = btn.dataset.filter;
+        buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+        document.querySelectorAll(".gallery .vcard").forEach(function (card) {
+          card.hidden = f !== "todas" && card.dataset.cat !== f;
+          card.classList.add("in");
+        });
+      });
+    });
+  })();
 
   // Reproductor de animaciones: un único <dialog> que carga el video recién al darle play
   (function () {
@@ -1144,19 +1540,83 @@
     });
   })();
 
-  // Resalta la sección actual en el índice
-  var links = document.querySelectorAll(".toc a");
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (!entry.isIntersecting) return;
-      links.forEach(function (a) {
-        a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id);
+  // Copiar el email, con confirmación visible
+  (function () {
+    var btn = document.getElementById("copy-email");
+    var status = document.getElementById("copy-status");
+    btn.addEventListener("click", function () {
+      var email = btn.dataset.email;
+      if (!navigator.clipboard) { status.textContent = "No se pudo copiar. El email es " + email + "."; return; }
+      navigator.clipboard.writeText(email).then(function () {
+        status.textContent = "Email copiado al portapapeles.";
+      }, function () {
+        status.textContent = "No se pudo copiar. El email es " + email + ".";
       });
     });
-  }, { rootMargin: "0px 0px -70% 0px" });
-  ["simulador", "materiales", "animaciones", "anim-analisis", "anim-algebra", "anim-fisica", "notas"].forEach(function (id) {
-    observer.observe(document.getElementById(id));
-  });
+  })();
+
+  if ("IntersectionObserver" in window) {
+    // Resalta la sección actual en la navegación
+    var navLinks = document.querySelectorAll('.nav-links a, .mobile-menu ul a');
+    var sectionObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(function (a) {
+          if (a.getAttribute("href") === "#" + entry.target.id) a.setAttribute("aria-current", "true");
+          else a.removeAttribute("aria-current");
+        });
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    ["inicio", "servicios", "simulador", "animaciones", "proceso", "materiales", "notas", "preguntas", "contacto"].forEach(function (id) {
+      sectionObserver.observe(document.getElementById(id));
+    });
+
+    // Las secciones suben y aparecen una sola vez al entrar en pantalla
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(function (el) { revealObserver.observe(el); });
+
+  }
+
+  // Frase: cada palabra pasa del tono apagado al color pleno, una por vez y en orden de lectura,
+  // según cuánto avanzó la sección por la pantalla (scroll limitado a un cálculo por cuadro)
+  (function () {
+    var line = document.querySelector("[data-words]");
+    var accents = ["moverse,", "fórmula"];
+    var html = line.innerHTML.split(/(<br>)/).map(function (part) {
+      if (part === "<br>") return " <br>";
+      return part.split(" ").filter(Boolean).map(function (w) {
+        return '<span class="w' + (accents.indexOf(w) > -1 ? " accent" : "") + '">' + w + "</span>";
+      }).join(" ");
+    }).join("");
+    line.innerHTML = html;
+    var words = line.querySelectorAll(".w");
+    if (reduceMotion) { words.forEach(function (w) { w.classList.add("on"); }); return; }
+
+    var queued = false;
+    function update() {
+      queued = false;
+      var r = line.getBoundingClientRect();
+      var vh = window.innerHeight;
+      // 0 cuando la frase asoma por el 85% de la pantalla, 1 cuando su final llega al 45%
+      var start = vh * 0.85, end = vh * 0.45;
+      var p = (start - r.top) / (start - end + r.height);
+      var lit = Math.round(Math.max(0, Math.min(1, p)) * words.length);
+      words.forEach(function (w, i) { w.classList.toggle("on", i < lit); });
+    }
+    window.addEventListener("scroll", function () {
+      if (!queued) { queued = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  })();
+
+  if (!("IntersectionObserver" in window)) document.documentElement.classList.remove("js");
 </script>
 
 <script>
@@ -1185,7 +1645,7 @@
     if (location.protocol === "file:") return nativePdf(url);
     openLink.href = url;
     status.textContent = "Cargando…";
-    viewer.innerHTML = "";
+    viewer.innerHTML = '<div class="pdf-skel" aria-hidden="true"><div></div><div></div></div>';
     viewer.scrollTop = 0;
     if (currentTask) currentTask.destroy();
     var task = (currentTask = pdfjsLib.getDocument(url));
@@ -1202,6 +1662,7 @@
         var canvas = document.createElement("canvas");
         canvas.width = viewport.width;
         canvas.height = viewport.height;
+        if (n === 1) viewer.innerHTML = "";
         viewer.appendChild(canvas);
         await page.render({ canvasContext: canvas.getContext("2d"), viewport: viewport }).promise;
       }
@@ -1284,7 +1745,7 @@ function theme() {
 function baseLayout(t) {
   return {
     paper_bgcolor: 'rgba(0,0,0,0)',
-    font: { family: 'Lato, sans-serif', color: t.fg, size: 12 },
+    font: { family: 'Geist, sans-serif', color: t.fg, size: 12 },
     modebar: { bgcolor: 'rgba(0,0,0,0)', color: t.muted, activecolor: t.primary },
     showlegend: false,
   };
@@ -1950,7 +2411,7 @@ function onFullscreenChange() {
 // El simulador se sale de la columna de texto y ocupa el ancho de la ventana
 // (con un margen y un tope), centrado respecto de la pantalla.
 function layoutBleed() {
-  const main = root.parentElement.closest('main');
+  const main = root.parentElement.closest('.wrap');
   const vw = document.documentElement.clientWidth;
   const w = Math.min(vw - 32, 1720);
   // En pantallas chicas no se gana espacio: se queda en la columna normal
