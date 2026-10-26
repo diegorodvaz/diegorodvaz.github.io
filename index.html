@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Diego E. Rodríguez V.">
-<meta name="description" content="Diego E. Rodríguez V. crea animaciones con Manim, simuladores interactivos y materiales en LaTeX para cursos de Análisis Matemático, Álgebra y Física. Disponible para proyectos de contenido educativo.">
+<meta name="description" content="Diego E. Rodríguez V. crea animaciones con Manim, simuladores interactivos y materiales en LaTeX para cursos de Análisis Matemático, Álgebra y Física. Si hacés contenido de matemática, escribime.">
 <title>Diego E. Rodríguez V. · Animaciones y simuladores de matemática</title>
 <link rel="canonical" href="https://diegorodvaz.github.io/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b7d66'/%3E%3Cpath d='M8 9h16L16 24z' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -45,8 +45,8 @@
     { "@type": "Question", "name": "¿Qué temas cubrís?", "acceptedAnswer": { "@type": "Answer", "text": "Análisis Matemático I y II, álgebra y física a nivel universitario, en especial cálculo vectorial, optimización y electromagnetismo." } },
     { "@type": "Question", "name": "¿Con qué herramientas trabajás?", "acceptedAnswer": { "@type": "Answer", "text": "Python con Manim para las animaciones, JavaScript con Plotly.js y math.js para los simuladores, y LaTeX con TikZ y pgfplots para los documentos." } },
     { "@type": "Question", "name": "¿Los simuladores necesitan instalación?", "acceptedAnswer": { "@type": "Answer", "text": "No. Corren en el navegador, también en el celular, y se pueden integrar en una plataforma de cursos o publicar como página independiente." } },
-    { "@type": "Question", "name": "¿Puedo revisar tu código antes de escribirte?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. Todo el código de este portafolio es abierto y está en GitHub: las escenas de Manim, el simulador y los scripts de verificación." } },
-    { "@type": "Question", "name": "¿Cómo sé que el contenido es correcto?", "acceptedAnswer": { "@type": "Answer", "text": "Estudio Matemática, y antes de animar verifico las cuentas. Por ejemplo, la animación del logaritmo tiene un script que comprueba numéricamente cada área y cada transformación de la escena." } }
+    { "@type": "Question", "name": "¿Puedo ver el código?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, está todo en GitHub: las escenas de Manim, el simulador y los scripts con los que verifico las cuentas." } },
+    { "@type": "Question", "name": "¿Cómo revisás que la matemática esté bien?", "acceptedAnswer": { "@type": "Answer", "text": "Estudio Matemática y hago las cuentas antes de animar. Cuando una escena es delicada escribo un script aparte que la chequea, como el del logaritmo." } }
   ]
 }
 </script>
@@ -444,25 +444,6 @@
   .player-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-200); padding: var(--s-100) var(--s-100) var(--s-100) var(--s-300); border-bottom: 1px solid var(--border); }
   .player-head h3 { font-size: 1rem; line-height: 1.5rem; }
   .player video { display: block; width: 100%; max-height: calc(94vh - 130px); background: #000; }
-
-  /* ---------------- Cómo trabajo ---------------- */
-  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-300); list-style: none; margin: 0; padding: 0; counter-reset: paso; }
-  .step { padding-top: var(--s-300); border-top: 1px solid var(--border); counter-increment: paso; }
-  .step::before {
-    content: counter(paso, decimal-leading-zero);
-    font-family: var(--mono); font-size: 0.875rem; line-height: 1.25rem; color: var(--primary);
-  }
-  .step h3 { margin-top: var(--s-200); font-size: 1.25rem; line-height: 1.75rem; }
-  .step p { margin: var(--s-75) 0 0; color: var(--muted); }
-  .trust {
-    display: flex; align-items: center; gap: var(--s-200);
-    margin-top: var(--s-600); padding: var(--s-300);
-    border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
-  }
-  .trust i { font-size: 1.5rem; color: var(--primary); flex-shrink: 0; }
-  .trust p { margin: 0; }
-  .trust a { font-weight: 600; }
-  @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
 
   /* ---------------- Materiales (visor de PDF) ---------------- */
   .docs { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--s-300); align-items: start; }
@@ -882,7 +863,7 @@
     <li style="--i: 2"><a href="#materiales">Materiales</a></li>
     <li style="--i: 3"><a href="#preguntas">Preguntas</a></li>
   </ul>
-  <a class="btn btn-primary" style="--i: 4" href="#contacto"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime por un proyecto</a>
+  <a class="btn btn-primary" style="--i: 4" href="#contacto"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime</a>
 </div>
 
 <main id="main">
@@ -891,11 +872,11 @@
   <section class="hero" id="inicio">
     <div class="wrap hero-grid">
       <div>
-        <span class="kicker"><i class="ph-bold ph-function" aria-hidden="true"></i>Contenido de matemática para EdTech</span>
-        <h1>La matemática que cuesta, <br>explicada en movimiento</h1>
-        <p class="lead">Creo animaciones con Manim, simuladores que corren en el navegador y materiales en LaTeX para cursos universitarios de Análisis Matemático, Álgebra y Física. Todo el código está abierto en GitHub.</p>
+        <span class="kicker"><i class="ph-bold ph-function" aria-hidden="true"></i>Animaciones, simuladores y materiales</span>
+        <h1>Hago animaciones y simuladores <br>para enseñar matemática</h1>
+        <p class="lead">Soy Diego, estudio Matemática y Sistemas de Información. Programo animaciones con Manim, simuladores que corren en el navegador y materiales en LaTeX, sobre todo de Análisis Matemático, Álgebra y Física. El código está en GitHub.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Proyecto%20de%20contenido%20matem%C3%A1tico"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime por un proyecto</a>
+          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Proyecto%20de%20contenido%20matem%C3%A1tico"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime</a>
           <a class="text-link" href="#animaciones">Ver el trabajo<i class="ph ph-arrow-down" aria-hidden="true"></i></a>
         </div>
         <ul class="proof" aria-label="Trabajo publicado">
@@ -918,29 +899,29 @@
   <section class="block" id="servicios" style="padding-top: 0">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="kicker">Qué puedo sumar a tu equipo</span>
-        <h2>Contenido que el alumno entiende sin que se lo expliquen dos veces</h2>
+        <span class="kicker">Lo que hago</span>
+        <h2>En qué te puedo dar una mano</h2>
       </div>
       <ul class="benefits">
         <li class="benefit reveal">
           <div class="benefit-icon"><i class="ph ph-film-strip" aria-hidden="true"></i></div>
-          <h3>Animaciones que muestran el porqué</h3>
-          <p>Seis piezas en Manim, de 40 segundos a casi 4 minutos. Cada una parte de una pregunta concreta, como por qué ln(ab) = ln a + ln b, y la responde con geometría.</p>
+          <h3>Animaciones con Manim</h3>
+          <p>Llevo seis, de 40 segundos a casi 4 minutos. Me gusta arrancar de una pregunta concreta, como por qué ln(ab) = ln a + ln b, y buscarle la vuelta con geometría.</p>
         </li>
         <li class="benefit reveal">
           <div class="benefit-icon"><i class="ph ph-cursor-click" aria-hidden="true"></i></div>
-          <h3>Simuladores que el alumno manipula</h3>
-          <p>Un simulador de descenso de gradiente con derivación simbólica, curvas de nivel y métricas en vivo. Corre en el navegador y en el celular, sin instalar nada.</p>
+          <h3>Simuladores en el navegador</h3>
+          <p>Hice uno de descenso de gradiente para Análisis II, con derivación simbólica, curvas de nivel y métricas en vivo. Anda en la compu y en el celular sin instalar nada.</p>
         </li>
         <li class="benefit reveal">
           <div class="benefit-icon"><i class="ph ph-file-text" aria-hidden="true"></i></div>
-          <h3>Materiales listos para la cátedra</h3>
-          <p>Exámenes con criterios de corrección, guías con resoluciones desplegables y resúmenes en LaTeX con figuras propias en TikZ.</p>
+          <h3>Materiales en LaTeX</h3>
+          <p>Exámenes con criterios de corrección, guías con resoluciones desplegables y resúmenes con figuras hechas en TikZ.</p>
         </li>
         <li class="benefit reveal">
           <div class="benefit-icon"><i class="ph ph-seal-check" aria-hidden="true"></i></div>
-          <h3>Rigor antes que efecto</h3>
-          <p>Estudio Matemática y Sistemas de Información. Antes de animar verifico las cuentas: la escena del logaritmo tiene un <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/verificar_log_area.py" target="_blank" rel="noopener">script que comprueba cada área</a>.</p>
+          <h3>Cuentas chequeadas</h3>
+          <p>Antes de animar reviso que la matemática cierre. Para la escena del logaritmo escribí un <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/verificar_log_area.py" target="_blank" rel="noopener">script que verifica cada área</a>.</p>
         </li>
       </ul>
     </div>
@@ -949,7 +930,7 @@
   <!-- ======================= FRASE ======================= -->
   <section class="tagline" aria-label="Enfoque">
     <div class="wrap">
-      <p data-words>Cuando el alumno ve la idea moverse,<br>la fórmula deja de ser algo para memorizar.</p>
+      <p data-words>Lo que más disfruto es encontrar<br>el dibujo que hace cerrar una fórmula.</p>
     </div>
   </section>
 
@@ -960,7 +941,7 @@
         <div class="sec-head">
           <span class="kicker"><i class="ph-bold ph-star" aria-hidden="true"></i>Proyecto destacado</span>
           <h2>Simulador de descenso de gradiente</h2>
-          <p>Para Análisis Matemático II: superficies z = f(x, y), curvas de nivel, planos intersectores y el campo ∇f. Muestra paso a paso cómo el algoritmo llega a un punto crítico, y cuándo oscila o diverge según la tasa α. Probalo acá abajo.</p>
+          <p>Para Análisis Matemático II: superficies z = f(x, y), curvas de nivel, planos intersectores y el campo ∇f. Se ve paso a paso cómo el algoritmo llega a un punto crítico, y cuándo oscila o diverge según la tasa α. Podés probarlo acá abajo.</p>
         </div>
         <ul class="links">
           <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/simulador-gradiente" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Código</a></li>
@@ -1162,8 +1143,8 @@
     <div class="wrap">
       <div class="sec-head reveal">
         <span class="kicker">Animaciones con Manim</span>
-        <h2>Demostraciones que se miran, no solo se leen</h2>
-        <p>Programadas en Python con Manim, el motor de 3Blue1Brown. Tocá una miniatura para verla en grande.</p>
+        <h2>Lo que fui animando</h2>
+        <p>Programadas en Python con Manim, la librería de 3Blue1Brown. Tocá una miniatura para verla en grande.</p>
       </div>
 
       <div class="filter" role="group" aria-label="Filtrar por tema">
@@ -1275,41 +1256,13 @@
     </div>
   </section>
 
-  <!-- ======================= CÓMO TRABAJO ======================= -->
-  <section class="block" id="proceso" style="padding-top: 0">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="kicker">Cómo trabajaríamos</span>
-        <h2>De un tema difícil a una pieza lista para publicar</h2>
-      </div>
-      <ol class="steps">
-        <li class="step reveal">
-          <h3>Elegimos el concepto</h3>
-          <p>Me contás el tema, el nivel del curso y en qué paso se traban los alumnos. Con eso defino qué tiene que mostrar la pieza.</p>
-        </li>
-        <li class="step reveal">
-          <h3>Guion y versión corta</h3>
-          <p>Escribo el guion, verifico las cuentas y armo una primera versión breve para validar el enfoque antes de producir todo.</p>
-        </li>
-        <li class="step reveal">
-          <h3>Entrega con código</h3>
-          <p>Recibís el video o la aplicación terminada, más el código fuente para que tu equipo pueda ajustarla después.</p>
-        </li>
-      </ol>
-      <div class="trust reveal">
-        <i class="ph ph-github-logo" aria-hidden="true"></i>
-        <p>Antes de escribirme podés revisar cómo trabajo: el código de cada animación, del simulador y de los scripts de verificación está en <a href="https://github.com/diegorodvaz/diegorodvaz.github.io" target="_blank" rel="noopener">GitHub</a>.</p>
-      </div>
-    </div>
-  </section>
-
   <!-- ======================= MATERIALES ======================= -->
   <section class="block" id="materiales" style="padding-top: 0">
     <div class="wrap">
       <div class="sec-head reveal">
         <span class="kicker">Materiales en LaTeX</span>
-        <h2>Documentos de cátedra, listos para usar</h2>
-        <p>Recursos de evaluación y estudio para Análisis Matemático en la UTN FRCU. Elegí un documento para verlo acá mismo.</p>
+        <h2>Material que armé para la cátedra</h2>
+        <p>Exámenes, guías y resúmenes de Análisis Matemático en la UTN FRCU. Elegí uno para verlo acá.</p>
       </div>
       <div class="docs reveal">
         <div class="tabs" role="tablist" aria-label="Documentos">
@@ -1341,7 +1294,7 @@
     <div class="wrap">
       <div class="sec-head reveal">
         <span class="kicker">Notas</span>
-        <h2>Las ideas detrás de los proyectos</h2>
+        <h2>Cómo hice algunas cosas</h2>
       </div>
       <div class="notes">
         <article class="note reveal">
@@ -1366,9 +1319,9 @@
   <section class="block" id="preguntas" style="padding-top: 0">
     <div class="wrap faq-grid">
       <div class="sec-head reveal">
-        <span class="kicker">Preguntas frecuentes</span>
-        <h2>Lo que suelen preguntarme</h2>
-        <p>Si tu duda no está acá, <a href="#contacto">escribime</a>.</p>
+        <span class="kicker">Preguntas</span>
+        <h2>Por si te lo preguntás</h2>
+        <p>Y si no está acá, <a href="#contacto">escribime</a>.</p>
       </div>
       <div class="faq reveal">
         <details>
@@ -1388,12 +1341,12 @@
           <p>No. Corren en el navegador, también en el celular, y se pueden integrar en una plataforma de cursos o publicar como página independiente.</p>
         </details>
         <details>
-          <summary>¿Puedo revisar tu código antes de escribirte?<i class="ph ph-plus" aria-hidden="true"></i></summary>
-          <p>Sí. Todo el código de este portafolio es abierto y está en GitHub: las escenas de Manim, el simulador y los scripts de verificación.</p>
+          <summary>¿Puedo ver el código?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Sí, está todo en <a href="https://github.com/diegorodvaz/diegorodvaz.github.io" target="_blank" rel="noopener">GitHub</a>: las escenas de Manim, el simulador y los scripts con los que verifico las cuentas.</p>
         </details>
         <details>
-          <summary>¿Cómo sé que el contenido es correcto?<i class="ph ph-plus" aria-hidden="true"></i></summary>
-          <p>Estudio Matemática, y antes de animar verifico las cuentas. Por ejemplo, la animación del logaritmo tiene un script que comprueba numéricamente cada área y cada transformación de la escena.</p>
+          <summary>¿Cómo revisás que la matemática esté bien?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Estudio Matemática y hago las cuentas antes de animar. Cuando una escena es delicada escribo un script aparte que la chequea, como el del logaritmo.</p>
         </details>
       </div>
     </div>
@@ -1404,10 +1357,10 @@
     <div class="wrap">
       <div class="cta reveal">
         <span class="kicker"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Contacto</span>
-        <h2>¿Hay un tema que a tus alumnos les cuesta ver?</h2>
-        <p>Contame cuál es y te respondo con una idea concreta de cómo animarlo o convertirlo en un simulador.</p>
+        <h2>¿Armamos algo juntos?</h2>
+        <p>Si estás haciendo contenido de matemática y te sirve una mano con animaciones, simuladores o materiales, escribime y lo charlamos.</p>
         <div class="cta-actions">
-          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Proyecto%20de%20contenido%20matem%C3%A1tico"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime por un proyecto</a>
+          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Proyecto%20de%20contenido%20matem%C3%A1tico"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Escribime</a>
           <button class="btn btn-ghost" type="button" id="copy-email" data-email="diego@rodriguez-vazquez.com.ar"><i class="ph ph-copy" aria-hidden="true"></i>diego@rodriguez-vazquez.com.ar</button>
         </div>
         <p class="copy-status" id="copy-status" aria-live="polite"></p>
@@ -1567,7 +1520,7 @@
         });
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
-    ["inicio", "servicios", "simulador", "animaciones", "proceso", "materiales", "notas", "preguntas", "contacto"].forEach(function (id) {
+    ["inicio", "servicios", "simulador", "animaciones", "materiales", "notas", "preguntas", "contacto"].forEach(function (id) {
       sectionObserver.observe(document.getElementById(id));
     });
 
@@ -1587,7 +1540,7 @@
   // según cuánto avanzó la sección por la pantalla (scroll limitado a un cálculo por cuadro)
   (function () {
     var line = document.querySelector("[data-words]");
-    var accents = ["moverse,", "fórmula"];
+    var accents = ["dibujo", "fórmula."];
     var html = line.innerHTML.split(/(<br>)/).map(function (part) {
       if (part === "<br>") return " <br>";
       return part.split(" ").filter(Boolean).map(function (w) {
