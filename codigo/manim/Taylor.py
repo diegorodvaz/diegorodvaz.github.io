@@ -76,7 +76,7 @@ class TaylorCaterpillarAnimation(Scene):
         # -------------------------------------------------------------------
         # 1. Título, ejes y función base f(x)
         # -------------------------------------------------------------------
-        titulo = Text("La Serie de Taylor", font_size=36, weight=BOLD)
+        titulo = Text("Polinomio de Taylor : Polinomio de Maclaurin", font_size=36, weight=BOLD)
         titulo.to_edge(UP, buff=0.3)
 
         ejes = Axes(
