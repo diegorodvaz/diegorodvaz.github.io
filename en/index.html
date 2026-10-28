@@ -1,0 +1,2561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<meta name="description" content="Diego E. Rodríguez V. creates Manim animations, interactive simulators and LaTeX materials for calculus, algebra and physics courses. Available for educational content projects.">
+<title>Diego E. Rodríguez V. · Math animations and simulators</title>
+<link rel="canonical" href="https://diegorodvaz.github.io/en/">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/">
+<link rel="alternate" hreflang="x-default" href="https://diegorodvaz.github.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b7d66'/%3E%3Cpath d='M8 9h16L16 24z' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
+<!-- Vista previa al compartir el enlace (LinkedIn, WhatsApp, X, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_AR">
+<meta property="og:url" content="https://diegorodvaz.github.io/en/">
+<meta property="og:title" content="Diego E. Rodríguez V. · Math animations and simulators">
+<meta property="og:description" content="Manim animations, interactive simulators and LaTeX materials for calculus, algebra and physics.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Diego E. Rodríguez V.'s portfolio: 3D surface from the gradient descent simulator and thumbnails of the animations.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.plot.ly" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<script>
+  // Aplica el tema guardado antes de pintar para evitar parpadeo
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What kind of content can you create?", "acceptedAnswer": { "@type": "Answer", "text": "Explanatory animations with Manim, interactive simulators that run in the browser, and LaTeX course materials: exams, problem sets and summaries with TikZ figures." } },
+    { "@type": "Question", "name": "What topics do you cover?", "acceptedAnswer": { "@type": "Answer", "text": "University-level single-variable and multivariable calculus, algebra and physics, especially vector calculus, optimization and electromagnetism." } },
+    { "@type": "Question", "name": "What tools do you work with?", "acceptedAnswer": { "@type": "Answer", "text": "Python with Manim for the animations, JavaScript with Plotly.js and math.js for the simulators, and LaTeX with TikZ and pgfplots for the documents." } },
+    { "@type": "Question", "name": "Do the simulators need to be installed?", "acceptedAnswer": { "@type": "Answer", "text": "No. They run in the browser, on phones too, and can be embedded in a course platform or published as a standalone page." } },
+    { "@type": "Question", "name": "Can I see the code?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, it's all on GitHub: the Manim scenes, the simulator and the scripts I use to check the math." } },
+    { "@type": "Question", "name": "How is the content checked?", "acceptedAnswer": { "@type": "Answer", "text": "The math is checked before animating. In the trickiest scenes, a separate script verifies it numerically, as in the logarithm one." } }
+  ]
+}
+</script>
+<style>
+  /* ================================================================
+     Sistema visual: una sola familia (Geist), escala de tipografía y
+     espaciado fijos, fondos planos, un acento verde azulado.
+     ================================================================ */
+  :root {
+    --bg: #ffffff;
+    --surface: #fafaf9;
+    --raised: #f2f2f0;
+    --fg: #161616;
+    --muted: #5c5f63;
+    --heading: #0f0f0f;
+    --primary: #0b7d66;
+    --on-primary: #ffffff;
+    --link: #0b7d66;
+    --border: #e6e6e3;
+    --accent-soft: rgba(11, 125, 102, 0.08);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    --nav-bg: rgba(255, 255, 255, 0.72);
+    --hero-from: #000000;
+    --hero-to: #666666;
+    --font: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+
+    /* Espaciado */
+    --s-25: 2px; --s-50: 4px; --s-75: 8px; --s-100: 12px; --s-200: 16px; --s-300: 24px;
+    --s-400: 32px; --s-500: 40px; --s-600: 48px; --s-700: 64px; --s-800: 80px; --s-900: 96px;
+
+    /* Movimiento */
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [data-theme="dark"] {
+    --bg: #181818;
+    --surface: #1f1f1f;
+    --raised: #272727;
+    --fg: #ececec;
+    --muted: #a3a3a3;
+    --heading: #ffffff;
+    --primary: #34d3b0;
+    --on-primary: #06231d;
+    --link: #34d3b0;
+    --border: #313131;
+    --accent-soft: rgba(52, 211, 176, 0.1);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --nav-bg: rgba(31, 31, 31, 0.72);
+    --hero-from: #ffffff;
+    --hero-to: #9b9b9b;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: var(--s-900); }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    background: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 300ms var(--ease), color 300ms var(--ease);
+  }
+  em, i:not([class*="ph"]) { font-style: normal; }
+  a { color: var(--link); text-underline-offset: 3px; }
+  h1, h2, h3, h4 { color: var(--heading); font-weight: 600; margin: 0; text-wrap: balance; }
+  p, li, dd { text-wrap: pretty; }
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+  img, video { max-width: 100%; }
+
+  .skip {
+    position: absolute; left: var(--s-200); top: -100px; z-index: 100;
+    padding: var(--s-75) var(--s-100); border-radius: 8px;
+    background: var(--primary); color: var(--on-primary); font-weight: 600; text-decoration: none;
+  }
+  .skip:focus { top: var(--s-200); }
+
+  .wrap { width: min(1120px, 100% - 2 * var(--s-300)); margin-inline: auto; }
+  section.block { padding: var(--s-900) 0; }
+  @media (max-width: 640px) {
+    .wrap { width: calc(100% - 2 * var(--s-200)); }
+    section.block { padding: var(--s-700) 0; }
+  }
+
+  /* Encabezados de sección */
+  .kicker {
+    display: inline-flex; align-items: center; gap: var(--s-75);
+    font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: var(--primary);
+  }
+  .sec-head { max-width: 680px; margin-bottom: var(--s-600); }
+  .sec-head h2 { font-size: 2.25rem; line-height: 2.5rem; letter-spacing: -0.02em; margin-top: var(--s-100); }
+  .sec-head p { margin: var(--s-200) 0 0; font-size: 1.125rem; line-height: 1.75rem; color: var(--muted); }
+  @media (max-width: 640px) {
+    .sec-head h2 { font-size: 1.875rem; line-height: 2.25rem; }
+  }
+
+  /* Botones */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-75);
+    padding: var(--s-75) var(--s-100);
+    font: inherit; font-size: 1rem; line-height: 1.5rem; font-weight: 600;
+    border-radius: 8px; border: 1px solid transparent;
+    text-decoration: none; cursor: pointer; white-space: nowrap;
+    transition: transform 300ms var(--ease), background-color 300ms var(--ease), border-color 300ms var(--ease), color 300ms var(--ease);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--primary); color: var(--on-primary); }
+  .btn-primary:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--primary) 88%, var(--heading)); }
+  .btn-ghost { background: transparent; color: var(--fg); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--raised); }
+  .btn-sm { font-size: 0.875rem; line-height: 1.25rem; padding: var(--s-75) var(--s-100); }
+  .btn i { font-size: 1.125rem; }
+
+  /* ---------------- Navegación flotante ---------------- */
+  .nav {
+    position: fixed; top: var(--s-200); left: 50%; z-index: 50;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: var(--s-50);
+    padding: var(--s-75);
+    max-width: calc(100% - 2 * var(--s-200));
+    border: 1px solid var(--border); border-radius: 9999px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    backdrop-filter: blur(16px) saturate(1.4);
+    box-shadow: var(--shadow);
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: var(--s-75);
+    padding: var(--s-50) var(--s-100) var(--s-50) var(--s-50);
+    font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: var(--heading); text-decoration: none; white-space: nowrap;
+  }
+  .brand-mark {
+    width: 28px; height: 28px; display: grid; place-items: center;
+    border-radius: 9999px; background: var(--primary); color: var(--on-primary);
+    font-family: var(--mono); font-size: 0.875rem; font-weight: 500;
+  }
+  .nav-links { display: flex; gap: var(--s-25); list-style: none; margin: 0; padding: 0; }
+  .nav-links a {
+    display: block; padding: var(--s-75) var(--s-100); border-radius: 9999px;
+    font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: var(--muted); text-decoration: none;
+    transition: color 300ms var(--ease), background-color 300ms var(--ease);
+  }
+  .nav-links a:hover { color: var(--heading); background: var(--raised); }
+  .nav-links a[aria-current="true"] { color: var(--heading); background: var(--raised); }
+  .icon-btn {
+    width: 36px; height: 36px; flex-shrink: 0;
+    display: grid; place-items: center;
+    border: 0; border-radius: 9999px; background: transparent; color: var(--fg);
+    font-size: 1.125rem; cursor: pointer;
+    transition: background-color 300ms var(--ease), transform 300ms var(--ease);
+  }
+  .icon-btn:hover { background: var(--raised); }
+  .icon-btn:active { transform: scale(0.94); }
+  /* Selector de idioma: mismo tamaño que el botón de tema */
+  .lang-btn { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .lang-btn:hover { color: var(--heading); }
+  .nav .btn-primary { border-radius: 9999px; }
+
+  /* Botón de menú: dos líneas que se cruzan */
+  .menu-btn { display: none; position: relative; }
+  .menu-btn span {
+    position: absolute; left: 11px; width: 14px; height: 1.5px; border-radius: 2px; background: currentColor;
+    transition: transform 500ms var(--ease);
+  }
+  .menu-btn span:first-child { transform: translateY(-3px); }
+  .menu-btn span:last-child { transform: translateY(3px); }
+  .menu-open .menu-btn span:first-child { transform: rotate(45deg); }
+  .menu-open .menu-btn span:last-child { transform: rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 40;
+    display: flex; flex-direction: column; justify-content: center; gap: var(--s-300);
+    padding: var(--s-900) var(--s-300) var(--s-600);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    opacity: 0; visibility: hidden;
+    transition: opacity 500ms var(--ease), visibility 500ms;
+  }
+  .menu-open .mobile-menu { opacity: 1; visibility: visible; }
+  .mobile-menu ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-75); }
+  .mobile-menu li, .mobile-menu .btn {
+    opacity: 0; transform: translateY(var(--s-300));
+    transition: opacity 500ms var(--ease), transform 500ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 60ms);
+  }
+  .menu-open .mobile-menu li, .menu-open .mobile-menu .btn { opacity: 1; transform: none; }
+  .mobile-menu ul a {
+    display: block; padding: var(--s-75) 0;
+    font-size: 1.875rem; line-height: 2.25rem; font-weight: 600; color: var(--heading); text-decoration: none;
+  }
+  .mobile-menu ul a[aria-current="true"] { color: var(--primary); }
+  .mobile-menu .btn { align-self: flex-start; }
+
+  @media (max-width: 860px) {
+    .nav { left: var(--s-200); right: var(--s-200); transform: none; max-width: none; justify-content: space-between; }
+    .nav-links, .nav .nav-cta { display: none; }
+    .menu-btn { display: grid; }
+    .nav-right { display: flex; align-items: center; }
+  }
+  @media (min-width: 861px) {
+    .mobile-menu { display: none; }
+    .nav-right { display: contents; }
+  }
+
+  /* ---------------- Hero ---------------- */
+  .hero { padding: 152px 0 var(--s-900); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-700); align-items: center; }
+  .hero h1 {
+    max-width: 680px; margin-top: var(--s-300);
+    font-size: 3.75rem; line-height: 1; letter-spacing: -0.035em; font-weight: 600;
+    background: linear-gradient(90deg, var(--hero-from), var(--hero-to));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    padding-bottom: var(--s-50);
+  }
+  .hero .lead { max-width: 680px; margin: var(--s-300) 0 0; font-size: 1.125rem; line-height: 1.75rem; color: var(--muted); }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-200); margin-top: var(--s-500); }
+  .text-link {
+    display: inline-flex; align-items: center; gap: var(--s-50);
+    font-weight: 600; color: var(--fg); text-decoration: none;
+    transition: color 300ms var(--ease);
+  }
+  .text-link:hover { color: var(--primary); }
+  .text-link i { transition: transform 300ms var(--ease); }
+  .text-link:hover i { transform: translateY(2px); }
+  .proof {
+    display: flex; flex-wrap: wrap; gap: var(--s-300); margin: var(--s-600) 0 0; padding: var(--s-300) 0 0;
+    border-top: 1px solid var(--border); list-style: none;
+  }
+  .proof li { display: grid; gap: var(--s-25); }
+  .proof b { font-size: 1.5rem; line-height: 2rem; font-weight: 600; color: var(--heading); font-variant-numeric: tabular-nums; }
+  .proof span { font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+
+  .hero-media {
+    position: relative; margin: 0;
+    padding: var(--s-75);
+    border: 1px solid var(--border); border-radius: 24px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .hero-media video {
+    display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+    border-radius: 16px; background: #000;
+  }
+  .hero-media figcaption {
+    display: flex; justify-content: space-between; gap: var(--s-200);
+    padding: var(--s-100) var(--s-75) var(--s-50);
+    font-size: 0.875rem; line-height: 1.25rem; color: var(--muted);
+  }
+  .hero-media figcaption b { color: var(--heading); font-weight: 600; }
+  .live-dot { display: inline-flex; align-items: center; gap: var(--s-75); }
+  .live-dot::before { content: ""; width: 8px; height: 8px; border-radius: 9999px; background: var(--primary); }
+
+  @media (max-width: 960px) {
+    .hero { padding-top: 128px; }
+    .hero-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-600); }
+    .hero h1 { font-size: 3rem; }
+  }
+  @media (max-width: 640px) {
+    .hero { padding: 112px 0 var(--s-700); }
+    .hero h1 { font-size: 2.25rem; line-height: 2.5rem; }
+    .hero h1 br { display: none; }
+    .proof { gap: var(--s-200) var(--s-300); }
+  }
+
+  /* ---------------- Beneficios ---------------- */
+  .benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-200); list-style: none; margin: 0; padding: 0; }
+  .benefit {
+    padding: var(--s-400);
+    border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+    transition: transform 500ms var(--ease), border-color 300ms var(--ease);
+  }
+  .benefit:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); }
+  .benefit-icon {
+    width: 40px; height: 40px; display: grid; place-items: center;
+    border-radius: 8px; background: var(--accent-soft); color: var(--primary); font-size: 1.25rem;
+  }
+  .benefit h3 { margin-top: var(--s-300); font-size: 1.25rem; line-height: 1.75rem; }
+  .benefit p { margin: var(--s-75) 0 0; color: var(--muted); }
+  .benefit a { font-weight: 600; }
+  @media (max-width: 760px) {
+    .benefits { grid-template-columns: minmax(0, 1fr); }
+    .benefit { padding: var(--s-300); }
+  }
+
+  /* ---------------- Etiquetas y enlaces de proyecto ---------------- */
+  .tags { display: flex; flex-wrap: wrap; gap: var(--s-75); list-style: none; padding: 0; margin: 0 0 var(--s-300); }
+  .tags li {
+    font-size: 0.75rem; line-height: 1rem; font-weight: 500;
+    padding: var(--s-50) var(--s-100); border-radius: 9999px;
+    border: 1px solid var(--border); color: var(--muted); background: var(--bg);
+  }
+  .links { display: flex; flex-wrap: wrap; gap: var(--s-75) var(--s-300); list-style: none; margin: 0 0 var(--s-300); padding: 0; font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; }
+  .links a {
+    display: inline-flex; align-items: center; gap: var(--s-75);
+    color: var(--link); text-decoration: none;
+  }
+  .links a:hover { text-decoration: underline; }
+  .links i { font-size: 1rem; }
+
+  /* ---------------- Simulador (envoltorio) ---------------- */
+  .feature-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-400); align-items: end; margin-bottom: var(--s-400); }
+  .feature-head .sec-head { margin-bottom: 0; }
+  .feature-head .links { margin: 0; justify-content: flex-end; }
+  @media (max-width: 860px) {
+    .feature-head { grid-template-columns: minmax(0, 1fr); gap: var(--s-300); }
+    .feature-head .links { justify-content: flex-start; }
+  }
+
+  /* ---------------- Galería de animaciones ---------------- */
+  .filter { display: flex; flex-wrap: wrap; gap: var(--s-75); margin: 0 0 var(--s-400); }
+  .filter button {
+    font: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500;
+    padding: var(--s-75) var(--s-200); border-radius: 9999px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--muted); cursor: pointer;
+    transition: background-color 300ms var(--ease), color 300ms var(--ease), border-color 300ms var(--ease);
+  }
+  .filter button:hover { color: var(--heading); border-color: var(--muted); }
+  .filter button[aria-pressed="true"] { background: var(--heading); border-color: var(--heading); color: var(--bg); }
+
+  .gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-300); }
+  .vcard {
+    display: flex; flex-direction: column; min-width: 0;
+    border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+    overflow: hidden;
+    transition: transform 500ms var(--ease), border-color 300ms var(--ease);
+  }
+  .vcard:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); }
+  .vcard[hidden] { display: none; }
+  .vcard-thumb {
+    position: relative; display: block; width: 100%; aspect-ratio: 16 / 9;
+    padding: 0; border: 0; background: #0b0f1a; cursor: pointer; overflow: hidden;
+  }
+  .vcard-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 500ms var(--ease); }
+  .vcard-thumb:hover img, .vcard-thumb:focus-visible img { transform: scale(1.04); }
+  .vcard-thumb:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; border-radius: 0; }
+  .play-badge {
+    position: absolute; inset: 0; margin: auto;
+    width: 48px; height: 48px; display: grid; place-items: center;
+    border-radius: 9999px; background: rgba(255, 255, 255, 0.92); color: #111;
+    font-size: 1.25rem;
+    opacity: 0; transform: scale(0.9);
+    transition: opacity 300ms var(--ease), transform 500ms var(--ease);
+  }
+  .vcard-thumb:hover .play-badge, .vcard-thumb:focus-visible .play-badge { opacity: 1; transform: none; }
+  @media (hover: none) { .play-badge { opacity: 1; transform: none; } }
+  .dur {
+    position: absolute; right: var(--s-75); bottom: var(--s-75);
+    padding: var(--s-25) var(--s-75); border-radius: 4px;
+    background: rgba(0, 0, 0, 0.72); color: #fff;
+    font-family: var(--mono); font-size: 0.75rem; line-height: 1rem; font-variant-numeric: tabular-nums;
+  }
+  .vcard-body { display: flex; flex-direction: column; flex: 1; padding: var(--s-300); }
+  .card-meta { font-size: 0.75rem; line-height: 1rem; font-weight: 500; color: var(--muted); margin-bottom: var(--s-75); }
+  .vcard h3 { font-size: 1.125rem; line-height: 1.75rem; }
+  .vcard p { margin: var(--s-75) 0 var(--s-200); font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+  .vcard .tags { margin-bottom: var(--s-200); }
+  .vcard .links { margin: auto 0 0; }
+  .pill {
+    display: inline-block; margin-left: var(--s-50); padding: 0 var(--s-75);
+    border-radius: 9999px; background: var(--accent-soft); color: var(--primary);
+  }
+  @media (max-width: 960px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .gallery { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Reproductor (ventana modal) */
+  .player {
+    width: min(1100px, 94vw); max-height: 94vh; padding: 0;
+    border: 1px solid var(--border); border-radius: 16px;
+    background: var(--bg); color: var(--fg);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    overflow: auto;
+  }
+  .player[open] { animation: pop 500ms var(--ease); }
+  @keyframes pop { from { opacity: 0; transform: translateY(var(--s-200)) scale(0.98); } }
+  .player::backdrop { background: rgba(0, 0, 0, 0.78); }
+  .player-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-200); padding: var(--s-100) var(--s-100) var(--s-100) var(--s-300); border-bottom: 1px solid var(--border); }
+  .player-head h3 { font-size: 1rem; line-height: 1.5rem; }
+  .player video { display: block; width: 100%; max-height: calc(94vh - 130px); background: #000; }
+
+  /* ---------------- Cómo trabajo ---------------- */
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-300); list-style: none; margin: 0; padding: 0; counter-reset: paso; }
+  .step { padding-top: var(--s-300); border-top: 1px solid var(--border); counter-increment: paso; }
+  .step::before {
+    content: counter(paso, decimal-leading-zero);
+    font-family: var(--mono); font-size: 0.875rem; line-height: 1.25rem; color: var(--primary);
+  }
+  .step h3 { margin-top: var(--s-200); font-size: 1.25rem; line-height: 1.75rem; }
+  .step p { margin: var(--s-75) 0 0; color: var(--muted); }
+  .trust {
+    display: flex; align-items: center; gap: var(--s-200);
+    margin-top: var(--s-600); padding: var(--s-300);
+    border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+  }
+  .trust i { font-size: 1.5rem; color: var(--primary); flex-shrink: 0; }
+  .trust p { margin: 0; }
+  .trust a { font-weight: 600; }
+  @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+
+  /* ---------------- Materiales (visor de PDF) ---------------- */
+  .docs { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--s-300); align-items: start; }
+  .tabs { display: grid; gap: var(--s-75); }
+  .tabs button {
+    display: grid; gap: var(--s-25); text-align: left;
+    font: inherit; padding: var(--s-100) var(--s-200);
+    border: 1px solid var(--border); border-radius: 12px; background: var(--bg);
+    color: var(--fg); cursor: pointer;
+    transition: background-color 300ms var(--ease), border-color 300ms var(--ease);
+  }
+  .tabs button b { font-weight: 600; font-size: 0.875rem; line-height: 1.25rem; }
+  .tabs button span { font-size: 0.75rem; line-height: 1rem; color: var(--muted); }
+  .tabs button:hover { background: var(--raised); }
+  .tabs button[aria-selected="true"] { border-color: var(--primary); background: var(--accent-soft); }
+  .tab-panels { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: var(--s-300); min-width: 0; }
+  .pdf-desc { margin: 0 0 var(--s-200); color: var(--muted); }
+  .pdf-desc strong { color: var(--fg); font-weight: 600; }
+  .pdf-toolbar {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-200);
+    margin-bottom: var(--s-100); font-size: 0.875rem; line-height: 1.25rem; color: var(--muted);
+  }
+  .pdf-toolbar a { display: inline-flex; align-items: center; gap: var(--s-50); font-weight: 600; text-decoration: none; }
+  .pdf-toolbar a:hover { text-decoration: underline; }
+  .pdf-viewer {
+    height: 640px; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: #4a4d50; padding: var(--s-100);
+  }
+  .pdf-viewer canvas { display: block; width: 100%; height: auto; margin: 0 auto var(--s-100); background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35); }
+  .pdf-viewer iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+  .pdf-message { color: #fff; text-align: center; padding: var(--s-400) var(--s-200); }
+  .pdf-message a { color: #7ee2c9; }
+  /* Esqueleto mientras se cargan las páginas */
+  .pdf-skel { display: grid; gap: var(--s-100); }
+  .pdf-skel div { aspect-ratio: 1 / 1.3; border-radius: 4px; background: #5c6064; animation: pulse 1.6s var(--ease) infinite; }
+  @keyframes pulse { 50% { opacity: 0.55; } }
+  @media (max-width: 860px) {
+    .docs { grid-template-columns: minmax(0, 1fr); }
+    .tabs { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    .pdf-viewer { height: 520px; }
+    .tab-panels { padding: var(--s-200); }
+  }
+
+  /* ---------------- Notas ---------------- */
+  .notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-300); }
+  .note {
+    position: relative; display: grid; gap: var(--s-75);
+    padding: var(--s-400); border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+    transition: transform 500ms var(--ease), border-color 300ms var(--ease);
+  }
+  .note:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); }
+  .note-icon { font-family: var(--mono); font-size: 1.5rem; line-height: 2rem; color: var(--primary); margin-bottom: var(--s-100); }
+  .note h3 { font-size: 1.25rem; line-height: 1.75rem; }
+  .note h3 a { color: inherit; text-decoration: none; }
+  .note h3 a::after { content: ""; position: absolute; inset: 0; border-radius: 16px; }
+  .note p { margin: 0 0 var(--s-100); color: var(--muted); }
+  .note .tags { margin: 0; }
+  @media (max-width: 760px) { .notes { grid-template-columns: minmax(0, 1fr); } .note { padding: var(--s-300); } }
+
+  /* ---------------- Preguntas frecuentes ---------------- */
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--s-700); align-items: start; }
+  .faq-grid .sec-head { position: sticky; top: 120px; }
+  .faq { border-top: 1px solid var(--border); }
+  .faq details { border-bottom: 1px solid var(--border); }
+  .faq summary {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-200);
+    padding: var(--s-300) 0; cursor: pointer; list-style: none;
+    font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; color: var(--heading);
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary i { flex-shrink: 0; color: var(--muted); transition: transform 500ms var(--ease); }
+  .faq details[open] summary i { transform: rotate(45deg); }
+  .faq details p { margin: 0 0 var(--s-300); color: var(--muted); max-width: 640px; }
+  @media (max-width: 860px) {
+    .faq-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-300); }
+    .faq-grid .sec-head { position: static; }
+  }
+
+  /* ---------------- Contacto final ---------------- */
+  .cta {
+    padding: var(--s-800) var(--s-600);
+    border-radius: 24px; background: var(--heading); color: var(--bg);
+    text-align: center;
+  }
+  .cta h2 { color: var(--bg); max-width: 680px; margin: var(--s-200) auto 0; font-size: 2.25rem; line-height: 2.5rem; letter-spacing: -0.02em; }
+  .cta p { max-width: 560px; margin: var(--s-200) auto 0; font-size: 1.125rem; line-height: 1.75rem; color: color-mix(in srgb, var(--bg) 72%, transparent); }
+  .cta .kicker { color: color-mix(in srgb, var(--bg) 72%, transparent); }
+  .cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-100); margin-top: var(--s-500); }
+  .cta .btn-primary { background: var(--bg); color: var(--heading); }
+  .cta .btn-primary:hover { background: color-mix(in srgb, var(--bg) 88%, var(--heading)); }
+  .cta .btn-ghost { color: var(--bg); border-color: color-mix(in srgb, var(--bg) 28%, transparent); }
+  .cta .btn-ghost:hover { background: color-mix(in srgb, var(--bg) 10%, transparent); }
+  .copy-status { min-height: 1.25rem; margin-top: var(--s-200); font-size: 0.875rem; line-height: 1.25rem; color: color-mix(in srgb, var(--bg) 72%, transparent); }
+  .cta-alt { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-300); margin-top: var(--s-300); font-size: 0.875rem; line-height: 1.25rem; }
+  .cta-alt a { display: inline-flex; align-items: center; gap: var(--s-75); color: var(--bg); text-decoration: none; font-weight: 500; opacity: 0.8; transition: opacity 300ms var(--ease); }
+  .cta-alt a:hover { opacity: 1; }
+  @media (max-width: 640px) {
+    .cta { padding: var(--s-600) var(--s-300); }
+    .cta h2 { font-size: 1.875rem; line-height: 2.25rem; }
+  }
+
+  /* ---------------- Pie ---------------- */
+  .footer { padding: var(--s-500) 0 var(--s-600); font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+  .footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-200); }
+  .footer ul { display: flex; flex-wrap: wrap; gap: var(--s-300); list-style: none; margin: 0; padding: 0; }
+  .footer a { color: var(--muted); text-decoration: none; }
+  .footer a:hover { color: var(--heading); }
+
+  /* ---------------- Revelado al hacer scroll ---------------- */
+  .js .reveal { opacity: 0; transform: translateY(var(--s-400)); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: 200ms !important; animation: none !important; }
+    .js .reveal { transform: none; }
+    .mobile-menu li, .mobile-menu .btn { transform: none; }
+  }
+</style>
+<style>
+  /* ================================================================
+     PROYECTO DESTACADO · Gradient descent simulator
+     Todo el CSS va bajo .gd y usa las variables del tema del sitio,
+     así el simulador cambia junto con el modo claro / oscuro.
+     ================================================================ */
+  .gd {
+    --gd-path: #f97316;
+    --gd-cut: #ec4899;
+    --gd-start: #22c55e;
+    container-type: inline-size;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    overflow: clip; /* clip (no hidden) para que la barra sticky funcione */
+    font-size: 0.875rem;
+    line-height: 1.45;
+    outline: none;
+  }
+  .gd [hidden] { display: none !important; }
+  .gd.is-fs { overflow: auto; border-radius: 0; border-width: 0; height: 100vh; }
+  .gd h3 { margin: 0; font-size: 0.875rem; color: var(--heading); }
+  .gd code, .gd kbd, .gd .mono { font-family: var(--mono); font-size: 0.85em; }
+  .gd kbd { padding: 0 0.3em; border: 1px solid var(--border); border-radius: 3px; background: var(--bg); }
+
+  .gd-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .gd-logo {
+    width: 40px; height: 40px; flex-shrink: 0;
+    display: grid; place-items: center;
+    border-radius: 8px;
+    background: var(--primary);
+    color: var(--on-primary);
+    font-family: var(--mono);
+    font-weight: 700;
+  }
+  .gd-head-text { flex: 1; min-width: 0; }
+  .gd-title { font-weight: 700; color: var(--heading); font-size: 1rem; }
+  .gd-sub { font-size: 0.75rem; color: var(--muted); }
+  .gd-badge {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    color: var(--muted);
+    background: rgba(108, 117, 125, 0.15);
+  }
+  .gd-badge[data-s="running"]   { color: var(--primary); background: rgba(24, 188, 156, 0.15); }
+  .gd-badge[data-s="paused"]    { color: #d97706; background: rgba(245, 158, 11, 0.15); }
+  .gd-badge[data-s="converged"] { color: #16a34a; background: rgba(34, 197, 94, 0.15); }
+  .gd-badge[data-s="diverged"]  { color: #dc2626; background: rgba(239, 68, 68, 0.15); }
+  .gd-badge[data-s="maxiter"]   { color: #ea580c; background: rgba(249, 115, 22, 0.15); }
+
+  /* Angosto: una sola columna; los bloques se reordenan para que la función y
+     los botones queden arriba de los gráficos y los parámetros debajo */
+  .gd-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; padding: 1rem; }
+  .gd-side, .gd-side-inner, .gd-main { display: contents; }
+  .gd-fnblock { order: 1; }
+  .gd-plots   { order: 2; }
+  .gd-groups  { order: 3; }
+  .gd-bottom  { order: 4; }
+  .gd-actions { order: 5; }
+  .gd-side-inner > details { order: 6; }
+  /* En pantallas angostas la barra de reproducción va al final del simulador pero
+     queda flotando abajo de la pantalla mientras se recorre (sticky) */
+  .gd-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin: 0 -1rem;
+    padding: 0.6rem 1rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Controles de formulario */
+  .gd-input, .gd-select {
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--fg);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.35rem 0.55rem;
+    min-width: 0;
+  }
+  .gd-input.mono { font-family: var(--mono); }
+  .gd-input:focus, .gd-select:focus, .gd-btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+  .gd-input.gd-invalid { border-color: #dc2626; }
+  .gd input[type="range"] { width: 100%; accent-color: var(--primary); margin: 0.2rem 0 0; }
+  .gd input[type="checkbox"] { accent-color: var(--primary); }
+
+  .gd-btn {
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.15s, background-color 0.15s;
+  }
+  .gd-btn:hover { filter: brightness(0.95); }
+  [data-theme="dark"] .gd-btn:hover { filter: brightness(1.2); }
+  .gd-btn-primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); min-width: 7.5rem; }
+  .gd-btn-dark { background: var(--heading); border-color: var(--heading); color: var(--bg); }
+  .gd-btn-icon { padding: 0.3rem 0.55rem; font-size: 1rem; line-height: 1; }
+
+  .gd-fnblock { display: grid; gap: 0.5rem; }
+  .gd-fnblock .gd-select { width: 100%; }
+  .gd-fn { display: flex; gap: 0.5rem; min-width: 0; }
+  .gd-fn .gd-input { flex: 1 1 auto; }
+  .gd-actions { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0.5rem; }
+  .gd-actions .gd-btn { padding-left: 0.4rem; padding-right: 0.4rem; min-width: 0; }
+  .gd-error { margin: 0; color: #dc2626; font-size: 0.75rem; }
+
+  .gd-deriv {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.45rem 0.65rem;
+    overflow-wrap: anywhere;
+  }
+  .gd-deriv span.k { color: var(--muted); }
+
+  /* Paneles de gráficos */
+  .gd-grid-2 { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+  .gd-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-width: 0; }
+  .gd-panel-head { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); }
+  .gd-legend { display: flex; flex-wrap: wrap; gap: 0.15rem 0.8rem; margin-top: 0.2rem; font-size: 0.75rem; color: var(--muted); }
+  .gd-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+  .gd-sw { display: inline-block; width: 12px; height: 3px; border-radius: 2px; }
+  .gd-sw.dot { width: 9px; height: 9px; border-radius: 50%; background: #fff; border: 1.5px solid #0f172a; }
+  .gd-sw.dia { width: 8px; height: 8px; transform: rotate(45deg); border-radius: 0; background: var(--gd-start); }
+  .gd-plot { height: 360px; position: relative; }
+  .gd-plot-wrap { position: relative; }
+  .gd-plot-wrap canvas { position: absolute; inset: 0; pointer-events: none; }
+  #plot2d { cursor: crosshair; }
+  .gd-conv { height: 250px; }
+  .gd-loading {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    color: var(--muted); font-size: 0.875rem;
+  }
+
+  /* Grupos de parámetros */
+  .gd-groups { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+  .gd-group {
+    margin: 0;
+    padding: 0.75rem 0.85rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    display: grid;
+    gap: 0.65rem;
+    align-content: start;
+    min-width: 0;
+  }
+  .gd-group legend {
+    padding: 0 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .gd-field { display: block; }
+  .gd-field-top { display: flex; justify-content: space-between; gap: 0.5rem; }
+  .gd-field-top .val { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+  .gd-field-top .val.cut { color: var(--gd-cut); }
+  .gd-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .gd-pair > label:not(.gd-stack) { display: flex; align-items: center; gap: 0.35rem; }
+  .gd-pair .gd-input, .gd-pair .gd-select { width: 100%; }
+  .gd-stack { display: grid; gap: 0.2rem; }
+  .gd-check { display: flex; align-items: center; gap: 0.45rem; }
+  .gd-hint { margin: 0; font-size: 0.75rem; color: var(--muted); }
+
+  /* Métricas */
+  .gd-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding: 0.8rem; }
+  .gd-metric { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.6rem; min-width: 0; }
+  .gd-metric.hl { border-color: var(--primary); background: rgba(24, 188, 156, 0.08); }
+  .gd-metric .lbl { font-size: 0.75rem; color: var(--muted); }
+  .gd-metric .v {
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .gd-msg {
+    margin: 0 0.8rem 0.8rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    overflow-wrap: anywhere;
+  }
+  .gd-msg.mono { font-family: var(--mono); }
+  .gd-msg[data-s="converged"] { color: #16a34a; border-color: rgba(34, 197, 94, 0.4); background: rgba(34, 197, 94, 0.08); }
+  .gd-msg[data-s="diverged"]  { color: #dc2626; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.08); }
+  .gd-msg[data-s="maxiter"]   { color: #ea580c; border-color: rgba(249, 115, 22, 0.4); background: rgba(249, 115, 22, 0.08); }
+
+  .gd details { margin: 0; font-size: 0.875rem; }
+  .gd summary { font-size: 1em; font-weight: 600; cursor: pointer; }
+  .gd details ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+  .gd details li { margin: 0.25rem 0; }
+
+  /* Distribución según el ancho del propio simulador */
+  @container (min-width: 680px) {
+    .gd-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gd-groups { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .gd-bottom { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+  }
+
+  /* Ancho: panel lateral con todos los controles (con scroll propio) + gráficos.
+     Todo entra en una pantalla: no hace falta desplazarse para cambiar
+     parámetros y darle play. */
+  @container (min-width: 1080px) {
+    .gd-body { grid-template-columns: 300px minmax(0, 1fr); align-items: stretch; padding: 0.75rem; gap: 0.75rem; }
+    .gd-side { display: block; position: relative; min-height: 0; }
+    .gd-side-inner {
+      display: grid;
+      align-content: start;
+      gap: 0.75rem;
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+      scrollbar-width: thin;
+    }
+    .gd-side-inner > * { order: 0; } /* orden natural: función, botones, parámetros */
+    .gd-main { display: grid; gap: 0.75rem; align-content: start; min-width: 0; }
+    .gd-actions { position: static; margin: 0; padding: 0; border: 0; background: none; }
+    .gd-groups { grid-template-columns: minmax(0, 1fr); gap: 0.6rem; }
+    .gd-group { gap: 0.5rem; padding: 0.55rem 0.75rem 0.7rem; }
+    .gd-plot { height: clamp(300px, calc(100vh - 440px), 600px); }
+    .gd-conv { height: 190px; }
+    .gd-bottom { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .gd-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0.6rem; }
+    .gd-msg { margin: 0 0.6rem 0.6rem; }
+  }
+  .gd.is-fs .gd-plot:not(.gd-conv) { height: max(320px, calc(100vh - 380px)); }
+
+  /* El simulador ocupa todo el ancho de la ventana (lo calcula el script) */
+  .gd.bleed { width: var(--bleed-w); margin-left: var(--bleed-x); }
+  .gd.is-fs { width: auto; margin-left: 0; }
+
+  @media (max-width: 560px) {
+    .gd-plot:not(.gd-conv) { height: 320px; }
+    .gd-btn-primary { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add("js");</script>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#home" aria-label="Diego E. Rodríguez V., home"><span class="brand-mark" aria-hidden="true">∇</span>Diego Rodríguez V.</a>
+  <nav aria-label="Sections">
+    <ul class="nav-links">
+      <li><a href="#simulator">Simulator</a></li>
+      <li><a href="#animations">Animations</a></li>
+      <li><a href="#materials">Materials</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </nav>
+  <div class="nav-right">
+    <a class="icon-btn lang-btn" href="../" hreflang="es" lang="es" aria-label="Versión en español">ES</a>
+    <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn-primary btn-sm nav-cta" href="#contact">Contact</a>
+    <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" aria-label="Menu">
+  <ul>
+    <li style="--i: 0"><a href="#simulator">Simulator</a></li>
+    <li style="--i: 1"><a href="#animations">Animations</a></li>
+    <li style="--i: 2"><a href="#materials">Materials</a></li>
+    <li style="--i: 3"><a href="#faq">FAQ</a></li>
+  </ul>
+  <a class="btn btn-primary" style="--i: 4" href="#contact"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Send an email</a>
+</div>
+
+<main id="main">
+
+  <!-- ======================= HERO ======================= -->
+  <section class="hero" id="home">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker">Portfolio</span>
+        <h1>Diego E. <br>Rodríguez V.</h1>
+        <p class="lead">Manim animations, interactive simulators and LaTeX materials for calculus, algebra and physics. Mathematics and Information Systems student.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Math%20content%20project"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Send an email</a>
+          <a class="text-link" href="#animations">See the work<i class="ph ph-arrow-down" aria-hidden="true"></i></a>
+        </div>
+        <ul class="proof" aria-label="Published work">
+          <li><b>8</b><span>Manim animations</span></li>
+          <li><b>1</b><span>interactive simulator</span></li>
+          <li><b>5</b><span>course materials</span></li>
+          <li><b>2</b><span>technical notes</span></li>
+        </ul>
+      </div>
+      <figure class="hero-media">
+        <video id="hero-video" muted loop playsinline preload="metadata" poster="../img/topologia-basica.jpg" aria-label="Animation: interior, exterior and boundary points of the set A using open balls">
+          <source src="../videos/topologia-basica.mp4" type="video/mp4">
+        </video>
+        <figcaption><span class="live-dot"><b>Basic topology concepts</b></span><span>Manim · 1:12</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ======================= BENEFICIOS ======================= -->
+  <section class="block" id="services" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Work</span>
+        <h2>What I do</h2>
+      </div>
+      <ul class="benefits">
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-film-strip" aria-hidden="true"></i></div>
+          <h3>Manim animations</h3>
+          <p>Eight published animations, from 0:40 to 4:12. Each one builds up a specific result, such as ln(ab) = ln a + ln b, from a geometric construction.</p>
+        </li>
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-cursor-click" aria-hidden="true"></i></div>
+          <h3>Browser-based simulators</h3>
+          <p>A gradient descent simulator for multivariable calculus, with symbolic differentiation, level curves and real-time metrics. Works on desktop and mobile, with nothing to install.</p>
+        </li>
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-file-text" aria-hidden="true"></i></div>
+          <h3>LaTeX materials</h3>
+          <p>Exams with grading criteria, problem sets with expandable solutions, and summaries with figures made in TikZ.</p>
+        </li>
+        <li class="benefit reveal">
+          <div class="benefit-icon"><i class="ph ph-seal-check" aria-hidden="true"></i></div>
+          <h3>Numerical verification</h3>
+          <p>Scenes are checked before rendering. The logarithm one comes with a <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/verificar_log_area.py" target="_blank" rel="noopener">script that checks every area</a>.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= SIMULADOR ======================= -->
+  <section class="block" id="simulator">
+    <div class="wrap">
+      <div class="feature-head reveal">
+        <div class="sec-head">
+          <span class="kicker"><i class="ph-bold ph-star" aria-hidden="true"></i>Featured project</span>
+          <h2>Gradient descent simulator</h2>
+          <p>For multivariable calculus: surfaces z = f(x, y), level curves, cutting planes and the ∇f field. It shows step by step how the algorithm reaches a critical point, and when it oscillates or diverges depending on the rate α.</p>
+        </div>
+        <ul class="links">
+          <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/simulador-gradiente" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li>
+          <li><a href="../codigo/simulador-gradiente/" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Standalone version (Spanish)</a></li>
+          <li><a href="notes/how-the-simulator-works.html"><i class="ph ph-notebook" aria-hidden="true"></i>How it works</a></li>
+        </ul>
+      </div>
+      <ul class="tags" aria-label="Technologies">
+        <li>JavaScript</li><li>Plotly.js</li><li>math.js</li><li>Symbolic differentiation</li><li>Optimization</li>
+      </ul>
+
+    <div class="gd" id="gd" tabindex="-1" aria-label="Gradient descent simulator">
+      <div class="gd-head">
+        <div class="gd-logo" aria-hidden="true">∇f</div>
+        <div class="gd-head-text">
+          <div class="gd-title">Gradient Descent Simulator</div>
+          <div class="gd-sub">Surfaces z = f(x, y) · Level curves · Optimization</div>
+        </div>
+        <span id="statusBadge" class="gd-badge" data-s="ready">Ready</span>
+        <button id="fsBtn" class="gd-btn gd-btn-icon" type="button" title="Fullscreen" aria-label="Fullscreen">⛶</button>
+      </div>
+
+      <div class="gd-body">
+        <!-- Panel lateral: función, controles y parámetros -->
+        <div class="gd-side"><div class="gd-side-inner">
+          <div class="gd-fnblock">
+            <select id="presetSelect" class="gd-select" aria-label="Preset function"></select>
+            <div class="gd-fn">
+              <input id="fnInput" class="gd-input mono" type="text" spellcheck="false" placeholder="e.g. x**2 + y**2" aria-label="Function f(x, y)">
+              <button id="applyFnBtn" class="gd-btn gd-btn-dark" type="button">Apply</button>
+            </div>
+            <p id="fnError" class="gd-error" hidden></p>
+            <div class="gd-deriv">
+              <div><span class="k">∂f/∂x =</span> <span id="dfxText"></span></div>
+              <div><span class="k">∂f/∂y =</span> <span id="dfyText"></span></div>
+            </div>
+          </div>
+          <div class="gd-actions">
+            <button id="playBtn" class="gd-btn gd-btn-primary" type="button">▶ Start</button>
+            <button id="stepBtn" class="gd-btn" type="button">Step ⏭</button>
+            <button id="resetBtn" class="gd-btn" type="button">↺ Reset</button>
+          </div>
+          <!-- Parámetros -->
+          <div class="gd-groups">
+            <fieldset class="gd-group">
+              <legend>Domain</legend>
+              <label class="gd-field">
+                <span class="gd-field-top"><span>X range</span><span id="xRangeLabel" class="val"></span></span>
+                <input id="xRange" type="range" min="0.5" max="10" step="0.5">
+              </label>
+              <label class="gd-field">
+                <span class="gd-field-top"><span>Y range</span><span id="yRangeLabel" class="val"></span></span>
+                <input id="yRange" type="range" min="0.5" max="10" step="0.5">
+              </label>
+              <label class="gd-field">
+                <span class="gd-field-top"><span>Grid resolution</span><span id="resLabel" class="val"></span></span>
+                <input id="resRange" type="range" min="20" max="120" step="5" value="60">
+              </label>
+            </fieldset>
+
+            <fieldset class="gd-group">
+              <legend>Cutting plane</legend>
+              <select id="planeType" class="gd-select" aria-label="Plane type">
+                <option value="none">No plane</option>
+                <option value="z" selected>Horizontal z = c (level curve)</option>
+                <option value="x">Vertical x = c (trace)</option>
+                <option value="y">Vertical y = c (trace)</option>
+              </select>
+              <label id="planeValWrap" class="gd-field">
+                <span class="gd-field-top"><span>Value of c</span><span id="planeLabel" class="val cut"></span></span>
+                <input id="planeVal" type="range">
+              </label>
+              <label class="gd-check">
+                <input id="showField" type="checkbox" checked>
+                Show vector field ∇f
+              </label>
+            </fieldset>
+
+            <fieldset class="gd-group">
+              <legend>Gradient descent</legend>
+              <div class="gd-stack">
+                <span>Starting point (x₀, y₀)</span>
+                <div class="gd-pair">
+                  <label><span class="mono" style="color: var(--muted)">x₀</span><input id="x0Input" class="gd-input mono" type="number" step="0.1"></label>
+                  <label><span class="mono" style="color: var(--muted)">y₀</span><input id="y0Input" class="gd-input mono" type="number" step="0.1"></label>
+                </div>
+              </div>
+              <label class="gd-field">
+                <span class="gd-field-top"><span>Learning rate α</span><span id="alphaLabel" class="val"></span></span>
+                <!-- Escala logarítmica: α = 10^valor -->
+                <input id="alphaRange" type="range" min="-4" max="0.3" step="0.01">
+              </label>
+              <label class="gd-field">
+                <span class="gd-field-top"><span>Max iterations</span><span id="iterLabel" class="val"></span></span>
+                <input id="iterRange" type="range" min="10" max="1000" step="10">
+              </label>
+              <label class="gd-field">
+                <span class="gd-field-top"><span>Speed</span><span id="delayLabel" class="val"></span></span>
+                <input id="delayRange" type="range" min="10" max="1000" step="10" value="150" style="direction: rtl">
+              </label>
+              <div class="gd-pair">
+                <label class="gd-stack"><span>Tolerance ‖∇f‖</span>
+                  <select id="tolSelect" class="gd-select mono">
+                    <option value="1e-2">1e-2</option>
+                    <option value="1e-3">1e-3</option>
+                    <option value="1e-4" selected>1e-4</option>
+                    <option value="1e-5">1e-5</option>
+                    <option value="1e-6">1e-6</option>
+                  </select>
+                </label>
+                <label class="gd-stack"><span>Gradient</span>
+                  <select id="gradMethod" class="gd-select">
+                    <option value="analytic" selected>Analytic</option>
+                    <option value="numeric">Numerical</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <details>
+            <summary>What am I looking at?</summary>
+            <ul>
+              <li>The <b>gradient</b> ∇f = (∂f/∂x, ∂f/∂y) points in the direction of <b>steepest ascent</b> and is <b>perpendicular</b> to the level curves.</li>
+              <li>The algorithm moves in the opposite direction: <span class="mono">x<sub>k+1</sub> = x<sub>k</sub> − α ∇f(x<sub>k</sub>)</span>.</li>
+              <li>With a large α the method <b>oscillates</b> or <b>diverges</b>; with a small α it converges slowly.</li>
+              <li>It stops when ‖∇f‖ &lt; tolerance: a <b>critical point</b> (minimum, maximum or saddle).</li>
+              <li>The plane z = c cuts the surface along the <b>level curve</b> f(x, y) = c.</li>
+            </ul>
+            <p class="gd-hint" style="margin-top: 0.5rem;">The function accepts <code>**</code> or <code>^</code>, <code>sin cos tan exp log sqrt abs</code>, <code>pi</code>, <code>e</code>. With the simulator focused: <kbd>Space</kbd> start/pause · <kbd>→</kbd> one step · <kbd>R</kbd> reset.</p>
+          </details>
+        </div></div>
+
+        <!-- Área de gráficos -->
+        <div class="gd-main">
+          <!-- Gráficos -->
+          <div class="gd-grid-2 gd-plots">
+            <div class="gd-panel">
+              <div class="gd-panel-head">
+                <h3>3D surface · z = f(x, y)</h3>
+                <div class="gd-legend">
+                  <span><i class="gd-sw" style="background: var(--gd-cut)"></i>Plane / intersection</span>
+                  <span><i class="gd-sw" style="background: var(--gd-path)"></i>Path</span>
+                  <span><i class="gd-sw dia"></i>Start</span>
+                  <span><i class="gd-sw dot"></i>Current point</span>
+                </div>
+              </div>
+              <div id="plot3d" class="gd-plot"><div class="gd-loading">Loading simulator…</div></div>
+            </div>
+            <div class="gd-panel">
+              <div class="gd-panel-head">
+                <h3>Level curves and vector field ∇f</h3>
+                <div class="gd-legend">
+                  <span><i class="gd-sw" style="background: var(--muted)"></i>∇f (steepest slope)</span>
+                  <span><i class="gd-sw" style="background: var(--gd-path)"></i>Algorithm steps</span>
+                  <span>Click = new starting point</span>
+                </div>
+              </div>
+              <!-- La trayectoria 2D se dibuja en un canvas superpuesto: evita que Plotly
+                   recalcule el contorno completo en cada paso de la animación -->
+              <div class="gd-plot-wrap">
+                <div id="plot2d" class="gd-plot"><div class="gd-loading">Loading simulator…</div></div>
+                <canvas id="overlay2d"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Métricas + convergencia -->
+          <div class="gd-grid-2 gd-bottom">
+            <div class="gd-panel">
+              <div class="gd-panel-head"><h3>Real-time metrics</h3></div>
+              <div class="gd-metrics">
+                <div class="gd-metric"><div class="lbl">Iteration k</div><div id="mK" class="v">0</div></div>
+                <div class="gd-metric"><div class="lbl">f(x<sub>k</sub>, y<sub>k</sub>)</div><div id="mF" class="v">—</div></div>
+                <div class="gd-metric"><div class="lbl">x<sub>k</sub></div><div id="mX" class="v">—</div></div>
+                <div class="gd-metric"><div class="lbl">y<sub>k</sub></div><div id="mY" class="v">—</div></div>
+                <div class="gd-metric"><div class="lbl">∂f/∂x</div><div id="mGx" class="v">—</div></div>
+                <div class="gd-metric"><div class="lbl">∂f/∂y</div><div id="mGy" class="v">—</div></div>
+                <div class="gd-metric hl"><div class="lbl">‖∇f‖ (norm)</div><div id="mNorm" class="v">—</div></div>
+                <div class="gd-metric"><div class="lbl">Step α‖∇f‖</div><div id="mStep" class="v">—</div></div>
+              </div>
+              <div id="mMsg" class="gd-msg" data-s="ready">Pick a starting point and press <b>Start</b> or <b>Step</b>.</div>
+            </div>
+            <div class="gd-panel">
+              <div class="gd-panel-head">
+                <h3>Convergence</h3>
+                <div class="gd-sub">‖∇f‖ on a log scale (left) and f(x<sub>k</sub>, y<sub>k</sub>) (right) per iteration</div>
+              </div>
+              <div id="plotConv" class="gd-conv gd-plot"><div class="gd-loading">Loading…</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ======================= ANIMACIONES ======================= -->
+  <section class="block" id="animations" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Manim</span>
+        <h2>Animations</h2>
+        <p>Programmed in Python with Manim. Select a thumbnail to play it. On-screen text is in Spanish.</p>
+      </div>
+
+      <div class="filter" role="group" aria-label="Filter by topic">
+        <button type="button" aria-pressed="true" data-filter="todas">All</button>
+        <button type="button" aria-pressed="false" data-filter="analisis">Calculus</button>
+        <button type="button" aria-pressed="false" data-filter="algebra">Algebra</button>
+        <button type="button" aria-pressed="false" data-filter="fisica">Physics</button>
+      </div>
+
+      <!-- Cada tarjeta muestra una miniatura; el video se abre en el reproductor recién al darle play -->
+      <div class="gallery">
+        <article class="vcard reveal" id="logaritmo" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="../videos/logaritmo-area.mp4" data-title="The logarithm as an area" aria-label="Play: The logarithm as an area">
+            <img src="../img/logaritmo-area.jpg" alt="Area under the hyperbola y = 1/t split into ln a and ln b, with ln(ab) = ln a + ln b" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">3:51</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Calculus I</div>
+            <h3>The logarithm as an area</h3>
+            <p>ln x is the area under y = 1/t between 1 and x. An area-preserving transformation shows why ln(ab) = ln a + ln b, and from there come powers, the number e and the derivative 1/x.</p>
+            <ul class="tags"><li>Definite integral</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/log_area.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="potencial" data-cat="fisica">
+          <button class="vcard-thumb" type="button" data-video="../videos/potencial-relieve.mp4" data-title="Electric potential as a landscape" aria-label="Play: Electric potential as a landscape">
+            <img src="../img/potencial-relieve.jpg" alt="Surface z = V(x, y) of two charges with projected field lines and equipotentials" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">1:51</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Physics and Multivariable Calculus <span class="pill">Ties in with the simulator</span></div>
+            <h3>Electric potential as a landscape</h3>
+            <p>Each charge is a peak or a well of z = V(x, y). Equipotentials are level curves and field lines follow the path of steepest descent: the same gradient as in the simulator.</p>
+            <ul class="tags"><li>Gradient</li><li>Electric field</li></ul>
+            <ul class="links">
+              <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/potencial_relieve.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li>
+              <li><a href="notes/gradient-perpendicular.html"><i class="ph ph-notebook" aria-hidden="true"></i>Related note</a></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="senx" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="../videos/senx-sobre-x.mp4" data-title="sin x / x with areas" aria-label="Play: sin x / x with areas">
+            <img src="../img/senx-sobre-x.jpg" alt="Figure stretched by 1/sin x next to the graphs of cos x, sin x / x and 1 near x = 0" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">4:12</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Calculus I</div>
+            <h3>sin x / x with areas</h3>
+            <p>On the unit circle, triangle OAP, the sector and triangle OAT give sin x ≤ x ≤ tan x, and from there cos x ≤ sin x / x ≤ 1. Stretching the figure by 1/sin x shows why the area ratios tend to 1.</p>
+            <ul class="tags"><li>Limits</li></ul>
+            <ul class="links">
+              <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/senx_sobre_x.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li>
+              <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/verificar_senx_sobre_x.py" target="_blank" rel="noopener"><i class="ph ph-seal-check" aria-hidden="true"></i>Verification</a></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="taylor" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="../videos/serie-de-taylor.mp4" data-title="Taylor and Maclaurin polynomials" aria-label="Play: Taylor and Maclaurin polynomials">
+            <img src="../img/serie-de-taylor.jpg" alt="Degree-11 Taylor polynomial approximating sin x near the origin" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">0:40</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Calculus I</div>
+            <h3>Taylor and Maclaurin polynomials</h3>
+            <p>The Taylor polynomial of sin x adds terms up to degree 15: near the origin it hugs the function, while farther out it still drifts away. The region where |f − P<sub>n</sub>| &lt; 0.1 grows with each degree.</p>
+            <ul class="tags"><li>Polynomial approximation</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Taylor.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="lata" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="../videos/lata-optima.mp4" data-title="The optimal can" aria-label="Play: The optimal can">
+            <img src="../img/lata-optima.jpg" alt="Fixed-volume cylinder next to the graph of the area A(r), split into lids and wall" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">2:44</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Calculus I</div>
+            <h3>The optimal can</h3>
+            <p>Among all cylinders of fixed volume, the one that uses the least metal minimizes A(r) = 2πr² + 2V/r and has a height equal to its diameter. At the end, why real cans don't have that shape.</p>
+            <ul class="tags"><li>Optimization</li></ul>
+            <ul class="links">
+              <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/lata_optima.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li>
+              <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/verificar_lata_optima.py" target="_blank" rel="noopener"><i class="ph ph-seal-check" aria-hidden="true"></i>Verification</a></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="green" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="../videos/teorema-de-green.mp4" data-title="Green's theorem" aria-label="Play: Green's theorem">
+            <img src="../img/teorema-de-green.jpg" alt="Region D divided into cells colored by curl, with the formula of Green's theorem" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">0:53</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Multivariable Calculus</div>
+            <h3>Green's theorem</h3>
+            <p>Why the circulation around a closed curve C equals the integral of the curl over D: the swirls of neighboring cells cancel along shared edges and only the boundary survives.</p>
+            <ul class="tags"><li>Vector calculus</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/Green.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="topologia" data-cat="analisis">
+          <button class="vcard-thumb" type="button" data-video="../videos/topologia-basica.mp4" data-title="Basic topology concepts" aria-label="Play: Basic topology concepts">
+            <img src="../img/topologia-basica.jpg" alt="Open ball on the upper edge of the set A, half green and half red" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">1:12</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Multivariable Calculus</div>
+            <h3>Basic topology concepts</h3>
+            <p>Interior, exterior and boundary points defined with open balls, on the set A = [0, 2] × [0, 2). A boundary point may or may not belong to the set.</p>
+            <ul class="tags"><li>Topology in ℝ²</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/PuntosTopologia.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li></ul>
+          </div>
+        </article>
+
+        <article class="vcard reveal" id="cuadrados" data-cat="algebra">
+          <button class="vcard-thumb" type="button" data-video="../videos/completar-cuadrados.mp4" data-title="From completing the square to the quadratic formula" aria-label="Play: From completing the square to the quadratic formula">
+            <img src="../img/completar-cuadrados.jpg" alt="Square of side x + b/2 built from pieces, and the quadratic formula" width="800" height="450" loading="lazy">
+            <span class="play-badge" aria-hidden="true"><i class="ph-bold ph-play"></i></span><span class="dur">1:20</span>
+          </button>
+          <div class="vcard-body">
+            <div class="card-meta">Algebra</div>
+            <h3>From completing the square to the quadratic formula</h3>
+            <p>x² + bx is a square plus a rectangle. The rectangle is cut into two strips attached to the square, and only the corner (b/2)² is missing. Reading off the areas gives the quadratic formula.</p>
+            <ul class="tags"><li>Quadratic equation</li></ul>
+            <ul class="links"><li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/manim/completar_cuadrados.py" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>Code</a></li></ul>
+          </div>
+        </article>
+      </div>
+
+      <!-- Reproductor único para todas las animaciones -->
+      <dialog class="player" id="player" aria-labelledby="player-title">
+        <div class="player-head">
+          <h3 id="player-title"></h3>
+          <button class="icon-btn player-close" type="button" aria-label="Close"><i class="ph ph-x" aria-hidden="true"></i></button>
+        </div>
+        <!-- muted: las animaciones no tienen audio, y así el navegador nunca bloquea el autoplay -->
+        <video id="player-video" controls playsinline muted preload="auto"></video>
+      </dialog>
+    </div>
+  </section>
+
+  <!-- ======================= CÓMO TRABAJO ======================= -->
+  <section class="block" id="process" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">How we'd work together</span>
+        <h2>From a hard topic to a piece ready to publish</h2>
+      </div>
+      <ol class="steps">
+        <li class="step reveal">
+          <h3>We pick the concept</h3>
+          <p>You tell me the topic, the course level and the step where students get stuck. From that I define what the piece needs to show.</p>
+        </li>
+        <li class="step reveal">
+          <h3>Script and short draft</h3>
+          <p>I write the script, check the math and put together a short first version to validate the approach before producing everything.</p>
+        </li>
+        <li class="step reveal">
+          <h3>Delivery with source code</h3>
+          <p>You get the finished video or app, plus the source code so your team can adjust it later.</p>
+        </li>
+      </ol>
+      <div class="trust reveal">
+        <i class="ph ph-github-logo" aria-hidden="true"></i>
+        <p>Before reaching out, you can review how I work: the code for every animation, the simulator and the verification scripts is on <a href="https://github.com/diegorodvaz/diegorodvaz.github.io" target="_blank" rel="noopener">GitHub</a>.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ======================= MATERIALES ======================= -->
+  <section class="block" id="materials" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">LaTeX</span>
+        <h2>Course materials</h2>
+        <p>Exams, problem sets and summaries for calculus courses at UTN FRCU, Argentina. The documents are in Spanish.</p>
+      </div>
+      <div class="docs reveal">
+        <div class="tabs" role="tablist" aria-label="Documents">
+          <button role="tab" aria-selected="true" data-pdf="../Portfolio_AM1_Solutions.pdf"
+            data-desc="First midterm of <strong>Calculus I</strong> (Análisis Matemático I, UTN FRCU) with step-by-step solutions and the grading criteria for each problem: limits using Taylor expansions, optimization and fundamental theorems, among others."><b>Exam with solutions</b><span>Calculus I</span></button>
+          <button role="tab" aria-selected="false" data-pdf="../Portfolio_AM1_Student.pdf"
+            data-desc="The student version of the same <strong>Calculus I</strong> midterm, without solutions."><b>Student exam</b><span>Calculus I</span></button>
+          <button role="tab" aria-selected="false" data-pdf="../Portfolio_CheatSheet.pdf"
+            data-desc="Reference summary for <strong>multivariable calculus</strong>: vectors and geometry in ℝ³, partial derivatives, gradient, directional derivative and tangent plane."><b>Reference sheet</b><span>Multivariable Calculus</span></button>
+          <button role="tab" aria-selected="false" data-pdf="../Portfolio_Tikz.pdf"
+            data-desc="Vector illustrations made in LaTeX with <strong>TikZ</strong> and pgfplots: geometry in ℝ³, a systems architecture diagram, the Gaussian bell curve and the geometric meaning of the derivative."><b>TikZ graphics</b><span>Technical illustration</span></button>
+          <button role="tab" aria-selected="false" data-pdf="../Portfolio_Interactive.pdf"
+            data-desc="Self-assessment for <strong>multivariable calculus</strong> (Unit 2: directional derivatives and the gradient field) with solutions that expand inside the PDF. To expand them, open it in a new tab with a viewer that supports PDF layers."><b>Interactive problem set</b><span>Multivariable Calculus</span></button>
+        </div>
+        <div class="tab-panels" role="tabpanel">
+          <p class="pdf-desc" id="pdf-desc" aria-live="polite"></p>
+          <div class="pdf-toolbar">
+            <span id="pdf-status">Loading…</span>
+            <a id="pdf-open" href="../Portfolio_AM1_Solutions.pdf" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Open in new tab</a>
+          </div>
+          <div class="pdf-viewer" id="pdf-viewer" aria-label="PDF viewer"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= NOTAS ======================= -->
+  <section class="block" id="notes" style="padding-top: 0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Notes</span>
+        <h2>Technical notes</h2>
+      </div>
+      <div class="notes">
+        <article class="note reveal">
+          <div class="note-icon" aria-hidden="true">∇f ⟂</div>
+          <div class="card-meta">5 min read</div>
+          <h3><a href="notes/gradient-perpendicular.html">Why the gradient is perpendicular to level curves</a></h3>
+          <p>A two-line proof with the chain rule, the intuition through the directional derivative, and why gradient descent zigzags on an elliptic paraboloid.</p>
+          <ul class="tags"><li>Gradient</li><li>Optimization</li></ul>
+        </article>
+        <article class="note reveal">
+          <div class="note-icon" aria-hidden="true">&lt;/&gt;</div>
+          <div class="card-meta">6 min read</div>
+          <h3><a href="notes/how-the-simulator-works.html">How the simulator works under the hood</a></h3>
+          <p>From an expression typed as text to 3D surfaces, level curves and a smooth animation: symbolic differentiation, marching squares and the choices that keep it all running in the browser.</p>
+          <ul class="tags"><li>JavaScript</li><li>Plotly.js</li><li>math.js</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= PREGUNTAS ======================= -->
+  <section class="block" id="faq" style="padding-top: 0">
+    <div class="wrap faq-grid">
+      <div class="sec-head reveal">
+        <span class="kicker">FAQ</span>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq reveal">
+        <details>
+          <summary>What kind of content can you create?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Explanatory animations with Manim, interactive simulators that run in the browser, and LaTeX course materials: exams, problem sets and summaries with TikZ figures.</p>
+        </details>
+        <details>
+          <summary>What topics do you cover?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>University-level single-variable and multivariable calculus, algebra and physics, especially vector calculus, optimization and electromagnetism.</p>
+        </details>
+        <details>
+          <summary>What tools do you work with?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Python with Manim for the animations, JavaScript with Plotly.js and math.js for the simulators, and LaTeX with TikZ and pgfplots for the documents.</p>
+        </details>
+        <details>
+          <summary>Do the simulators need to be installed?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>No. They run in the browser, on phones too, and can be embedded in a course platform or published as a standalone page.</p>
+        </details>
+        <details>
+          <summary>Can I see the code?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>Yes, it's all on <a href="https://github.com/diegorodvaz/diegorodvaz.github.io" target="_blank" rel="noopener">GitHub</a>: the Manim scenes, the simulator and the scripts I use to check the math.</p>
+        </details>
+        <details>
+          <summary>How is the content checked?<i class="ph ph-plus" aria-hidden="true"></i></summary>
+          <p>The math is checked before animating. In the trickiest scenes, a separate script verifies it numerically, as in the logarithm one.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CONTACTO ======================= -->
+  <section class="block" id="contact" style="padding-top: 0">
+    <div class="wrap">
+      <div class="cta reveal">
+        <span class="kicker"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Contact</span>
+        <h2>Available for educational content projects</h2>
+        <p>Animation, interactive simulation and math materials.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="mailto:diego@rodriguez-vazquez.com.ar?subject=Math%20content%20project"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Send an email</a>
+          <button class="btn btn-ghost" type="button" id="copy-email" data-email="diego@rodriguez-vazquez.com.ar"><i class="ph ph-copy" aria-hidden="true"></i>diego@rodriguez-vazquez.com.ar</button>
+        </div>
+        <p class="copy-status" id="copy-status" aria-live="polite"></p>
+        <div class="cta-alt">
+          <a href="https://www.linkedin.com/in/diego-ezequiel-rodriguez-vazquez" target="_blank" rel="noopener"><i class="ph ph-linkedin-logo" aria-hidden="true"></i>LinkedIn</a>
+          <a href="https://github.com/diegorodvaz" target="_blank" rel="noopener"><i class="ph ph-github-logo" aria-hidden="true"></i>GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© 2026 Diego E. Rodríguez V. · This site uses no cookies or tracking.</span>
+    <ul>
+      <li><a href="#home">Back to top</a></li>
+      <li><a href="https://github.com/diegorodvaz/diegorodvaz.github.io" target="_blank" rel="noopener">Site source code</a></li>
+      <li><a href="https://www.linkedin.com/in/diego-ezequiel-rodriguez-vazquez" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Modo claro / oscuro
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() {
+    var dark = document.documentElement.dataset.theme === "dark";
+    toggle.innerHTML = '<i class="ph ' + (dark ? "ph-sun" : "ph-moon") + '" aria-hidden="true"></i>';
+  }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Menú de celular: panel a pantalla completa
+  (function () {
+    var btn = document.getElementById("menu-btn");
+    var menu = document.getElementById("mobile-menu");
+    function set(open) {
+      document.body.classList.toggle("menu-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      document.body.style.overflow = open ? "hidden" : "";
+    }
+    btn.addEventListener("click", function () { set(!document.body.classList.contains("menu-open")); });
+    menu.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+  })();
+
+  // Video del hero: se reproduce solo si está en pantalla y no se pidió reducir el movimiento
+  (function () {
+    var v = document.getElementById("hero-video");
+    if (reduceMotion || !("IntersectionObserver" in window)) return;
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) v.play().catch(function () {});
+      else v.pause();
+    }).observe(v);
+  })();
+
+  // Pestañas de PDFs (el visor se carga en el script de módulo de abajo)
+  document.querySelectorAll(".tabs button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".tabs button").forEach(function (b) {
+        b.setAttribute("aria-selected", b === btn ? "true" : "false");
+      });
+      showPdfDesc(btn);
+      window.showPdf(btn.dataset.pdf);
+    });
+  });
+
+  // Descripción del documento seleccionado
+  function showPdfDesc(btn) {
+    document.getElementById("pdf-desc").innerHTML = btn.dataset.desc || "";
+  }
+  showPdfDesc(document.querySelector('.tabs button[aria-selected="true"]'));
+
+  // Filtro de la galería por tema
+  (function () {
+    var buttons = document.querySelectorAll(".filter button");
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var f = btn.dataset.filter;
+        buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+        document.querySelectorAll(".gallery .vcard").forEach(function (card) {
+          card.hidden = f !== "todas" && card.dataset.cat !== f;
+          card.classList.add("in");
+        });
+      });
+    });
+  })();
+
+  // Reproductor de animaciones: un único <dialog> que carga el video recién al darle play
+  (function () {
+    var dlg = document.getElementById("player");
+    var video = document.getElementById("player-video");
+    var title = document.getElementById("player-title");
+
+    function load(btn) {
+      video.poster = btn.querySelector("img").src;
+      video.src = btn.dataset.video;
+      title.textContent = btn.dataset.title;
+      video.play().catch(function () {});
+    }
+
+    function open(btn) {
+      // Sin soporte de <dialog>: se abre el video directo en otra pestaña
+      if (typeof dlg.showModal !== "function") { window.open(btn.dataset.video, "_blank"); return; }
+      if (!dlg.open) dlg.showModal();
+      load(btn);
+    }
+
+    dlg.addEventListener("close", function () {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); }); // clic fuera del reproductor
+    dlg.querySelector(".player-close").addEventListener("click", function () { dlg.close(); });
+
+    document.querySelectorAll("#animations .vcard [data-video]").forEach(function (btn) {
+      btn.addEventListener("click", function () { open(btn); });
+    });
+  })();
+
+  // Copiar el email, con confirmación visible
+  (function () {
+    var btn = document.getElementById("copy-email");
+    var status = document.getElementById("copy-status");
+    btn.addEventListener("click", function () {
+      var email = btn.dataset.email;
+      if (!navigator.clipboard) { status.textContent = "Couldn't copy. The email is " + email + "."; return; }
+      navigator.clipboard.writeText(email).then(function () {
+        status.textContent = "Email copied to clipboard.";
+      }, function () {
+        status.textContent = "Couldn't copy. The email is " + email + ".";
+      });
+    });
+  })();
+
+  if ("IntersectionObserver" in window) {
+    // Resalta la sección actual en la navegación
+    var navLinks = document.querySelectorAll('.nav-links a, .mobile-menu ul a');
+    var sectionObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(function (a) {
+          if (a.getAttribute("href") === "#" + entry.target.id) a.setAttribute("aria-current", "true");
+          else a.removeAttribute("aria-current");
+        });
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    ["home", "services", "simulator", "animations", "process", "materials", "notes", "faq", "contact"].forEach(function (id) {
+      sectionObserver.observe(document.getElementById(id));
+    });
+
+    // Las secciones suben y aparecen una sola vez al entrar en pantalla
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(function (el) { revealObserver.observe(el); });
+
+  }
+
+  if (!("IntersectionObserver" in window)) document.documentElement.classList.remove("js");
+</script>
+
+<script>
+  // Visor de respaldo si PDF.js no llega a cargar: usa el visor nativo del navegador
+  window.showPdf = function (url) {
+    document.getElementById("pdf-open").href = url;
+    document.getElementById("pdf-status").textContent = "";
+    document.getElementById("pdf-viewer").innerHTML =
+      '<iframe src="' + url + '" title="PDF document"></iframe>';
+  };
+</script>
+<script type="module">
+  // Renderiza los PDFs con PDF.js para que se vean en cualquier navegador (incluido el celular)
+  import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs";
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
+
+  var viewer = document.getElementById("pdf-viewer");
+  var status = document.getElementById("pdf-status");
+  var openLink = document.getElementById("pdf-open");
+  var currentTask = null;
+  var nativePdf = window.showPdf; // visor nativo del navegador (script anterior)
+
+  async function showPdf(url) {
+    // Abierto con doble clic (file://) PDF.js no puede leer el archivo: se usa el visor nativo
+    if (location.protocol === "file:") return nativePdf(url);
+    openLink.href = url;
+    status.textContent = "Loading…";
+    viewer.innerHTML = '<div class="pdf-skel" aria-hidden="true"><div></div><div></div></div>';
+    viewer.scrollTop = 0;
+    if (currentTask) currentTask.destroy();
+    var task = (currentTask = pdfjsLib.getDocument(url));
+    try {
+      var pdf = await task.promise;
+      status.textContent = pdf.numPages + (pdf.numPages === 1 ? " page" : " pages");
+      var ratio = window.devicePixelRatio || 1;
+      var targetWidth = Math.max(viewer.clientWidth - 24, 300);
+      for (var n = 1; n <= pdf.numPages; n++) {
+        if (task !== currentTask) return; // se cambió de pestaña
+        var page = await pdf.getPage(n);
+        var base = page.getViewport({ scale: 1 });
+        var viewport = page.getViewport({ scale: (targetWidth / base.width) * ratio });
+        var canvas = document.createElement("canvas");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        if (n === 1) viewer.innerHTML = "";
+        viewer.appendChild(canvas);
+        await page.render({ canvasContext: canvas.getContext("2d"), viewport: viewport }).promise;
+      }
+    } catch (err) {
+      if (task !== currentTask) return;
+      // Si PDF.js falla, se intenta con el visor nativo (el enlace "Open in new tab" sigue disponible)
+      nativePdf(url);
+    }
+  }
+
+  window.showPdf = showPdf;
+  window.pdfjsReady = true;
+  showPdf(document.querySelector('.tabs button[aria-selected="true"]').dataset.pdf);
+</script>
+<script>
+  // Si el módulo no cargó (sin conexión al CDN), mostrar el primero con el visor nativo
+  window.addEventListener("load", function () {
+    if (!window.pdfjsReady) {
+      window.showPdf(document.querySelector('.tabs button[aria-selected="true"]').dataset.pdf);
+    }
+  });
+</script>
+
+<script>
+/* =====================================================================
+   SIMULADOR DE DESCENSO DE GRADIENTE
+   Plotly (~3,5 MB) y math.js se cargan recién cuando el simulador se
+   acerca a la pantalla, para que el resto del portafolio cargue rápido.
+   Todo el estado vive en el objeto `state`. El flujo es:
+     función → malla (grid) → gráficos completos (renderAll)
+     cada paso del algoritmo → sólo se actualizan las trazas de la
+     trayectoria (updatePath) para que la animación sea fluida.
+   ===================================================================== */
+(function () {
+'use strict';
+
+const LIBS = [
+  'https://cdn.plot.ly/plotly-2.35.2.min.js',
+  'https://cdn.jsdelivr.net/npm/mathjs@13.2.0/lib/browser/math.js',
+];
+
+// ---------- Utilidades ----------
+const $ = (id) => document.getElementById(id);
+const root = $('gd');
+const linspace = (a, b, n) => Array.from({ length: n }, (_, i) => a + (b - a) * i / (n - 1));
+const finite = (v) => typeof v === 'number' && Number.isFinite(v);
+
+/** Formatea números: decimales normales o notación científica si es muy grande/chico. */
+function fmt(v, digits = 6) {
+  if (!finite(v)) return '—';
+  if (v === 0) return '0';
+  const a = Math.abs(v);
+  if (a >= 1e5 || a < 1e-4) return v.toExponential(3);
+  return Number(v.toPrecision(digits)).toString();
+}
+
+/** math.js puede devolver números complejos (ej. sqrt(-1)); los tratamos como NaN salvo parte imaginaria nula. */
+function toReal(v) {
+  if (typeof v === 'number') return v;
+  if (typeof v === 'boolean') return +v;
+  if (v && typeof v.re === 'number') return Math.abs(v.im) < 1e-12 ? v.re : NaN;
+  return NaN;
+}
+
+// Paleta de colores de las capas (coherente con la leyenda del HTML)
+const COLORS = {
+  path: '#f97316',      // trayectoria (naranja)
+  current: '#ffffff',   // punto actual (blanco con borde oscuro)
+  start: '#22c55e',     // punto inicial (verde)
+  cut: '#ec4899',       // plano / intersección (rosa)
+};
+
+/** Colores del tema del sitio (variables CSS), para que los gráficos sigan el modo claro / oscuro. */
+function theme() {
+  const cs = getComputedStyle(document.documentElement);
+  const v = (n) => cs.getPropertyValue(n).trim();
+  return { fg: v('--fg'), muted: v('--muted'), border: v('--border'), bg: v('--bg'), primary: v('--primary') };
+}
+
+function baseLayout(t) {
+  return {
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: 'Geist, sans-serif', color: t.fg, size: 12 },
+    modebar: { bgcolor: 'rgba(0,0,0,0)', color: t.muted, activecolor: t.primary },
+    showlegend: false,
+  };
+}
+
+// ---------- Funciones predefinidas (con parámetros sugeridos) ----------
+const PRESETS = [
+  { name: 'Elliptic paraboloid (zigzag)', expr: '0.5 * (x**2 + 3*y**2)', R: 3, alpha: 0.5, x0: -2.5, y0: 2, iters: 100 },
+  { name: 'Circular paraboloid', expr: 'x**2 + y**2', R: 3, alpha: 0.1, x0: 2.5, y0: -2, iters: 100 },
+  { name: 'Waves sin(x)·cos(y)', expr: 'sin(x) * cos(y)', R: 3.5, alpha: 0.3, x0: 0.4, y0: 0.6, iters: 150 },
+  { name: 'Saddle point x² − y²', expr: 'x**2 - y**2', R: 2, alpha: 0.1, x0: 1.8, y0: 0.02, iters: 60 },
+  { name: 'Monkey saddle x³ − 3xy²', expr: 'x**3 - 3*x*y**2', R: 2, alpha: 0.02, x0: 0.6, y0: 0.4, iters: 200 },
+  { name: 'Rosenbrock (curved valley)', expr: '(1 - x)**2 + 100*(y - x**2)**2', R: 2, alpha: 0.001, x0: -1.5, y0: 1.5, iters: 1000 },
+  { name: 'Himmelblau (4 minima)', expr: '(x**2 + y - 11)**2 + (x + y**2 - 7)**2', R: 5, alpha: 0.01, x0: 0, y0: 0, iters: 200 },
+  { name: 'Gaussian wells (local vs global min.)', expr: '-exp(-(x**2 + y**2)) - 1.5*exp(-((x-1.6)**2 + (y-1.4)**2)/0.5)', R: 3, alpha: 0.3, x0: -1, y0: -0.8, iters: 200 },
+];
+
+// ---------- Estado global ----------
+const state = {
+  expr: '',
+  fc: null,            // función compilada
+  dfx: null, dfy: null,// derivadas parciales compiladas (si math.js las pudo calcular)
+  useAnalytic: true,
+  xR: 3, yR: 3, res: 60,
+  grid: null,          // { xs, ys, Z, zmin, zmax }
+  arrows: null,        // segmentos del campo vectorial
+  showField: true,
+  plane: { type: 'z', value: 0 },
+  x0: -2.5, y0: 2,
+  alpha: 0.1, maxIter: 100, delay: 150, tol: 1e-4,
+  path: [],            // [{x, y, z, gx, gy, norm}]
+  camera: null,        // última cámara 3D elegida por el usuario
+  running: false, timer: null,
+  status: 'ready',     // ready | running | paused | converged | diverged | maxiter
+};
+
+// ---------- Evaluación de f y su gradiente ----------
+function evalF(x, y) {
+  try { return toReal(state.fc.evaluate({ x, y })); } catch { return NaN; }
+}
+
+/** Gradiente: analítico (derivada simbólica de math.js) o numérico (diferencias centrales). */
+function grad(x, y) {
+  if (state.useAnalytic && state.dfx && state.dfy) {
+    try {
+      const gx = toReal(state.dfx.evaluate({ x, y }));
+      const gy = toReal(state.dfy.evaluate({ x, y }));
+      if (finite(gx) && finite(gy)) return [gx, gy];
+    } catch { /* si falla, se usa el método numérico */ }
+  }
+  const hx = 1e-5 * Math.max(1, Math.abs(x));
+  const hy = 1e-5 * Math.max(1, Math.abs(y));
+  return [
+    (evalF(x + hx, y) - evalF(x - hx, y)) / (2 * hx),
+    (evalF(x, y + hy) - evalF(x, y - hy)) / (2 * hy),
+  ];
+}
+
+function makePoint(x, y) {
+  const z = evalF(x, y);
+  const [gx, gy] = grad(x, y);
+  return { x, y, z, gx, gy, norm: Math.hypot(gx, gy) };
+}
+
+/** Parsea la expresión del usuario. Lanza un Error con mensaje legible si es inválida. */
+function parseFunction(str) {
+  const clean = str.replace(/\*\*/g, '^').trim();   // soporta sintaxis estilo Python
+  if (!clean) throw new Error('Enter a function.');
+  let node;
+  try { node = math.parse(clean); } catch (e) { throw new Error('Invalid syntax: ' + e.message); }
+  const fc = node.compile();
+
+  // Probamos en varios puntos: detecta símbolos desconocidos y funciones sin valores reales
+  const probes = [[0.3, 0.7], [1.1, -0.4], [-0.9, 0.2], [0, 0], [2, 2]];
+  let anyFinite = false;
+  for (const [x, y] of probes) {
+    let v;
+    try { v = fc.evaluate({ x, y }); }
+    catch (e) { throw new Error(e.message); }
+    if (finite(toReal(v))) anyFinite = true;
+  }
+  if (!anyFinite) throw new Error('The function does not produce real values.');
+
+  // Derivadas simbólicas (pueden no existir para algunas expresiones)
+  let dfx = null, dfy = null, dfxStr = null, dfyStr = null;
+  try {
+    const dx = math.derivative(node, 'x'), dy = math.derivative(node, 'y');
+    dfx = dx.compile(); dfy = dy.compile();
+    dfxStr = dx.toString(); dfyStr = dy.toString();
+  } catch { /* se usará gradiente numérico */ }
+
+  return { clean, fc, dfx, dfy, dfxStr, dfyStr };
+}
+
+// ---------- Malla y campo vectorial ----------
+function computeGrid() {
+  const n = state.res;
+  const xs = linspace(-state.xR, state.xR, n);
+  const ys = linspace(-state.yR, state.yR, n);
+  let zmin = Infinity, zmax = -Infinity;
+  // Plotly espera z[fila = y][columna = x]
+  const Z = ys.map((y) => xs.map((x) => {
+    const v = evalF(x, y);
+    if (!finite(v)) return null;
+    if (v < zmin) zmin = v;
+    if (v > zmax) zmax = v;
+    return v;
+  }));
+  if (!finite(zmin)) { zmin = -1; zmax = 1; }
+  if (zmax - zmin < 1e-9) { zmin -= 1; zmax += 1; }
+  state.grid = { xs, ys, Z, zmin, zmax };
+}
+
+/** Construye flechas (segmentos + puntas) normalizadas del campo ∇f. Plotly.js no trae "quiver". */
+function computeArrows() {
+  const m = 15;
+  const xs = linspace(-state.xR, state.xR, m), ys = linspace(-state.yR, state.yR, m);
+  const cell = Math.min((2 * state.xR) / (m - 1), (2 * state.yR) / (m - 1));
+  const vecs = [];
+  let gmax = 0;
+  for (const y of ys) for (const x of xs) {
+    const [gx, gy] = grad(x, y);
+    const n = Math.hypot(gx, gy);
+    if (finite(n) && n > 1e-12) { vecs.push([x, y, gx / n, gy / n, n]); gmax = Math.max(gmax, n); }
+  }
+  const X = [], Y = [];
+  const ang = 0.45; // apertura de la punta (~26°)
+  for (const [x, y, ux, uy, n] of vecs) {
+    // Longitud proporcional a √‖∇f‖ para comprimir rangos grandes
+    const L = cell * 0.8 * (0.3 + 0.7 * Math.sqrt(n / gmax));
+    const x2 = x + ux * L / 2, y2 = y + uy * L / 2;
+    X.push(x - ux * L / 2, x2, null); Y.push(y - uy * L / 2, y2, null);
+    const h = L * 0.35;
+    for (const s of [1, -1]) {
+      const t = s * ang, vx = -ux, vy = -uy;
+      X.push(x2, x2 + h * (vx * Math.cos(t) - vy * Math.sin(t)), null);
+      Y.push(y2, y2 + h * (vx * Math.sin(t) + vy * Math.cos(t)), null);
+    }
+  }
+  state.arrows = { X, Y };
+}
+
+/**
+ * Curva de nivel f(x,y) = c sobre la malla mediante "marching squares":
+ * en cada celda se buscan los cruces del nivel por las aristas (interpolación
+ * lineal) y se unen de a pares. Devuelve segmentos separados por null.
+ */
+function levelCurve(c) {
+  const { xs, ys, Z } = state.grid;
+  const X = [], Y = [];
+  for (let j = 0; j < ys.length - 1; j++) {
+    for (let i = 0; i < xs.length - 1; i++) {
+      // Esquinas en orden: (i,j) (i+1,j) (i+1,j+1) (i,j+1)
+      const corners = [[xs[i], ys[j], Z[j][i]], [xs[i + 1], ys[j], Z[j][i + 1]],
+                       [xs[i + 1], ys[j + 1], Z[j + 1][i + 1]], [xs[i], ys[j + 1], Z[j + 1][i]]];
+      if (corners.some((p) => p[2] === null)) continue;
+      const pts = [];
+      for (let e = 0; e < 4; e++) {
+        const [xa, ya, za] = corners[e], [xb, yb, zb] = corners[(e + 1) % 4];
+        if ((za - c) * (zb - c) < 0) {
+          const t = (c - za) / (zb - za);
+          pts.push([xa + t * (xb - xa), ya + t * (yb - ya)]);
+        }
+      }
+      for (let k = 0; k + 1 < pts.length; k += 2) {
+        X.push(pts[k][0], pts[k + 1][0], null);
+        Y.push(pts[k][1], pts[k + 1][1], null);
+      }
+    }
+  }
+  return { X, Y };
+}
+
+// ---------- Construcción de los gráficos ----------
+const PLOT_CONFIG = { responsive: true, displaylogo: false };
+
+/** Arreglos de la trayectoria. En 3D se ocultan los puntos fuera de la caja visible. */
+function pathArrays(for3d) {
+  const { zmin, zmax } = state.grid;
+  const lift = (zmax - zmin) * 0.012; // eleva la línea para que no quede tapada por la malla
+  const [zlo, zhi] = zRange();
+  const X = [], Y = [], Z = [];
+  for (const p of state.path) {
+    const inBox = Math.abs(p.x) <= state.xR && Math.abs(p.y) <= state.yR && finite(p.z) && p.z >= zlo && p.z <= zhi;
+    if (for3d && !inBox) { X.push(null); Y.push(null); Z.push(null); continue; }
+    X.push(finite(p.x) ? p.x : null);
+    Y.push(finite(p.y) ? p.y : null);
+    Z.push(finite(p.z) ? p.z + lift : null);
+  }
+  return { X, Y, Z };
+}
+
+function zRange() {
+  const { zmin, zmax } = state.grid, r = zmax - zmin;
+  return [zmin - 0.05 * r, zmax + 0.1 * r];
+}
+
+function build3D(t) {
+  const { xs, ys, Z, zmin, zmax } = state.grid;
+  const { xR, yR, plane } = state;
+  const c = plane.value, zr = zmax - zmin;
+
+  const surface = {
+    type: 'surface', x: xs, y: ys, z: Z, colorscale: 'Viridis', opacity: 0.95,
+    colorbar: { thickness: 12, len: 0.6, outlinewidth: 0, title: { text: 'z' } },
+    lighting: { ambient: 0.75, diffuse: 0.6, specular: 0.1, roughness: 0.9 },
+    hovertemplate: 'x=%{x:.3f}<br>y=%{y:.3f}<br>z=%{z:.4f}<extra></extra>',
+    // Sin resaltado de contornos al pasar el mouse: es costoso y hace que el giro se trabe
+    contours: { x: { highlight: false }, y: { highlight: false }, z: { highlight: false } },
+  };
+
+  // Plano de corte (superficie de 2×2 puntos)
+  let planeTrace = { type: 'surface', x: [0, 1], y: [0, 1], z: [[0, 0], [0, 0]], visible: false, showscale: false };
+  const planeStyle = { colorscale: [[0, COLORS.cut], [1, COLORS.cut]], opacity: 0.3, showscale: false, hoverinfo: 'skip' };
+  if (plane.type === 'z') {
+    planeTrace = { type: 'surface', x: [-xR, xR], y: [-yR, yR], z: [[c, c], [c, c]], ...planeStyle };
+  } else if (plane.type === 'x') {
+    planeTrace = { type: 'surface', x: [[c, c], [c, c]], y: [[-yR, yR], [-yR, yR]], z: [[zmin, zmin], [zmax, zmax]], ...planeStyle };
+  } else if (plane.type === 'y') {
+    planeTrace = { type: 'surface', x: [[-xR, xR], [-xR, xR]], y: [[c, c], [c, c]], z: [[zmin, zmin], [zmax, zmax]], ...planeStyle };
+  }
+
+  // Curva de intersección para planos verticales: (c, t, f(c,t)) o (t, c, f(t,c))
+  // y curva de nivel f(x,y) = c (elevada levemente) para el plano horizontal
+  const cut = { type: 'scatter3d', mode: 'lines', x: [], y: [], z: [], line: { color: COLORS.cut, width: 7 }, hoverinfo: 'skip' };
+  if (plane.type === 'z') {
+    const L = levelCurve(c);
+    const lift = zr * 0.006;
+    cut.x = L.X; cut.y = L.Y; cut.z = L.X.map((v) => (v === null ? null : c + lift));
+  } else if (plane.type === 'x' || plane.type === 'y') {
+    const R = plane.type === 'x' ? yR : xR;
+    for (const s of linspace(-R, R, 240)) {
+      const [px, py] = plane.type === 'x' ? [c, s] : [s, c];
+      const v = evalF(px, py);
+      cut.x.push(px); cut.y.push(py); cut.z.push(finite(v) ? v : null);
+    }
+  }
+
+  const P = pathArrays(true);
+  const last = P.X.length - 1;
+  const path = {
+    type: 'scatter3d', mode: 'lines+markers', x: P.X, y: P.Y, z: P.Z,
+    line: { color: COLORS.path, width: 6 }, marker: { size: 3, color: COLORS.path },
+    hovertemplate: 'k=%{pointNumber}<br>x=%{x:.4f}<br>y=%{y:.4f}<extra>Path</extra>',
+  };
+  const current = {
+    type: 'scatter3d', mode: 'markers', x: [P.X[last]], y: [P.Y[last]], z: [P.Z[last]],
+    marker: { size: 7, color: COLORS.current, line: { color: '#0f172a', width: 2 } }, hoverinfo: 'skip',
+  };
+  const start = {
+    type: 'scatter3d', mode: 'markers', x: [P.X[0]], y: [P.Y[0]], z: [P.Z[0]],
+    marker: { size: 6, color: COLORS.start, symbol: 'diamond' }, hoverinfo: 'skip',
+  };
+
+  const axis = (title, range) => ({
+    title: { text: title }, range, color: t.muted, gridcolor: t.border, zerolinecolor: t.border, showbackground: false,
+  });
+  const layout = {
+    ...baseLayout(t),
+    margin: { l: 0, r: 0, t: 0, b: 0 },
+    uirevision: 'keep', // conserva la cámara del usuario entre redibujados
+    scene: {
+      xaxis: axis('x', [-xR, xR]),
+      yaxis: axis('y', [-yR, yR]),
+      zaxis: axis('z', zRange()),
+      dragmode: 'turntable', // arrastrar = girar
+      aspectmode: 'manual',
+      aspectratio: { x: 1, y: yR / xR, z: 0.75 },
+      camera: state.camera || { eye: { x: 1.55, y: -1.55, z: 1.05 } },
+    },
+  };
+  // Índices fijos: 0 superficie, 1 plano, 2 corte, 3 trayectoria, 4 actual, 5 inicio
+  return { data: [surface, planeTrace, cut, path, current, start], layout };
+}
+
+function build2D(t) {
+  const { xs, ys, Z } = state.grid;
+  const { xR, yR, plane } = state;
+  const c = plane.value;
+
+  const contour = {
+    type: 'contour', x: xs, y: ys, z: Z, colorscale: 'Viridis', ncontours: 24, showscale: false,
+    contours: { coloring: 'heatmap', showlabels: true, labelfont: { size: 9, color: 'rgba(255,255,255,0.9)' } },
+    line: { width: 0.7, color: 'rgba(255,255,255,0.5)' },
+    hovertemplate: 'x=%{x:.3f}<br>y=%{y:.3f}<br>f=%{z:.4f}<extra></extra>',
+  };
+
+  // Campo vectorial: halo oscuro + línea blanca para que se lea sobre cualquier color
+  const A = state.showField ? state.arrows : { X: [], Y: [] };
+  const arrowsHalo = { type: 'scatter', mode: 'lines', x: A.X, y: A.Y, line: { color: 'rgba(15,23,42,0.45)', width: 3 }, hoverinfo: 'skip' };
+  const arrows = { type: 'scatter', mode: 'lines', x: A.X, y: A.Y, line: { color: 'rgba(255,255,255,0.95)', width: 1.3 }, hoverinfo: 'skip' };
+
+  // Intersección del plano proyectada en XY
+  let planeTrace = { type: 'scatter', mode: 'lines', x: [], y: [], hoverinfo: 'skip' };
+  if (plane.type === 'z') {
+    // Misma curva f(x,y) = c que en el 3D (un contorno de Plotly con un único
+    // nivel falla al redibujarse, así que se usa una línea calculada)
+    const L = levelCurve(c);
+    planeTrace = { type: 'scatter', mode: 'lines', x: L.X, y: L.Y, line: { color: COLORS.cut, width: 3.5 }, hoverinfo: 'skip' };
+  } else if (plane.type === 'x') {
+    planeTrace = { type: 'scatter', mode: 'lines', x: [c, c], y: [-yR, yR], line: { color: COLORS.cut, width: 3, dash: 'dash' }, hoverinfo: 'skip' };
+  } else if (plane.type === 'y') {
+    planeTrace = { type: 'scatter', mode: 'lines', x: [-xR, xR], y: [c, c], line: { color: COLORS.cut, width: 3, dash: 'dash' }, hoverinfo: 'skip' };
+  }
+
+  const layout = {
+    ...baseLayout(t),
+    margin: { l: 48, r: 12, t: 12, b: 42 },
+    plot_bgcolor: t.bg,
+    hovermode: 'closest',
+    dragmode: false,       // el clic se usa para elegir el punto inicial
+    xaxis: { title: { text: 'x' }, range: [-xR, xR], zeroline: false, color: t.muted, gridcolor: t.border },
+    // Escala 1:1 → el gradiente se ve perpendicular a las curvas de nivel
+    yaxis: { title: { text: 'y' }, range: [-yR, yR], zeroline: false, scaleanchor: 'x', scaleratio: 1, color: t.muted, gridcolor: t.border },
+  };
+  // Índices: 0 contorno, 1 halo, 2 flechas, 3 plano (la trayectoria va en el canvas)
+  return { data: [contour, arrowsHalo, arrows, planeTrace], layout };
+}
+
+/** Dibuja la trayectoria 2D sobre el canvas usando la escala de los ejes de Plotly. */
+function drawOverlay2D() {
+  const div = $('plot2d'), cv = $('overlay2d'), fl = div._fullLayout;
+  if (!fl || !fl.xaxis) return;
+  const dpr = window.devicePixelRatio || 1, w = div.clientWidth, h = div.clientHeight;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  }
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  const xa = fl.xaxis, ya = fl.yaxis;
+  const px = (x) => xa._offset + xa.l2p(x), py = (y) => ya._offset + ya.l2p(y);
+  const pts = state.path.filter((p) => finite(p.x) && finite(p.y) && Math.abs(p.x) < 1e6 && Math.abs(p.y) < 1e6);
+  if (!pts.length) return;
+
+  // Recorte al área del gráfico
+  ctx.save();
+  ctx.beginPath(); ctx.rect(xa._offset, ya._offset, xa._length, ya._length); ctx.clip();
+
+  // Línea de la trayectoria con halo oscuro
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  pts.forEach((p, i) => (i ? ctx.lineTo(px(p.x), py(p.y)) : ctx.moveTo(px(p.x), py(p.y))));
+  ctx.strokeStyle = 'rgba(15,23,42,0.5)'; ctx.lineWidth = 4.5; ctx.stroke();
+  ctx.strokeStyle = COLORS.path; ctx.lineWidth = 2.5; ctx.stroke();
+
+  // Puntos de cada iteración (se omiten si hay demasiados)
+  if (pts.length <= 300) {
+    ctx.fillStyle = COLORS.path; ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1;
+    for (const p of pts) { ctx.beginPath(); ctx.arc(px(p.x), py(p.y), 3, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+  }
+
+  // Inicio (rombo verde) y punto actual (círculo blanco)
+  const s = pts[0], c = pts[pts.length - 1];
+  ctx.beginPath();
+  ctx.moveTo(px(s.x), py(s.y) - 7); ctx.lineTo(px(s.x) + 7, py(s.y));
+  ctx.lineTo(px(s.x), py(s.y) + 7); ctx.lineTo(px(s.x) - 7, py(s.y)); ctx.closePath();
+  ctx.fillStyle = COLORS.start; ctx.fill(); ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(px(c.x), py(c.y), 6.5, 0, 2 * Math.PI);
+  ctx.fillStyle = COLORS.current; ctx.fill(); ctx.lineWidth = 2.5; ctx.stroke();
+  ctx.restore();
+}
+
+function buildConv(t) {
+  const ks = state.path.map((_, i) => i);
+  const norms = state.path.map((p) => (finite(p.norm) && p.norm > 0 ? p.norm : null));
+  const fs = state.path.map((p) => (finite(p.z) ? p.z : null));
+  return {
+    data: [
+      { type: 'scatter', mode: 'lines+markers', x: ks, y: norms, name: '‖∇f‖', line: { color: t.primary, width: 2 }, marker: { size: 4 } },
+      { type: 'scatter', mode: 'lines', x: ks, y: fs, name: 'f(xₖ, yₖ)', yaxis: 'y2', line: { color: COLORS.path, width: 2 } },
+      { type: 'scatter', mode: 'lines', x: [0, Math.max(1, ks.length - 1)], y: [state.tol, state.tol], name: 'tolerance', line: { color: t.muted, width: 1, dash: 'dot' }, hoverinfo: 'skip' },
+    ],
+    layout: {
+      ...baseLayout(t),
+      margin: { l: 58, r: 58, t: 10, b: 38 },
+      plot_bgcolor: t.bg,
+      showlegend: true,
+      legend: { orientation: 'h', x: 0, y: 1.14, font: { size: 11 } },
+      xaxis: { title: { text: 'iteration k' }, zeroline: false, color: t.muted, gridcolor: t.border },
+      yaxis: { type: 'log', title: { text: '‖∇f‖' }, exponentformat: 'power', color: t.muted, gridcolor: t.border },
+      yaxis2: { overlaying: 'y', side: 'right', title: { text: 'f' }, showgrid: false, zeroline: false, color: t.muted },
+      hovermode: 'x unified',
+    },
+  };
+}
+
+/** Redibuja todo (cuando cambia la función, el dominio, el plano, el campo o el tema). */
+function renderAll() {
+  const t = theme();
+  const a = build3D(t), b = build2D(t), c = buildConv(t);
+  Plotly.react('plot3d', a.data, a.layout, PLOT_CONFIG);
+  Plotly.react('plot2d', b.data, b.layout, { ...PLOT_CONFIG, modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'autoScale2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'] });
+  Plotly.react('plotConv', c.data, c.layout, PLOT_CONFIG);
+}
+
+/** Actualiza sólo las trazas de la trayectoria (rápido, para la animación). */
+function updatePath() {
+  updatePath3D();
+  drawOverlay2D();
+  updateConv();
+}
+
+// Mientras el usuario gira o hace zoom en el 3D no se redibuja la trayectoria:
+// cada restyle reinicia el gesto y el giro se "traba". Se aplica al soltar.
+const interaction3d = { active: false, pending: false, timer: null };
+
+function updatePath3D() {
+  if (interaction3d.active) { interaction3d.pending = true; return; }
+  const P3 = pathArrays(true);
+  const l3 = P3.X.length - 1;
+  Plotly.restyle('plot3d', {
+    x: [P3.X, [P3.X[l3]], [P3.X[0]]], y: [P3.Y, [P3.Y[l3]], [P3.Y[0]]], z: [P3.Z, [P3.Z[l3]], [P3.Z[0]]],
+  }, [3, 4, 5]);
+}
+
+function watch3DInteraction() {
+  const div = $('plot3d');
+
+  // Plotly no copia la cámara girada al layout: sin esto, el próximo
+  // restyle/react vuelve a la cámara inicial y el gráfico "salta"
+  const keepCamera = (cam) => {
+    if (!cam) return;
+    state.camera = JSON.parse(JSON.stringify(cam));
+    if (div.layout.scene) div.layout.scene.camera = state.camera;
+  };
+  const readCamera = () => {
+    const sc = div._fullLayout && div._fullLayout.scene && div._fullLayout.scene._scene;
+    return sc && sc.getCamera ? sc.getCamera() : null;
+  };
+  const end = () => {
+    if (!interaction3d.active) return;
+    interaction3d.active = false;
+    keepCamera(readCamera());
+    if (interaction3d.pending) { interaction3d.pending = false; updatePath3D(); }
+  };
+
+  // Eventos de puntero en fase de captura: llegan aunque Plotly los consuma
+  div.addEventListener('pointerdown', () => { interaction3d.active = true; clearTimeout(interaction3d.timer); }, true);
+  window.addEventListener('pointerup', () => { interaction3d.timer = setTimeout(end, 30); }, true);
+  window.addEventListener('pointercancel', () => { interaction3d.timer = setTimeout(end, 30); }, true);
+  // Zoom con la rueda: se da por terminado 250 ms después del último movimiento
+  div.addEventListener('wheel', () => {
+    interaction3d.active = true;
+    clearTimeout(interaction3d.timer);
+    interaction3d.timer = setTimeout(end, 250);
+  }, { capture: true, passive: true });
+  // Botones de la barra (ej. "reiniciar cámara") informan la cámara en el evento
+  div.on('plotly_relayout', (ev) => keepCamera(ev && ev['scene.camera']));
+}
+
+/** Gráfico de convergencia. */
+function updateConv() {
+  const c = buildConv(theme());
+  Plotly.restyle('plotConv', { x: c.data.map((d) => d.x), y: c.data.map((d) => d.y) }, [0, 1, 2]);
+}
+
+// Agrupa redibujados frecuentes (sliders) en un solo frame
+let rafPending = false;
+function scheduleRender() {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => { rafPending = false; renderAll(); });
+}
+
+// ---------- Métricas y estado ----------
+const STATUS_TEXT = {
+  ready: 'Ready', running: 'Running…', paused: 'Paused',
+  converged: 'Converged ✓', diverged: 'Diverged ✕', maxiter: 'Max. iterations',
+};
+
+function updateMetrics() {
+  const P = state.path, p = P[P.length - 1], k = P.length - 1;
+  if (!p) return; // todavía no hay trayectoria (arranque)
+  $('mK').textContent = k;
+  $('mX').textContent = fmt(p.x);
+  $('mY').textContent = fmt(p.y);
+  $('mF').textContent = fmt(p.z);
+  $('mGx').textContent = fmt(p.gx);
+  $('mGy').textContent = fmt(p.gy);
+  $('mNorm').textContent = fmt(p.norm);
+  $('mStep').textContent = fmt(state.alpha * p.norm);
+
+  $('statusBadge').textContent = STATUS_TEXT[state.status];
+  $('statusBadge').dataset.s = state.status;
+
+  // Mensaje explicativo según el estado
+  const msg = $('mMsg');
+  const msgs = {
+    ready: 'Pick a starting point and press <b>Start</b> or <b>Step</b>.',
+    running: `x<sub>${k + 1}</sub> = x<sub>${k}</sub> − α·∇f = (${fmt(p.x, 4)}, ${fmt(p.y, 4)}) − ${fmt(state.alpha, 3)}·(${fmt(p.gx, 4)}, ${fmt(p.gy, 4)})`,
+    paused: `Paused at k = ${k}. Next step: (${fmt(p.x - state.alpha * p.gx, 4)}, ${fmt(p.y - state.alpha * p.gy, 4)})`,
+    converged: `‖∇f‖ = ${fmt(p.norm)} &lt; ${state.tol}: reached a critical point at (${fmt(p.x, 5)}, ${fmt(p.y, 5)}) after ${k} iterations.`,
+    diverged: 'The algorithm diverged: the values grow without bound. Try a smaller α.',
+    maxiter: `Reached ${state.maxIter} iterations without meeting the tolerance. Increase the iterations or adjust α.`,
+  };
+  msg.innerHTML = msgs[state.status];
+  msg.dataset.s = state.status;
+  msg.classList.toggle('mono', state.status !== 'ready');
+
+  $('playBtn').textContent = state.running ? '❚❚ Pause' : '▶ Start';
+}
+
+// ---------- Algoritmo de descenso de gradiente ----------
+const isFinal = () => ['converged', 'diverged'].includes(state.status) ||
+                      (state.status === 'maxiter' && state.path.length - 1 >= state.maxIter);
+
+/** Ejecuta un único paso: x_{k+1} = x_k − α ∇f(x_k). Devuelve false si no pudo avanzar. */
+function step(render = true) {
+  if (isFinal()) return false;
+  const P = state.path, last = P[P.length - 1];
+  const p = makePoint(last.x - state.alpha * last.gx, last.y - state.alpha * last.gy);
+  P.push(p);
+
+  if (!finite(p.z) || !finite(p.norm) || Math.abs(p.x) > 1e6 || Math.abs(p.y) > 1e6) state.status = 'diverged';
+  else if (p.norm < state.tol) state.status = 'converged';
+  else if (P.length - 1 >= state.maxIter) state.status = 'maxiter';
+  else state.status = state.running ? 'running' : 'paused';
+
+  if (render) { updatePath(); updateMetrics(); }
+  return true;
+}
+
+function tick() {
+  if (!state.running) return;
+  // A velocidades altas se calculan varios pasos por cuadro y se dibuja una sola vez
+  const batch = Math.max(1, Math.round(80 / state.delay));
+  for (let i = 0; i < batch && step(false); i++);
+  updatePath();
+  if (isFinal()) { state.running = false; updateMetrics(); return; }
+  updateMetrics();
+  state.timer = setTimeout(tick, state.delay);
+}
+
+function play() {
+  if (isFinal()) resetGD();            // si ya terminó, volver a empezar
+  state.running = true;
+  state.status = 'running';
+  updateMetrics();
+  tick();
+}
+
+function pause() {
+  state.running = false;
+  clearTimeout(state.timer);
+  if (state.status === 'running') state.status = 'paused';
+  updateMetrics();
+}
+
+/** Reinicia la trayectoria en (x0, y0). */
+function resetGD(redraw = true) {
+  state.running = false;
+  clearTimeout(state.timer);
+  const p0 = makePoint(state.x0, state.y0);
+  state.path = [p0];
+  state.status = p0.norm < state.tol ? 'converged' : 'ready';
+  if (redraw) { updatePath(); updateMetrics(); }
+}
+
+// ---------- Aplicación de la función y controles ----------
+function applyFunction(str) {
+  let parsed;
+  try { parsed = parseFunction(str); }
+  catch (e) {
+    $('fnError').textContent = e.message;
+    $('fnError').hidden = false;
+    $('fnInput').classList.add('gd-invalid');
+    return false;
+  }
+  $('fnError').hidden = true;
+  $('fnInput').classList.remove('gd-invalid');
+
+  Object.assign(state, { expr: parsed.clean, fc: parsed.fc, dfx: parsed.dfx, dfy: parsed.dfy });
+  $('dfxText').textContent = parsed.dfxStr ?? 'not available → central differences';
+  $('dfyText').textContent = parsed.dfyStr ?? 'not available → central differences';
+  $('gradMethod').querySelector('[value="analytic"]').disabled = !parsed.dfx;
+  if (!parsed.dfx) { $('gradMethod').value = 'numeric'; state.useAnalytic = false; }
+
+  rebuildDomain(true);
+  return true;
+}
+
+/** Recalcula malla y flechas; ajusta el rango del slider del plano. */
+function rebuildDomain(resetPlane = false) {
+  computeGrid();
+  computeArrows();
+  configurePlaneSlider(resetPlane);
+  resetGD(false);
+  renderAll();
+  updateMetrics();
+}
+
+function configurePlaneSlider(resetValue) {
+  const s = $('planeVal'), pl = state.plane;
+  $('planeValWrap').hidden = pl.type === 'none';
+  let lo, hi;
+  if (pl.type === 'z') { lo = state.grid.zmin; hi = state.grid.zmax; }
+  else if (pl.type === 'x') { lo = -state.xR; hi = state.xR; }
+  else { lo = -state.yR; hi = state.yR; }
+  s.min = lo; s.max = hi; s.step = (hi - lo) / 400;
+  if (resetValue || pl.value < lo || pl.value > hi) {
+    pl.value = pl.type === 'z' ? lo + 0.3 * (hi - lo) : 0;
+  }
+  s.value = pl.value;
+  updatePlaneLabel();
+}
+
+function updatePlaneLabel() {
+  const pl = state.plane;
+  $('planeLabel').textContent = pl.type === 'none' ? '' : `${pl.type} = ${fmt(pl.value, 4)}`;
+}
+
+function syncLabels() {
+  $('xRangeLabel').textContent = `[${-state.xR}, ${state.xR}]`;
+  $('yRangeLabel').textContent = `[${-state.yR}, ${state.yR}]`;
+  $('resLabel').textContent = `${state.res} × ${state.res}`;
+  $('alphaLabel').textContent = fmt(state.alpha, 3);
+  $('iterLabel').textContent = state.maxIter;
+  $('delayLabel').textContent = `${state.delay} ms/step`;
+}
+
+/** Carga un preset: función + parámetros sugeridos. */
+function loadPreset(i) {
+  const p = PRESETS[i];
+  pause();
+  Object.assign(state, { xR: p.R, yR: p.R, alpha: p.alpha, x0: p.x0, y0: p.y0, maxIter: p.iters });
+  $('fnInput').value = p.expr;
+  $('xRange').value = p.R; $('yRange').value = p.R;
+  $('alphaRange').value = Math.log10(p.alpha);
+  $('iterRange').value = p.iters;
+  $('x0Input').value = p.x0; $('y0Input').value = p.y0;
+  syncLabels();
+  applyFunction(p.expr);
+}
+
+/** Fija un nuevo punto inicial (desde inputs o clic). */
+function setStart(x, y) {
+  state.x0 = +x.toFixed(3); state.y0 = +y.toFixed(3);
+  $('x0Input').value = state.x0; $('y0Input').value = state.y0;
+  resetGD();
+}
+
+// ---------- Fullscreen ----------
+const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+function toggleFullscreen() {
+  if (fsElement()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  else (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+}
+function onFullscreenChange() {
+  const on = fsElement() === root;
+  root.classList.toggle('is-fs', on);
+  $('fsBtn').textContent = on ? '✕' : '⛶';
+  $('fsBtn').title = on ? 'Exit fullscreen' : 'Fullscreen';
+  // Las alturas cambian por CSS: los gráficos se ajustan en el siguiente cuadro
+  requestAnimationFrame(() => {
+    ['plot3d', 'plot2d', 'plotConv'].forEach((id) => Plotly.Plots.resize(id));
+  });
+}
+
+// ---------- Ancho completo ----------
+// El simulador se sale de la columna de texto y ocupa el ancho de la ventana
+// (con un margen y un tope), centrado respecto de la pantalla.
+function layoutBleed() {
+  const main = root.parentElement.closest('.wrap');
+  const vw = document.documentElement.clientWidth;
+  const w = Math.min(vw - 32, 1720);
+  // En pantallas chicas no se gana espacio: se queda en la columna normal
+  if (w < main.clientWidth + 100) { root.classList.remove('bleed'); return; }
+  root.style.setProperty('--bleed-w', w + 'px');
+  root.style.setProperty('--bleed-x', ((vw - w) / 2 - main.getBoundingClientRect().left) + 'px');
+  root.classList.add('bleed');
+}
+
+// El índice lateral se oculta mientras el simulador está en pantalla (quedaría encima)
+function watchToc() {
+  const toc = document.querySelector('.toc');
+  if (!toc || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver((entries) => {
+    toc.classList.toggle('is-hidden', entries[0].isIntersecting && root.classList.contains('bleed'));
+  }, { rootMargin: '-40px 0px' }).observe(root);
+}
+
+// ---------- Eventos ----------
+function wireEvents() {
+  // Presets
+  const sel = $('presetSelect');
+  PRESETS.forEach((p, i) => sel.add(new Option(p.name, i)));
+  sel.add(new Option('— Custom —', 'custom'));
+  sel.addEventListener('change', () => { if (sel.value !== 'custom') loadPreset(+sel.value); });
+
+  // Función personalizada
+  const apply = () => { pause(); sel.value = 'custom'; applyFunction($('fnInput').value); };
+  $('applyFnBtn').addEventListener('click', apply);
+  $('fnInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') apply(); });
+
+  // Dominio
+  const onDomain = () => {
+    state.xR = +$('xRange').value; state.yR = +$('yRange').value; state.res = +$('resRange').value;
+    syncLabels(); pause(); rebuildDomain(false);
+  };
+  ['xRange', 'yRange', 'resRange'].forEach((id) => $(id).addEventListener('input', onDomain));
+
+  // Plano intersector
+  $('planeType').addEventListener('change', (e) => {
+    state.plane.type = e.target.value;
+    configurePlaneSlider(true); renderAll();
+  });
+  $('planeVal').addEventListener('input', (e) => {
+    state.plane.value = +e.target.value; updatePlaneLabel(); scheduleRender();
+  });
+
+  // Parámetros del algoritmo
+  $('alphaRange').addEventListener('input', (e) => {
+    state.alpha = Math.pow(10, +e.target.value); syncLabels(); updateMetrics();
+  });
+  $('iterRange').addEventListener('input', (e) => {
+    state.maxIter = +e.target.value; syncLabels();
+    if (state.status === 'maxiter' && state.path.length - 1 < state.maxIter) { state.status = 'paused'; updateMetrics(); }
+  });
+  $('delayRange').addEventListener('input', (e) => { state.delay = +e.target.value; syncLabels(); });
+  $('tolSelect').addEventListener('change', (e) => { state.tol = +e.target.value; resetGD(); renderAll(); });
+  $('gradMethod').addEventListener('change', (e) => {
+    state.useAnalytic = e.target.value === 'analytic'; computeArrows(); resetGD(false); renderAll(); updateMetrics();
+  });
+  $('showField').addEventListener('change', (e) => { state.showField = e.target.checked; renderAll(); });
+
+  // Punto inicial por teclado
+  const onStartInput = () => {
+    const x = parseFloat($('x0Input').value), y = parseFloat($('y0Input').value);
+    if (finite(x) && finite(y)) setStart(x, y);
+  };
+  $('x0Input').addEventListener('change', onStartInput);
+  $('y0Input').addEventListener('change', onStartInput);
+
+  // Botones
+  $('playBtn').addEventListener('click', () => (state.running ? pause() : play()));
+  $('stepBtn').addEventListener('click', () => {
+    if (state.running) pause();
+    if (isFinal()) return;
+    if (state.status === 'ready') state.status = 'paused';
+    step();
+  });
+  $('resetBtn').addEventListener('click', () => resetGD());
+
+  // Clic en el gráfico 2D → convierte píxeles a coordenadas de datos
+  const div2d = $('plot2d');
+  div2d.addEventListener('click', (evt) => {
+    const fl = div2d._fullLayout;
+    if (!fl) return;
+    const xa = fl.xaxis, ya = fl.yaxis, rect = div2d.getBoundingClientRect();
+    const px = evt.clientX - rect.left - xa._offset;
+    const py = evt.clientY - rect.top - ya._offset;
+    if (px < 0 || py < 0 || px > xa._length || py > ya._length) return;
+    pause();
+    setStart(xa.p2l(px), ya.p2l(py));
+  });
+
+  // En el 3D arrastrar = girar; el punto inicial se elige sólo en el 2D
+  watch3DInteraction();
+
+  // Fullscreen
+  $('fsBtn').addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) $('fsBtn').hidden = true;
+
+  // Atajos de teclado: sólo con el simulador enfocado, para no interferir con el
+  // desplazamiento del resto de la página (ignorados mientras se escribe en un campo)
+  root.addEventListener('keydown', (e) => {
+    if (['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].includes(e.target.tagName)) return;
+    if (e.code === 'Space') { e.preventDefault(); $('playBtn').click(); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); $('stepBtn').click(); }
+    else if (e.key === 'r' || e.key === 'R') resetGD();
+  });
+
+  // Cuando se cambia el modo claro / oscuro del sitio, se recolorean los gráficos
+  new MutationObserver(() => renderAll())
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+}
+
+// ---------- Inicio ----------
+function init() {
+  ['plot3d', 'plot2d', 'plotConv'].forEach((id) => { $(id).textContent = ''; });
+  // Los gráficos deben existir antes de enlazar eventos de Plotly
+  Plotly.newPlot('plot3d', [], {}, PLOT_CONFIG);
+  Plotly.newPlot('plot2d', [], {}, PLOT_CONFIG);
+  Plotly.newPlot('plotConv', [], {}, PLOT_CONFIG);
+  // Cada vez que Plotly redibuja el 2D (cambios, redimensionado), se repinta la trayectoria
+  $('plot2d').on('plotly_afterplot', drawOverlay2D);
+  wireEvents();
+  $('delayRange').value = state.delay;
+  loadPreset(0);
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error(src));
+    document.head.appendChild(s);
+  });
+}
+
+function boot() {
+  Promise.all(LIBS.map(loadScript)).then(init).catch(() => {
+    root.querySelector('.gd-body').innerHTML =
+      '<div class="gd-msg" data-s="diverged" style="margin:0">Could not load the libraries (Plotly / math.js). Check your internet connection and reload the page.</div>';
+  });
+}
+
+layoutBleed();
+window.addEventListener('resize', layoutBleed);
+watchToc();
+
+// Carga diferida: se inicia cuando el simulador está por entrar en pantalla
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) { io.disconnect(); boot(); }
+  }, { rootMargin: '600px 0px' });
+  io.observe(root);
+} else {
+  boot();
+}
+})();
+</script>
+</body>
+</html>

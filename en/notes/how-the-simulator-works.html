@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>How the simulator works under the hood</title>
+<meta name="description" content="Symbolic differentiation, marching squares and the choices that keep the gradient descent simulator running smoothly in the browser.">
+<link rel="canonical" href="https://diegorodvaz.github.io/en/notes/how-the-simulator-works.html">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/notas/como-funciona-el-simulador.html">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/notes/how-the-simulator-works.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://diegorodvaz.github.io/en/notes/how-the-simulator-works.html">
+<meta property="og:title" content="How the gradient descent simulator works under the hood">
+<meta property="og:description" content="From an expression typed as text to 3D surfaces, level curves and a smooth animation, with no server.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="../../notas/nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light and dark mode">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notes">← Back to the portfolio</a>
+
+  <div class="kicker">Note · Web development</div>
+  <h1>How the simulator works under the hood</h1>
+  <p class="meta">Diego E. Rodríguez V. · 6 min read</p>
+
+  <p class="lead">The <a href="../#simulator">gradient descent simulator</a> runs entirely in the browser: there's no server computing anything. This note walks through the main pieces, from the moment you type a function to the animated path in 3D.</p>
+
+  <h2>1. The tools</h2>
+  <ul>
+    <li><strong>HTML, CSS and JavaScript</strong> with no frameworks: the state lives in a single object and each change redraws only what's needed.</li>
+    <li><strong>math.js</strong> to parse the function, evaluate it and differentiate it symbolically.</li>
+    <li><strong>Plotly.js</strong> for the 3D surface, the level-curve map and the convergence chart.</li>
+  </ul>
+  <p>Plotly weighs about 3.5 MB. So that the rest of the portfolio loads fast, the libraries are only downloaded when the simulator is about to appear on screen (using an <code>IntersectionObserver</code>).</p>
+
+  <h2>2. From text to function</h2>
+  <p>What you type is text, for example <code>0.5 * (x**2 + 3*y**2)</code>. The simulator:</p>
+  <ol>
+    <li>Replaces <code>**</code> with <code>^</code>, so Python syntax works too.</li>
+    <li>Turns it into an expression tree with <code>math.parse</code> and compiles it for fast evaluation.</li>
+    <li>Tests it at five points. That catches unknown symbols (like a stray <code>z</code>) or functions with no real values, and shows a readable error.</li>
+    <li>Computes $\partial f/\partial x$ and $\partial f/\partial y$ with <code>math.derivative</code>: these are the formulas shown below the function field.</li>
+  </ol>
+  <p>If math.js can't differentiate the expression, or if <em>Numerical</em> mode is selected, the gradient is approximated with <strong>central differences</strong>:</p>
+  $$\frac{\partial f}{\partial x}(x, y) \approx \frac{f(x + h,\, y) - f(x - h,\, y)}{2h}, \qquad h = 10^{-5}\cdot\max(1, |x|).$$
+  <p>The error of this formula is of order $h^2$, much better than the forward difference (order $h$). Scaling $h$ with $|x|$ avoids losing precision when values are large.</p>
+
+  <h2>3. The algorithm</h2>
+  <p>Each step applies $\mathbf x_{k+1} = \mathbf x_k - \alpha\,\nabla f(\mathbf x_k)$ and then checks three stopping conditions:</p>
+<pre><code><span class="c">// One gradient descent step (simplified)</span>
+const p = makePoint(last.x - alpha * last.gx, last.y - alpha * last.gy);
+
+if (!finite(p.z) || Math.abs(p.x) > 1e6) status = 'diverged';   <span class="c">// blew up to infinity</span>
+else if (p.norm &lt; tol)                  status = 'converged';  <span class="c">// ‖∇f‖ &lt; tolerance</span>
+else if (k >= maxIter)                   status = 'maxiter';    <span class="c">// ran out of iterations</span></code></pre>
+  <p>Converging means reaching a <strong>critical point</strong>, where $\nabla f = \mathbf 0$. It can be a minimum, but also a maximum or a saddle point: the <em>Saddle point</em> and <em>Monkey saddle</em> examples are there to show exactly that.</p>
+
+  <h2>4. The level curve of the plane z = c</h2>
+  <p>To draw the intersection of the surface with the plane $z = c$, the simulator uses <strong>marching squares</strong>, a classic graphics algorithm:</p>
+  <ol>
+    <li>$f$ is evaluated on a grid of points (from 20×20 to 120×120, depending on the resolution control).</li>
+    <li>Each cell's four edges are checked. If $f - c$ changes sign between the ends of an edge, the curve crosses that edge.</li>
+    <li>The exact crossing point is estimated by linear interpolation: $t = \dfrac{c - z_a}{z_b - z_a}$.</li>
+    <li>The crossings in each cell are joined in pairs with segments.</li>
+  </ol>
+  <p>It's the same argument as Bolzano's theorem, applied cell by cell. The resulting curve is drawn the same way on the 2D map and, slightly raised, on the 3D surface. There was a practical reason to do it by hand: a Plotly contour with a single level failed when redrawn.</p>
+
+  <h2>5. The vector field</h2>
+  <p>Plotly doesn't ship an arrow plot (<em>quiver</em>), so the arrows are built from loose segments. On a 15×15 grid, $\nabla f$ is computed, the direction is normalized, and the length is made proportional to $\sqrt{\lVert\nabla f\rVert}$. The square root compresses the range: without it, arrows near the minimum would be invisible and the ones at the edge huge. Each arrow is drawn twice, a thick dark one underneath and a white one on top, so it reads over any color on the map.</p>
+
+  <h2>6. Keeping the animation smooth</h2>
+  <p>Redrawing everything at each step would be slow: the surface has up to 14,400 points and the contour is recomputed from scratch. So:</p>
+  <ul>
+    <li><strong>In 3D only the path traces are updated</strong> (<code>Plotly.restyle</code> on three traces), not the surface.</li>
+    <li><strong>In 2D the path lives on an overlaid <code>&lt;canvas&gt;</code></strong>, which uses Plotly's axis scale to place each point. The contour is left untouched.</li>
+    <li><strong>At high speeds several steps are computed per frame</strong> and drawn only once.</li>
+    <li><strong>Nothing is redrawn while you rotate the 3D camera:</strong> each update used to restart the gesture and the rotation would stutter. Pending changes are applied when you release the mouse, and the chosen camera is saved so it doesn't snap back to the initial position.</li>
+  </ul>
+
+  <h2>7. Fitting it into the portfolio</h2>
+  <ul>
+    <li><strong>Colors:</strong> the simulator uses the same CSS variables as the rest of the page. When you switch between light and dark mode, a <code>MutationObserver</code> notices and recolors the charts.</li>
+    <li><strong>Responsive layout:</strong> with <em>container queries</em> the simulator adapts to its own width. On wide screens the controls sit in a side panel; on phones, a single column with the playback bar pinned to the bottom.</li>
+    <li><strong>Keyboard shortcuts</strong> (Space, →, R) that only work with the simulator focused, so they don't interfere with page scrolling.</li>
+  </ul>
+
+  <div class="cta">
+    <p>📈 <a href="../#simulator">Open the simulator</a></p>
+    <p>💻 <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/simulador-gradiente" target="_blank" rel="noopener">See the code on GitHub</a></p>
+    <p>📝 <a href="gradient-perpendicular.html">Another note: why the gradient is perpendicular to level curves</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portfolio</a> · <a href="../../notas/como-funciona-el-simulador.html" hreflang="es" lang="es">Leer en español</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>

@@ -7,10 +7,14 @@
 <meta name="description" content="Diego E. Rodríguez V. crea animaciones con Manim, simuladores interactivos y materiales en LaTeX para cursos de Análisis Matemático, Álgebra y Física. Disponible para proyectos de contenido educativo.">
 <title>Diego E. Rodríguez V. · Animaciones y simuladores de matemática</title>
 <link rel="canonical" href="https://diegorodvaz.github.io/">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/">
+<link rel="alternate" hreflang="x-default" href="https://diegorodvaz.github.io/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b7d66'/%3E%3Cpath d='M8 9h16L16 24z' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
 <!-- Vista previa al compartir el enlace (LinkedIn, WhatsApp, X, etc.) -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_AR">
+<meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://diegorodvaz.github.io/">
 <meta property="og:title" content="Diego E. Rodríguez V. · Animaciones y simuladores de matemática">
 <meta property="og:description" content="Animaciones con Manim, simuladores interactivos y materiales en LaTeX para Análisis Matemático, Álgebra y Física.">
@@ -201,6 +205,9 @@
   }
   .icon-btn:hover { background: var(--raised); }
   .icon-btn:active { transform: scale(0.94); }
+  /* Selector de idioma: mismo tamaño que el botón de tema */
+  .lang-btn { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .lang-btn:hover { color: var(--heading); }
   .nav .btn-primary { border-radius: 9999px; }
 
   /* Botón de menú: dos líneas que se cruzan */
@@ -850,6 +857,7 @@
     </ul>
   </nav>
   <div class="nav-right">
+    <a class="icon-btn lang-btn" href="en/" hreflang="en" lang="en" aria-label="English version">EN</a>
     <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Cambiar entre modo claro y oscuro"><i class="ph ph-moon" aria-hidden="true"></i></button>
     <a class="btn btn-primary btn-sm nav-cta" href="#contacto">Contacto</a>
     <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span></button>

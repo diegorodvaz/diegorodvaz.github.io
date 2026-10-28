@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Why the gradient is perpendicular to level curves</title>
+<meta name="description" content="A proof with the chain rule, the intuition through the directional derivative, and why gradient descent zigzags on an elliptic paraboloid.">
+<link rel="canonical" href="https://diegorodvaz.github.io/en/notes/gradient-perpendicular.html">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/notas/gradiente-perpendicular.html">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/notes/gradient-perpendicular.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://diegorodvaz.github.io/en/notes/gradient-perpendicular.html">
+<meta property="og:title" content="Why the gradient is perpendicular to level curves">
+<meta property="og:description" content="A two-line proof, the intuition through the directional derivative, and the zigzag of gradient descent.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="../../notas/nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+<style>
+  /* Colores de la figura */
+  .fig-level { fill: none; stroke: var(--muted); stroke-width: 1.2; opacity: 0.55; }
+  .fig-level.on { opacity: 1; stroke-width: 2; stroke: var(--heading); }
+  .fig-tan { stroke: var(--fg); stroke-width: 1.6; stroke-dasharray: 6 5; }
+  .fig-grad { stroke: var(--primary); stroke-width: 3; }
+  .fig-neg { stroke: #f97316; stroke-width: 3; }
+  .fig-aim { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 2 4; }
+  .fig-right { fill: none; stroke: var(--fg); stroke-width: 1.2; }
+  .fig-txt { font: 600 14px Geist, sans-serif; fill: var(--fg); }
+  .fig-txt.g { fill: var(--primary); }
+  .fig-txt.n { fill: #f97316; }
+  .fig-txt.m { fill: var(--muted); font-weight: 400; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light and dark mode">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notes">← Back to the portfolio</a>
+
+  <div class="kicker">Note · Multivariable Calculus</div>
+  <h1>Why the gradient is perpendicular to level curves</h1>
+  <p class="meta">Diego E. Rodríguez V. · 5 min read</p>
+
+  <p class="lead">If you look at the level-curve map in the <a href="../#simulator">gradient descent simulator</a>, the ∇f arrows always cross the curves at a right angle. It isn't a coincidence or a quirk of the drawing: it's a property you can prove in two lines.</p>
+
+  <h2>The proof</h2>
+  <p>Let $f(x, y)$ be a differentiable function and let $f(x, y) = c$ be one of its level curves. We parametrize that curve as $\mathbf r(t) = (x(t),\, y(t))$. Since the whole curve lies on level $c$, for every $t$:</p>
+  $$f\big(\mathbf r(t)\big) = c.$$
+  <p>We differentiate both sides with respect to $t$. The right side is a constant, so it gives zero. On the left we apply the <strong>chain rule</strong>:</p>
+  $$\frac{d}{dt}\, f\big(\mathbf r(t)\big) = \frac{\partial f}{\partial x}\,x'(t) + \frac{\partial f}{\partial y}\,y'(t) = \nabla f\big(\mathbf r(t)\big)\cdot \mathbf r'(t) = 0.$$
+  <p>The vector $\mathbf r'(t)$ is tangent to the level curve. A zero dot product between two nonzero vectors means they are perpendicular. Therefore:</p>
+  $$\nabla f \perp \text{the level curve at every point.}$$
+
+  <div class="callout">
+    <p class="callout-title">Assumptions used</p>
+    <p>$f$ differentiable, the curve smoothly parametrized with $\mathbf r'(t) \neq \mathbf 0$, and $\nabla f \neq \mathbf 0$ at the point. Where $\nabla f = \mathbf 0$ (a critical point) there is no direction to compare: that's exactly where gradient descent stops.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 400 300" role="img" aria-labelledby="fig-t">
+      <title id="fig-t">Elliptic level curves of f = ½(x² + 3y²) with the gradient perpendicular to the tangent at a point</title>
+      <defs>
+        <marker id="ah-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--primary)"/></marker>
+        <marker id="ah-n" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f97316"/></marker>
+      </defs>
+      <ellipse class="fig-level" cx="200" cy="150" rx="40" ry="23.1"/>
+      <ellipse class="fig-level on" cx="200" cy="150" rx="80" ry="46.2"/>
+      <ellipse class="fig-level" cx="200" cy="150" rx="120" ry="69.3"/>
+      <ellipse class="fig-level" cx="200" cy="150" rx="160" ry="92.4"/>
+      <line class="fig-aim" x1="248" y1="113" x2="200" y2="150"/>
+      <line class="fig-tan" x1="183.8" y1="85.2" x2="312.2" y2="140.8"/>
+      <line class="fig-grad" x1="248" y1="113" x2="271.8" y2="58" marker-end="url(#ah-g)"/>
+      <line class="fig-neg" x1="248" y1="113" x2="224.2" y2="168" marker-end="url(#ah-n)"/>
+      <path class="fig-right" d="M238.83,109.03 L242.8,99.86 L251.97,103.83"/>
+      <circle cx="248" cy="113" r="4.5" style="fill: var(--heading)"/>
+      <circle cx="200" cy="150" r="3.5" style="fill: var(--muted)"/>
+      <text class="fig-txt g" x="278" y="58">∇f</text>
+      <text class="fig-txt n" x="196" y="186">−∇f</text>
+      <text class="fig-txt" x="316" y="146">tangent</text>
+      <text class="fig-txt m" x="150" y="140">minimum</text>
+      <text class="fig-txt m" x="286" y="104">f = c</text>
+    </svg>
+    <figcaption>Level curves of $f = \tfrac12(x^2 + 3y^2)$. At the marked point, ∇f is perpendicular to the tangent, but −∇f does not point at the minimum (dotted line).</figcaption>
+  </figure>
+
+  <h2>The intuition: the directional derivative</h2>
+  <p>The directional derivative measures how much $f$ changes if you move in the direction of a unit vector $\mathbf u$:</p>
+  $$D_{\mathbf u} f = \nabla f \cdot \mathbf u = \lVert \nabla f \rVert \cos\theta,$$
+  <p>where $\theta$ is the angle between $\nabla f$ and $\mathbf u$. Three facts follow from this formula at once:</p>
+  <ul>
+    <li><strong>Walking along the level curve</strong> doesn't change $f$, so $D_{\mathbf u} f = 0$. Since $\lVert\nabla f\rVert \neq 0$, we must have $\cos\theta = 0$: the tangent makes a 90° angle with the gradient.</li>
+    <li><strong>The steepest ascent</strong> happens when $\cos\theta = 1$, that is, in the direction of $\nabla f$, and its rate is $\lVert \nabla f \rVert$.</li>
+    <li><strong>The steepest descent</strong> happens when $\cos\theta = -1$: the direction of $-\nabla f$. That's why gradient descent takes steps $\mathbf x_{k+1} = \mathbf x_k - \alpha\,\nabla f(\mathbf x_k)$.</li>
+  </ul>
+
+  <h2>A practical consequence: the zigzag</h2>
+  <p>The fact that $-\nabla f$ is the direction of steepest <em>local</em> descent doesn't mean it points at the minimum. The two only coincide when the level curves are circles.</p>
+
+  <h3>Circular paraboloid: a straight path</h3>
+  <p>With $f = x^2 + y^2$ the level curves are circles and $\nabla f = (2x,\, 2y)$ points radially. So $-\nabla f$ points straight at the origin and the algorithm descends in a straight line.</p>
+
+  <h3>Elliptic paraboloid: a zigzag</h3>
+  <p>With $f = \tfrac12(x^2 + 3y^2)$ the curves are ellipses and $\nabla f = (x,\, 3y)$. The $y$ component weighs three times as much, so $-\nabla f$ no longer points at the minimum (that's what the figure shows). One step of the algorithm becomes:</p>
+  $$x_{k+1} = (1 - \alpha)\,x_k, \qquad y_{k+1} = (1 - 3\alpha)\,y_k.$$
+  <p>With $\alpha = 0.5$ we get $x_{k+1} = 0.5\,x_k$ but $y_{k+1} = -0.5\,y_k$: the $y$ coordinate <strong>flips sign at every step</strong>. The point bounces from one side of the valley to the other as it moves toward the minimum. Also, convergence requires $|1 - \alpha| &lt; 1$ and $|1 - 3\alpha| &lt; 1$, that is, $0 &lt; \alpha &lt; \tfrac23$. With a larger $\alpha$, the steepest direction (the $y$ one) diverges.</p>
+
+  <div class="callout idea">
+    <p class="callout-title">Try it in the simulator</p>
+    <p>Pick <em>Elliptic paraboloid (zigzag)</em> and press Start: you'll see the bounce. Then raise α above 0.67 and watch it diverge. With <em>Circular paraboloid</em> the path is straight.</p>
+  </div>
+
+  <h2>A drawing detail</h2>
+  <p>The perpendicularity only shows if both axes use the same scale. If the $y$ axis is stretched relative to the $x$ axis, right angles get distorted. That's why the simulator's level-curve map locks a 1:1 scale between the axes.</p>
+
+  <h2>In three variables</h2>
+  <p>The same argument works for $F(x, y, z)$: any curve lying on the level surface $F = c$ satisfies $\nabla F \cdot \mathbf r'(t) = 0$. So $\nabla F$ is perpendicular to every tangent direction of the surface, which is why it's the normal vector of the <strong>tangent plane</strong>:</p>
+  $$\nabla F(P_0)\cdot (\mathbf x - P_0) = 0.$$
+
+  <div class="cta">
+    <p>📈 <a href="../#simulator">Open the gradient descent simulator</a></p>
+    <p>🎥 <a href="../#potencial">Animation: electric potential as a landscape, where E = −∇V is perpendicular to the equipotentials</a></p>
+    <p>📝 <a href="how-the-simulator-works.html">Another note: how the simulator works under the hood</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portfolio</a> · <a href="../../notas/gradiente-perpendicular.html" hreflang="es" lang="es">Leer en español</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>
