@@ -3,24 +3,74 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taylor contra mínimos cuadrados · Streamlit</title>
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Taylor contra mínimos cuadrados · App</title>
 <meta name="description" content="App de Streamlit que corre en el navegador (stlite): ajuste polinómico de sen x con scikit-learn contra el polinomio de Taylor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../notas/nota.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/browser@1.12.0/build/style.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
 <style>
-  body { margin: 0; font-family: system-ui, sans-serif; }
-  .volver { display: block; padding: 0.6rem 1rem; font-size: 0.9rem; }
-  #cargando { padding: 2rem 1rem; text-align: center; color: #666; }
+  .app-wrap { max-width: 1040px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  .app-wrap h1 { font-size: 2.3rem; }
+  #cargando { padding: 2rem 0; color: var(--muted); }
+  /* Streamlit dentro del mismo documento: tipografía del portafolio y sin su cabecera */
+  #root .stApp, #root .stApp :where(h1, h2, h3, p, label, button, input, div, td, th):not([data-testid="stIconMaterial"]) {
+    font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+  }
+  #root [data-testid="stHeader"] { display: none; }
+  #root [data-testid="stMainBlockContainer"] { padding: 0; max-width: none; }
+  /* Streamlit se pega al alto de la ventana con position:absolute; acá tiene que fluir dentro de la página */
+  #root .stApp { position: relative; height: auto; min-height: 640px; overflow: visible; background: transparent; }
+  #root [data-testid="stAppViewContainer"], #root [data-testid="stMain"] { position: static; height: auto; overflow: visible; }
 </style>
 </head>
 <body>
-<a class="volver" href="../../notas/taylor-vs-minimos-cuadrados.html">← Volver a la nota</a>
-<div id="root"><p id="cargando">Cargando Python en el navegador (Pyodide, scikit-learn, pandas, seaborn)… la primera vez puede tardar hasta un minuto.</p></div>
+<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+
+<main class="app-wrap">
+  <a class="volver" href="../../notas/taylor-vs-minimos-cuadrados.html">← Volver a la nota</a>
+  <div class="kicker">App interactiva · Streamlit</div>
+  <h1>Taylor contra mínimos cuadrados</h1>
+  <p class="meta">Diego E. Rodríguez V.</p>
+  <p class="lead">Aproximá sen x con un polinomio de dos maneras: con las derivadas en un punto (Taylor) o ajustando puntos ruidosos (mínimos cuadrados). Movés los controles y ves cómo cambia el error. <a href="../../#app-taylor">Más sobre este proyecto</a>.</p>
+
+  <div id="root"><p id="cargando">Cargando Python en el navegador (Pyodide, scikit-learn, pandas, seaborn)… la primera vez puede tardar hasta un minuto.</p></div>
+</main>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    location.reload();  // Streamlit fija su tema al arrancar: se vuelve a montar con los colores nuevos
+  });
+  syncIcon();
+</script>
 <script type="module">
   import { mount } from "https://cdn.jsdelivr.net/npm/@stlite/browser@1.12.0/build/stlite.js";
+  var dark = document.documentElement.dataset.theme === "dark";
   mount(
     {
       entrypoint: "streamlit_app.py",
-      streamlitConfig: { "client.toolbarMode": "minimal" },
+      streamlitConfig: {
+        "client.toolbarMode": "minimal",
+        "theme.base": dark ? "dark" : "light",
+        "theme.primaryColor": dark ? "#34d3b0" : "#0b7d66",
+        "theme.backgroundColor": dark ? "#181818" : "#ffffff",
+        "theme.secondaryBackgroundColor": dark ? "#1f1f1f" : "#fafaf9",
+        "theme.textColor": dark ? "#ececec" : "#161616"
+      },
       requirements: ["numpy", "pandas", "scikit-learn", "matplotlib", "seaborn"],
       files: {
         "streamlit_app.py": { url: "./streamlit_app.py" },
