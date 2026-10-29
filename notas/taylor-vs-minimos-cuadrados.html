@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Taylor contra mínimos cuadrados</title>
+<meta name="description" content="Aproximar sen x con polinomios de dos maneras: Taylor (derivadas en un punto) y mínimos cuadrados (datos ruidosos), con scikit-learn, pandas y seaborn.">
+<link rel="canonical" href="https://diegorodvaz.github.io/notas/taylor-vs-minimos-cuadrados.html">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/notas/taylor-vs-minimos-cuadrados.html">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/notes/taylor-vs-least-squares.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_AR">
+<meta property="og:url" content="https://diegorodvaz.github.io/notas/taylor-vs-minimos-cuadrados.html">
+<meta property="og:title" content="Taylor contra mínimos cuadrados">
+<meta property="og:description" content="Taylor es la mejor aproximación local; mínimos cuadrados, la mejor global sobre datos. Y el sobreajuste.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notas">← Volver al portafolio</a>
+
+  <div class="kicker">Nota · Python</div>
+  <h1>Taylor contra mínimos cuadrados</h1>
+  <p class="meta">Diego E. Rodríguez V. · 5 min de lectura</p>
+
+  <p class="lead">Hay dos formas de aproximar $\sin x$ con un polinomio. Taylor usa las derivadas en un solo punto y no mira ningún dato. Mínimos cuadrados mira puntos ruidosos y busca el polinomio que mejor los ajusta. Las dos dan un polinomio del mismo grado, pero se comportan de manera muy distinta. El código está en <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/taylor-minimos-cuadrados" target="_blank" rel="noopener"><code>codigo/taylor-minimos-cuadrados</code></a> y hay una <a href="../codigo/taylor-minimos-cuadrados/" target="_blank" rel="noopener">app para jugar con los parámetros</a>.</p>
+
+  <h2>El experimento</h2>
+  <p>Se generan 20 puntos $(x_i,\ \sin x_i + \varepsilon_i)$ con $x_i$ al azar en $[-\pi, \pi]$ y ruido gaussiano de desvío $0{,}25$. Con scikit-learn se ajustan polinomios de grado 1 a 12 (<code>PolynomialFeatures</code> + <code>LinearRegression</code>). Los errores van a un DataFrame de pandas en formato largo, que seaborn grafica directo:</p>
+  <pre><code>df = errores(x, y, max_grado=12)     # columnas: grado, conjunto, rmse
+sns.lineplot(data=df, x="grado", y="rmse", hue="conjunto", style="conjunto", markers=True)</code></pre>
+  <p>Hay tres series. El error de <strong>entrenamiento</strong> se mide sobre los 20 puntos con ruido. El error de <strong>prueba</strong> se mide sobre la curva exacta $\sin x$ en 400 puntos de $[-\pi, \pi]$, que el modelo nunca vio. La tercera es el error del polinomio de <strong>Taylor</strong> en 0 del mismo grado, medido igual.</p>
+
+  <figure>
+    <img src="../img/taylor-vs-ajuste-curvas.svg" alt="Puntos ruidosos de sen x con el ajuste de grado 3, el de grado 12 que se dispara en los bordes y el polinomio de Taylor de grado 5" loading="lazy">
+    <figcaption>El ajuste de grado 3 sigue a $\sin x$. El de grado 12 pasa cerca de los puntos pero se dispara donde no hay datos. Taylor de grado 5 es exacto cerca de 0 y se aparta en los bordes.</figcaption>
+  </figure>
+
+  <h2>Qué muestran los errores</h2>
+  <figure>
+    <img src="../img/taylor-vs-ajuste-error.svg" alt="Error RMSE contra el grado: el de entrenamiento baja, el de prueba sube desde el grado 7 y el de Taylor cae por debajo de 0,001" loading="lazy">
+    <figcaption>Error RMSE (escala logarítmica) contra el grado del polinomio.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Mínimos cuadrados sobreajusta.</strong> El error de entrenamiento solo baja: de $0{,}127$ en grado 3 a $0{,}106$ en grado 12. El de prueba hace lo contrario: queda en $0{,}147$ entre los grados 3 y 6 y sube hasta $0{,}433$ en el grado 12. El polinomio de grado alto se pega al ruido.</li>
+    <li><strong>Con pocos datos y ruido, el grado bajo gana.</strong> A los mínimos cuadrados les alcanza con grado 3, mientras que Taylor de grado 3 tiene un error de $0{,}640$. Ajustar sobre todo el intervalo rinde más que ser exacto en un punto.</li>
+    <li><strong>Pero Taylor termina ganando.</strong> Pasa de $0{,}018$ en grado 7 a $0{,}0015$ en grado 9 y a $0{,}00009$ en grado 11. Ningún ajuste a datos ruidosos baja de $0{,}146$, porque el ruido pone un piso.</li>
+  </ul>
+
+  <div class="callout">
+    <p class="callout-title">La diferencia de fondo</p>
+    <p>Taylor es <strong>local</strong> y exacto: necesita conocer la función y sus derivadas en un punto, no tiene ruido ni sobreajuste, y su error crece como $|x|^{n+1}$ al alejarse. Mínimos cuadrados es <strong>global</strong> y estadístico: no necesita conocer la función, solo datos, pero hereda el ruido y se pasa de ajuste si el grado es alto para la cantidad de puntos. Si tenés la fórmula, usá Taylor. Si solo tenés mediciones, ajustá y controlá el grado con datos de prueba.</p>
+  </div>
+
+  <p>Lo que se ve depende de la semilla, de la cantidad de puntos y del ruido. En la app podés cambiarlos y ver cómo se mueve el grado óptimo.</p>
+
+  <div class="cta">
+    <p>🧮 <a href="../codigo/taylor-minimos-cuadrados/" target="_blank" rel="noopener">Abrir la app (Streamlit en el navegador)</a></p>
+    <p>🎥 <a href="../#taylor">Animación: serie de Taylor</a></p>
+    <p>📝 <a href="verificar-con-sympy.html">Nota relacionada: verificar con SymPy lo que muestran las animaciones</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portafolio de Recursos</a> · <a href="../en/notes/taylor-vs-least-squares.html" hreflang="en" lang="en">Read in English</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>

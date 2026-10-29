@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Taylor versus least squares</title>
+<meta name="description" content="Approximating sin x with polynomials in two ways: Taylor (derivatives at a point) and least squares (noisy data), with scikit-learn, pandas and seaborn.">
+<link rel="canonical" href="https://diegorodvaz.github.io/en/notes/taylor-vs-least-squares.html">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/notas/taylor-vs-minimos-cuadrados.html">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/notes/taylor-vs-least-squares.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://diegorodvaz.github.io/en/notes/taylor-vs-least-squares.html">
+<meta property="og:title" content="Taylor versus least squares">
+<meta property="og:description" content="Taylor is the best local approximation; least squares, the best global one over data. And overfitting.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="../../notas/nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light and dark mode">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notes">← Back to the portfolio</a>
+
+  <div class="kicker">Note · Python</div>
+  <h1>Taylor versus least squares</h1>
+  <p class="meta">Diego E. Rodríguez V. · 5 min read</p>
+
+  <p class="lead">There are two ways to approximate $\sin x$ with a polynomial. Taylor uses the derivatives at a single point and looks at no data. Least squares looks at noisy points and finds the polynomial that fits them best. Both give a polynomial of the same degree, but they behave very differently. The code is in <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/tree/main/codigo/taylor-minimos-cuadrados" target="_blank" rel="noopener"><code>codigo/taylor-minimos-cuadrados</code></a>, and there is an <a href="../../codigo/taylor-minimos-cuadrados/" target="_blank" rel="noopener">app to play with the parameters</a> (its interface is in Spanish).</p>
+
+  <h2>The experiment</h2>
+  <p>We generate 20 points $(x_i,\ \sin x_i + \varepsilon_i)$ with $x_i$ drawn at random from $[-\pi, \pi]$ and Gaussian noise with standard deviation $0.25$. With scikit-learn we fit polynomials of degree 1 to 12 (<code>PolynomialFeatures</code> + <code>LinearRegression</code>). The errors go into a long-format pandas DataFrame that seaborn plots directly:</p>
+  <pre><code>df = errores(x, y, max_grado=12)     # columns: grado, conjunto, rmse
+sns.lineplot(data=df, x="grado", y="rmse", hue="conjunto", style="conjunto", markers=True)</code></pre>
+  <p>There are three series. The <strong>training</strong> error is measured on the 20 noisy points. The <strong>test</strong> error is measured on the exact curve $\sin x$ at 400 points of $[-\pi, \pi]$ that the model never saw. The third is the error of the degree-matched <strong>Taylor</strong> polynomial at 0, measured the same way.</p>
+
+  <figure>
+    <img src="../../img/taylor-vs-ajuste-curvas.svg" alt="Noisy points of sin x with the degree 3 fit, the degree 12 fit blowing up at the edges, and the degree 5 Taylor polynomial" loading="lazy">
+    <figcaption>The degree 3 fit follows $\sin x$. The degree 12 fit passes close to the points but blows up where there is no data. Degree 5 Taylor is exact near 0 and drifts apart at the edges.</figcaption>
+  </figure>
+
+  <h2>What the errors show</h2>
+  <figure>
+    <img src="../../img/taylor-vs-ajuste-error.svg" alt="RMSE against degree: training error falls, test error rises from degree 7, and the Taylor error drops below 0.001" loading="lazy">
+    <figcaption>RMSE (log scale) against polynomial degree.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Least squares overfits.</strong> The training error only goes down: from $0.127$ at degree 3 to $0.106$ at degree 12. The test error does the opposite: it stays at $0.147$ between degrees 3 and 6 and climbs to $0.433$ at degree 12. The high-degree polynomial clings to the noise.</li>
+    <li><strong>With little data and noise, a low degree wins.</strong> Least squares is fine at degree 3, while degree 3 Taylor has an error of $0.640$. Fitting across the whole interval pays off more than being exact at one point.</li>
+    <li><strong>But Taylor ends up winning.</strong> It goes from $0.018$ at degree 7 to $0.0015$ at degree 9 and to $0.00009$ at degree 11. No fit to noisy data gets below $0.146$, because the noise sets a floor.</li>
+  </ul>
+
+  <div class="callout">
+    <p class="callout-title">The underlying difference</p>
+    <p>Taylor is <strong>local</strong> and exact: it needs to know the function and its derivatives at a point, has no noise and no overfitting, and its error grows like $|x|^{n+1}$ as you move away. Least squares is <strong>global</strong> and statistical: it doesn't need to know the function, only data, but it inherits the noise and overfits when the degree is high for the number of points. If you have the formula, use Taylor. If you only have measurements, fit and control the degree with held-out data.</p>
+  </div>
+
+  <p>What you see depends on the seed, the number of points and the noise. In the app you can change them and watch the best degree move.</p>
+
+  <div class="cta">
+    <p>🧮 <a href="../../codigo/taylor-minimos-cuadrados/" target="_blank" rel="noopener">Open the app (Streamlit in the browser)</a></p>
+    <p>🎥 <a href="../#taylor">Animation: Taylor series</a></p>
+    <p>📝 <a href="verifying-with-sympy.html">Related note: verifying with SymPy what the animations show</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portfolio</a> · <a href="../../notas/taylor-vs-minimos-cuadrados.html" hreflang="es" lang="es">Leer en español</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>
