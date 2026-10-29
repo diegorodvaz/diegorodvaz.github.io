@@ -70,4 +70,5 @@ m2.metric("Prueba (sen x exacto)", f"{fila['Prueba (sen x exacto)']:.3f}")
 m3.metric("Taylor en 0", f"{fila['Taylor en 0 (sen x exacto)']:.3f}")
 
 if st.toggle("Ver la tabla de errores (pandas)"):
-    st.dataframe(df.pivot(index="conjunto", columns="grado", values="rmse").round(3))
+    # st.table (HTML) y no st.dataframe: éste dibuja en un canvas que acá se ve vacío
+    st.table(df.pivot(index="conjunto", columns="grado", values="rmse").apply(lambda col: col.map(lambda v: f"{v:.3g}")))
