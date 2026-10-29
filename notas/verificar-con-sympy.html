@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Verificar con SymPy lo que muestran las animaciones</title>
+<meta name="description" content="Tres resultados del portafolio (gradiente perpendicular, lata óptima y serie de Taylor) comprobados de forma simbólica con SymPy y graficados con Matplotlib.">
+<link rel="canonical" href="https://diegorodvaz.github.io/notas/verificar-con-sympy.html">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/notas/verificar-con-sympy.html">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/notes/verifying-with-sympy.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_AR">
+<meta property="og:url" content="https://diegorodvaz.github.io/notas/verificar-con-sympy.html">
+<meta property="og:title" content="Verificar con SymPy lo que muestran las animaciones">
+<meta property="og:description" content="Gradiente, lata óptima y Taylor comprobados con álgebra simbólica, no solo con números.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notas">← Volver al portafolio</a>
+
+  <div class="kicker">Nota · Python</div>
+  <h1>Verificar con SymPy lo que muestran las animaciones</h1>
+  <p class="meta">Diego E. Rodríguez V. · 4 min de lectura</p>
+
+  <p class="lead">Los scripts <code>verificar_*.py</code> de las animaciones comprueban con NumPy y SciPy que los números del video son correctos. Eso es una comprobación numérica: puede fallar en un caso que no probaste. Con SymPy se comprueba el resultado <em>de forma exacta</em>, con álgebra, y Matplotlib dibuja las figuras. Todo sale de un solo script: <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/verificacion/verificar_con_sympy.py" target="_blank" rel="noopener"><code>verificar_con_sympy.py</code></a>.</p>
+
+  <h2>1. El gradiente es perpendicular a la curva de nivel</h2>
+  <p>La <a href="gradiente-perpendicular.html">nota sobre el gradiente</a> lo demuestra con la regla de la cadena. Acá lo comprobamos en el ejemplo $f = \tfrac12(x^2 + 3y^2)$. La curva de nivel $f = c$ es una elipse que se parametriza con $\mathbf r(t) = \big(\sqrt{2c}\cos t,\ \sqrt{2c/3}\,\sin t\big)$.</p>
+  <pre><code>grad = sp.Matrix([sp.diff(f, x), sp.diff(f, y)])
+r = sp.Matrix([sp.sqrt(2*c)*sp.cos(t), sp.sqrt(2*c/3)*sp.sin(t)])
+sp.simplify(f.subs({x: r[0], y: r[1]}) - c)               # 0: r(t) está en f = c
+sp.simplify(grad.subs({x: r[0], y: r[1]}).dot(r.diff(t)))  # 0: ∇f · r'(t)</code></pre>
+  <p>Las dos líneas devuelven <code>0</code> para todo $t$ y todo $c &gt; 0$, no solo para algunos valores de prueba. Con la misma herramienta se resuelve la desigualdad $|1 - 3\alpha| &lt; 1$ del zigzag y sale exactamente $0 &lt; \alpha &lt; \tfrac23$.</p>
+
+  <h2>2. La lata óptima tiene h = 2r</h2>
+  <p>Para un volumen $V$ fijo, la chapa es $A(r) = 2\pi r^2 + 2V/r$. SymPy resuelve $A'(r) = 0$ y entrega el radio óptimo:</p>
+  $$r^* = \left(\frac{V}{2\pi}\right)^{1/3}, \qquad \frac{h^*}{r^*} = 2.$$
+  <p>El script verifica que ese cociente sea exactamente 2 y que $A''(r^*) &gt; 0$, es decir, que es un mínimo y no un máximo. Para $V = 1000\ \text{cm}^3$ da $r^* \approx 5{,}42$ cm.</p>
+  <figure>
+    <img src="../img/verificacion-lata.svg" alt="Gráfico de la chapa A(r) en función del radio, con el mínimo marcado en r = 5,42 cm" loading="lazy">
+    <figcaption>$A(r)$ para $V = 1000\ \text{cm}^3$, con el mínimo calculado por SymPy.</figcaption>
+  </figure>
+
+  <h2>3. Los polinomios de Taylor de sen x</h2>
+  <p><code>sp.series(sp.sin(x), x, 0, 10)</code> devuelve el polinomio de grado 9, y el script lo compara con los coeficientes que usa la animación:</p>
+  $$\sin x \approx x - \frac{x^3}{6} + \frac{x^5}{120} - \frac{x^7}{5040} + \frac{x^9}{362880}.$$
+  <figure>
+    <img src="../img/verificacion-taylor.svg" alt="sen x junto con sus polinomios de Taylor de grado 1, 3 y 7 en el intervalo de −2π a 2π" loading="lazy">
+    <figcaption>Los polinomios de grado 1, 3 y 7 se pegan a $\sin x$ cerca del origen y se separan al alejarse.</figcaption>
+  </figure>
+
+  <div class="callout">
+    <p class="callout-title">Qué prueba y qué no</p>
+    <p>SymPy comprueba la <em>álgebra</em> de estos casos concretos. No reemplaza la demostración general: la de la perpendicularidad vale para cualquier $f$ diferenciable, y acá solo verificamos un ejemplo.</p>
+  </div>
+
+  <div class="cta">
+    <p>🎥 <a href="../#taylor">Animación: serie de Taylor</a></p>
+    <p>🎥 <a href="../#lata">Animación: la lata óptima</a></p>
+    <p>📝 <a href="gradiente-perpendicular.html">Nota: por qué el gradiente es perpendicular a las curvas de nivel</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portafolio de Recursos</a> · <a href="../en/notes/verifying-with-sympy.html" hreflang="en" lang="en">Read in English</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>

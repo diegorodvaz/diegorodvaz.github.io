@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Diego E. Rodríguez V.">
+<title>Verifying with SymPy what the animations show</title>
+<meta name="description" content="Three results from the portfolio (perpendicular gradient, optimal can and Taylor series) checked symbolically with SymPy and plotted with Matplotlib.">
+<link rel="canonical" href="https://diegorodvaz.github.io/en/notes/verifying-with-sympy.html">
+<link rel="alternate" hreflang="es" href="https://diegorodvaz.github.io/notas/verificar-con-sympy.html">
+<link rel="alternate" hreflang="en" href="https://diegorodvaz.github.io/en/notes/verifying-with-sympy.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://diegorodvaz.github.io/en/notes/verifying-with-sympy.html">
+<meta property="og:title" content="Verifying with SymPy what the animations show">
+<meta property="og:description" content="Gradient, optimal can and Taylor checked with symbolic algebra, not just with numbers.">
+<meta property="og:image" content="https://diegorodvaz.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="../../notas/nota.css">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (saved === "dark" || (!saved && prefersDark)) document.documentElement.dataset.theme = "dark";
+  })();
+</script>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light and dark mode">🌙</button>
+
+<article class="nota">
+  <a class="volver" href="../#notes">← Back to the portfolio</a>
+
+  <div class="kicker">Note · Python</div>
+  <h1>Verifying with SymPy what the animations show</h1>
+  <p class="meta">Diego E. Rodríguez V. · 4 min read</p>
+
+  <p class="lead">The <code>verificar_*.py</code> scripts behind the animations use NumPy and SciPy to check that the numbers in the video are right. That is a numerical check: it can miss a case you didn't try. SymPy checks the result <em>exactly</em>, with algebra, and Matplotlib draws the figures. Everything comes from one script: <a href="https://github.com/diegorodvaz/diegorodvaz.github.io/blob/main/codigo/verificacion/verificar_con_sympy.py" target="_blank" rel="noopener"><code>verificar_con_sympy.py</code></a>.</p>
+
+  <h2>1. The gradient is perpendicular to the level curve</h2>
+  <p>The <a href="gradient-perpendicular.html">note on the gradient</a> proves it with the chain rule. Here we check it on the example $f = \tfrac12(x^2 + 3y^2)$. The level curve $f = c$ is an ellipse parametrized by $\mathbf r(t) = \big(\sqrt{2c}\cos t,\ \sqrt{2c/3}\,\sin t\big)$.</p>
+  <pre><code>grad = sp.Matrix([sp.diff(f, x), sp.diff(f, y)])
+r = sp.Matrix([sp.sqrt(2*c)*sp.cos(t), sp.sqrt(2*c/3)*sp.sin(t)])
+sp.simplify(f.subs({x: r[0], y: r[1]}) - c)               # 0: r(t) lies on f = c
+sp.simplify(grad.subs({x: r[0], y: r[1]}).dot(r.diff(t)))  # 0: ∇f · r'(t)</code></pre>
+  <p>Both lines return <code>0</code> for every $t$ and every $c &gt; 0$, not just for a few test values. The same tool solves the zigzag inequality $|1 - 3\alpha| &lt; 1$ and gives exactly $0 &lt; \alpha &lt; \tfrac23$.</p>
+
+  <h2>2. The optimal can has h = 2r</h2>
+  <p>For a fixed volume $V$, the sheet metal is $A(r) = 2\pi r^2 + 2V/r$. SymPy solves $A'(r) = 0$ and returns the optimal radius:</p>
+  $$r^* = \left(\frac{V}{2\pi}\right)^{1/3}, \qquad \frac{h^*}{r^*} = 2.$$
+  <p>The script checks that this ratio is exactly 2 and that $A''(r^*) &gt; 0$, i.e. it is a minimum and not a maximum. For $V = 1000\ \text{cm}^3$ it gives $r^* \approx 5.42$ cm.</p>
+  <figure>
+    <img src="../../img/verificacion-lata.svg" alt="Plot of the sheet metal A(r) against the radius, with the minimum marked at r = 5.42 cm" loading="lazy">
+    <figcaption>$A(r)$ for $V = 1000\ \text{cm}^3$, with the minimum computed by SymPy.</figcaption>
+  </figure>
+
+  <h2>3. The Taylor polynomials of sin x</h2>
+  <p><code>sp.series(sp.sin(x), x, 0, 10)</code> returns the degree-9 polynomial, and the script compares it with the coefficients used in the animation:</p>
+  $$\sin x \approx x - \frac{x^3}{6} + \frac{x^5}{120} - \frac{x^7}{5040} + \frac{x^9}{362880}.$$
+  <figure>
+    <img src="../../img/verificacion-taylor.svg" alt="sin x together with its Taylor polynomials of degree 1, 3 and 7 on the interval from −2π to 2π" loading="lazy">
+    <figcaption>The degree 1, 3 and 7 polynomials hug $\sin x$ near the origin and drift away further out.</figcaption>
+  </figure>
+
+  <div class="callout">
+    <p class="callout-title">What this proves and what it doesn't</p>
+    <p>SymPy checks the <em>algebra</em> of these specific cases. It doesn't replace the general proof: perpendicularity holds for any differentiable $f$, and here we only verify one example.</p>
+  </div>
+
+  <div class="cta">
+    <p>🎥 <a href="../#taylor">Animation: Taylor series</a></p>
+    <p>🎥 <a href="../#lata">Animation: the optimal can</a></p>
+    <p>📝 <a href="gradient-perpendicular.html">Note: why the gradient is perpendicular to level curves</a></p>
+  </div>
+
+  <footer>© Diego E. Rodríguez V. · <a href="../">Portfolio</a> · <a href="../../notas/verificar-con-sympy.html" hreflang="es" lang="es">Leer en español</a></footer>
+</article>
+
+<script>
+  var toggle = document.getElementById("theme-toggle");
+  function syncIcon() { toggle.textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙"; }
+  toggle.addEventListener("click", function () {
+    var dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    syncIcon();
+  });
+  syncIcon();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false })"></script>
+</body>
+</html>
